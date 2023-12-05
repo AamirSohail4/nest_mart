@@ -1,0 +1,9 @@
+.home-slide-cover.mt-30.banner-slider {
+  background-image: url(../../assets/imgs/slider/slider-1.png);
+  width: 1586px;
+  position: relative;
+  left: 0px;
+  top: 0px;
+  border-radius: 15px;
+  transition: opacity 500ms ease 0s;
+}
