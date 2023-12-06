@@ -63,16 +63,16 @@ export const Navbar = () => {
               <div className="header-info">
                 <ul>
                   <li>
-                    <Link to="page-about.htlm">About Us</Link>
+                    <Link to="/about">About Us</Link>
                   </li>
                   <li>
-                    <Link to="page-account.html">My Account</Link>
+                    <Link to="/myacount">My Account</Link>
                   </li>
                   <li>
-                    <Link to="shop-wishlist.html">Wishlist</Link>
+                    <Link to="/shop-wishlist">Wishlist</Link>
                   </li>
                   <li>
-                    <Link to="shop-order.html">Order Tracking</Link>
+                    <Link to="#">Order Tracking</Link>
                   </li>
                 </ul>
               </div>
@@ -162,7 +162,7 @@ export const Navbar = () => {
         <div className="container">
           <div className="header-wrap">
             <div className="logo logo-width-1">
-              <Link to="index.html">
+              <Link to="/">
                 <img src={logo} alt="logo" />
               </Link>
             </div>
@@ -208,29 +208,29 @@ export const Navbar = () => {
                     </form>
                   </div>
                   <div className="header-action-icon-2">
-                    <Link to="shop-compare.html">
+                    <Link to="/shop-compare">
                       <img className="svgInject" alt="Nest" src={img4} />
                       <span className="pro-count blue">3</span>
                     </Link>
-                    <Link to="shop-compare.html">
+                    <Link to="/shop-compare">
                       <span className="lable ml-0">Compare</span>
                     </Link>
                   </div>
                   <div className="header-action-icon-2">
-                    <Link to="shop-wishlist.html">
+                    <Link to="/shop-wishlist">
                       <img className="svgInject" alt="Nest" src={img5} />
                       <span className="pro-count blue">6</span>
                     </Link>
-                    <Link to="shop-wishlist.html">
+                    <Link to="/shop-wishlist">
                       <span className="lable">Wishlist</span>
                     </Link>
                   </div>
                   <div className="header-action-icon-2">
-                    <Link className="mini-cart-icon" href="shop-cart.html">
+                    <Link className="mini-cart-icon" href="/shop-cart">
                       <img alt="Nest" src={img6} />
                       <span className="pro-count blue">2</span>
                     </Link>
-                    <Link to="shop-cart.html">
+                    <Link to="/shop-cart">
                       <span className="lable">Cart</span>
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2">
@@ -287,52 +287,52 @@ export const Navbar = () => {
                           </h4>
                         </div>
                         <div className="shopping-cart-button">
-                          <Link to="shop-cart.html" className="outline">
+                          <Link to="/shop-cart" className="outline">
                             View cart
                           </Link>
-                          <Link to="shop-checkout.html">Checkout</Link>
+                          <Link to="/shop-checkout">Checkout</Link>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="header-action-icon-2">
-                    <Link to="page-account.html">
+                    <Link to="/myacount">
                       <img className="svgInject" alt="Nest" src={img9} />
                     </Link>
-                    <Link to="page-account.html">
+                    <Link to="/myacount">
                       <span className="lable ml-0">Account</span>
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                       <ul>
                         <li>
-                          <Link to="page-account.html">
+                          <Link to="/myacount">
                             <i className="fi fi-rs-user mr-10"></i>My Account
                           </Link>
                         </li>
                         <li>
-                          <Link to="page-account.html">
+                          <Link to="/myacount">
                             <i className="fi fi-rs-location-alt mr-10"></i>Order
                             Tracking
                           </Link>
                         </li>
                         <li>
-                          <Link to="page-account.html">
+                          <Link to="/myacount">
                             <i className="fi fi-rs-label mr-10"></i>My Voucher
                           </Link>
                         </li>
                         <li>
-                          <Link to="shop-wishlist.html">
+                          <Link to="/shop-wishlist">
                             <i className="fi fi-rs-heart mr-10"></i>My Wishlist
                           </Link>
                         </li>
                         <li>
-                          <Link to="page-account.html">
+                          <Link to="/myacount">
                             <i className="fi fi-rs-settings-sliders mr-10"></i>
                             Setting
                           </Link>
                         </li>
                         <li>
-                          <Link to="page-login.html">
+                          <Link to="/login">
                             <i className="fi fi-rs-sign-out mr-10"></i>Sign out
                           </Link>
                         </li>
@@ -488,15 +488,15 @@ export const Navbar = () => {
                   <ul>
                     <li className="hot-deals">
                       <img src={img25} alt="hot deals" />
-                      <Link to="shop-grid-right.html">Hot Deals</Link>
+                      <Link to="/products-grid">Hot Deals</Link>
                     </li>
                     <li>
-                      <Link className="active" href="index.html">
+                      <Link className="active" to="/home">
                         Home <i className="fi-rs-angle-down"></i>
                       </Link>
                       <ul className="sub-menu">
                         <li>
-                          <Link to="index.html">Home 1</Link>
+                          <Link to="/single-product">Product Details</Link>
                         </li>
                         <li>
                           <Link to="index-2.html">Home 2</Link>
@@ -516,7 +516,7 @@ export const Navbar = () => {
                       </ul>
                     </li>
                     <li>
-                      <Link to="page-about.html">About</Link>
+                      <Link to="/about">About</Link>
                     </li>
                     <li>
                       <Link to="shop-grid-right.html">
@@ -856,40 +856,36 @@ export const Navbar = () => {
                       </Link>
                       <ul className="sub-menu">
                         <li>
-                          <Link to="page-about.html">About Us</Link>
+                          <Link to="/about">About Us</Link>
                         </li>
                         <li>
-                          <Link to="page-contact.html">Contact</Link>
+                          <Link to="/contact">Contact</Link>
                         </li>
                         <li>
-                          <Link to="page-account.html">My Account</Link>
+                          <Link to="/myacount">My Account</Link>
                         </li>
                         <li>
-                          <Link to="page-login.html">Login</Link>
+                          <Link to="/login">Login</Link>
                         </li>
                         <li>
-                          <Link to="page-register.html">Register</Link>
+                          <Link to="/register">Register</Link>
                         </li>
                         <li>
-                          <Link to="page-purchase-guide.html">
-                            Purchase Guide
-                          </Link>
+                          <Link to="/purchase-guid">Purchase Guide</Link>
                         </li>
                         <li>
-                          <Link to="page-privacy-policy.html">
-                            Privacy Policy
-                          </Link>
+                          <Link to="/privacy-policy">Privacy Policy</Link>
                         </li>
                         <li>
-                          <Link to="page-terms.html">Terms of Service</Link>
+                          <Link to="/terms">Terms of Service</Link>
                         </li>
                         <li>
-                          <Link to="page-404.html">404 Page</Link>
+                          <Link to="/page-404">404 Page</Link>
                         </li>
                       </ul>
                     </li>
                     <li>
-                      <Link to="page-contact.html">Contact</Link>
+                      <Link to="/contact">Contact</Link>
                     </li>
                   </ul>
                 </nav>

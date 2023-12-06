@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Breadcrumb } from "../../components/breadcrumb/Breadcrumb";
-import { PrimerySidbar } from "../../components/breadcrumb/sidebar/PrimerySidbar";
 import img1 from "../../assets/imgs/theme/icons/icon-location.svg";
 import img2 from "../../assets/imgs/theme/icons/icon-contact.svg";
 import img3 from "../../assets/imgs/vendor/vendor-18.svg";
@@ -831,8 +830,17 @@ export const ShopProduct = () => {
                 </div>
               </div>
             </div>
-
-            <PrimerySidbar />
+            <div
+              className="col-xl-3 primary-sidebar sticky-sidebar mt-30"
+              style={{
+                position: "relative",
+                overflow: "visible",
+                boxSizing: "border-box",
+                minHeight: "1px",
+              }}
+            >
+              <h3>Sidbar</h3>
+            </div>
           </div>
         </div>
       </div>

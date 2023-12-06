@@ -833,7 +833,17 @@ export const SingleProduct = () => {
                 </div>
               </div>
             </div>
-            <PrimerySidbar />
+            <div
+              className="col-xl-3 primary-sidebar sticky-sidebar mt-30"
+              style={{
+                position: "relative",
+                overflow: "visible",
+                boxSizing: "border-box",
+                minHeight: "1px",
+              }}
+            >
+              <PrimerySidbar />
+            </div>
           </div>
         </div>
       </div>
