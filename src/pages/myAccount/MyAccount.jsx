@@ -88,7 +88,7 @@ export const MyAccount = () => {
                           </a>
                         </li>
                         <li className="nav-item">
-                          <a className="nav-link" href="page-login.html">
+                          <a className="nav-link" href="/login">
                             <i className="fi-rs-sign-out mr-10"></i>Logout
                           </a>
                         </li>

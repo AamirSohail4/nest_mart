@@ -36,6 +36,16 @@ import { useState, useEffect } from "react";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [openCategory, setOpenCategory] = useState(false);
+  const [moreCategory, setMoreCategory] = useState(false);
+  const handelOpenCategory = () => {
+    setOpenCategory(!openCategory);
+    console.log(openCategory);
+  };
+  const handelMoreCategory = () => {
+    setMoreCategory(!moreCategory);
+    console.log(openCategory);
+  };
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -128,7 +138,7 @@ export const Navbar = () => {
                     </ul>
                   </li>
                   <li>
-                    <Link className="language-dropdown-active" href="#">
+                    <Link className="language-dropdown-active" to="#">
                       USD <i className="fi-rs-angle-small-down"></i>
                     </Link>
                     <ul className="language-dropdown">
@@ -359,31 +369,40 @@ export const Navbar = () => {
             </div>
             <div className="header-nav d-none d-lg-flex">
               <div className="main-categori-wrap d-none d-lg-block">
-                <Link className="categories-button-active" href="#">
+                <Link
+                  className={`categories-button-active ${
+                    openCategory ? "open" : ""
+                  }`}
+                  to="#"
+                >
                   <span className="fi-rs-apps"></span>{" "}
                   <span className="et">Browse</span> All Categories
-                  <i className="fi-rs-angle-down"></i>
+                  <i
+                    className="fi-rs-angle-down"
+                    onClick={handelOpenCategory}
+                  ></i>
                 </Link>
-                <div className="categories-dropdown-wrap categories-dropdown-active-large font-heading">
+                <div
+                  className={`categories-dropdown-wrap categories-dropdown-active-large font-heading ${
+                    openCategory ? "show" : ""
+                  }`}
+                >
                   <div className="d-flex categori-dropdown-inner">
                     <ul>
                       <li>
                         <Link to="shop-grid-right.html">
-                          {" "}
                           <img src={img11} alt="" />
                           Milks and Dairies
                         </Link>
                       </li>
                       <li>
                         <Link to="shop-grid-right.html">
-                          {" "}
                           <img src={img12} alt="" />
                           Clothing & beauty
                         </Link>
                       </li>
                       <li>
                         <Link to="shop-grid-right.html">
-                          {" "}
                           <img src={img13} alt="" />
                           Pet Foods & Toy
                         </Link>
@@ -441,7 +460,11 @@ export const Navbar = () => {
                       </li>
                     </ul>
                   </div>
-                  <div className="more_slide_open" style={{ display: "none" }}>
+                  <div
+                    className={`more_slide_open ${
+                      moreCategory ? "show" : "hide"
+                    }`}
+                  >
                     <div className="d-flex categori-dropdown-inner">
                       <ul>
                         <li>
@@ -478,7 +501,7 @@ export const Navbar = () => {
                     </div>
                   </div>
                   <div className="more_categories">
-                    <span className="icon"></span>{" "}
+                    <span className="icon" onClick={handelMoreCategory}></span>{" "}
                     <span className="heading-sm-1">Show more...</span>
                   </div>
                 </div>

@@ -9471,7 +9471,9 @@ span.fi-rs-apps {
   visibility: hidden;
   margin-top: 26px;
 }
-
+.hide {
+  display: none;
+}
 .categories-dropdown-active-large.show {
   opacity: 1;
   visibility: visible;

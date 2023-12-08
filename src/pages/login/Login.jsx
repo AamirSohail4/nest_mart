@@ -19,7 +19,7 @@ export const Login = () => {
                           <h1 className="mb-5">Login</h1>
                           <p className="mb-30">
                             Don&apos;t have an account?{" "}
-                            <a href="page-register.html">Create here</a>
+                            <a href="/register">Create here</a>
                           </p>
                         </div>
                         <form method="post">

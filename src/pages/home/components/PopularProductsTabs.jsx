@@ -164,7 +164,7 @@ export const PopularProductsTabs = () => {
                     data-wow-delay=".1s"
                     style={{
                       visibility: "visible",
-                      "animation-delay": "0.1s",
+                      animationDelay: "0.1s",
                       animationName: "fadeIn",
                     }}
                   >
@@ -250,7 +250,7 @@ export const PopularProductsTabs = () => {
                     data-wow-delay=".1s"
                     style={{
                       visibility: "visible",
-                      "animation-delay": "0.1s",
+                      animationDelay: "0.1s",
                       animationName: "fadeIn",
                     }}
                   >
@@ -336,7 +336,7 @@ export const PopularProductsTabs = () => {
                     data-wow-delay=".1s"
                     style={{
                       visibility: "visible",
-                      "animation-delay": "0.1s",
+                      animationDelay: "0.1s",
                       animationName: "fadeIn",
                     }}
                   >
@@ -422,7 +422,7 @@ export const PopularProductsTabs = () => {
                     data-wow-delay=".1s"
                     style={{
                       visibility: "visible",
-                      "animation-delay": "0.1s",
+                      animationDelay: "0.1s",
                       animationName: "fadeIn",
                     }}
                   >
@@ -508,7 +508,7 @@ export const PopularProductsTabs = () => {
                     data-wow-delay=".1s"
                     style={{
                       visibility: "visible",
-                      "animation-delay": "0.1s",
+                      animationDelay: "0.1s",
                       animationName: "fadeIn",
                     }}
                   >
@@ -594,7 +594,7 @@ export const PopularProductsTabs = () => {
                     data-wow-delay=".1s"
                     style={{
                       visibility: "visible",
-                      "animation-delay": "0.1s",
+                      animationDelay: "0.1s",
                       animationName: "fadeIn",
                     }}
                   >
@@ -680,7 +680,7 @@ export const PopularProductsTabs = () => {
                     data-wow-delay=".1s"
                     style={{
                       visibility: "visible",
-                      "animation-delay": "0.1s",
+                      animationDelay: "0.1s",
                       animationName: "fadeIn",
                     }}
                   >
@@ -766,7 +766,7 @@ export const PopularProductsTabs = () => {
                     data-wow-delay=".1s"
                     style={{
                       visibility: "visible",
-                      "animation-delay": "0.1s",
+                      animationDelay: "0.1s",
                       animationName: "fadeIn",
                     }}
                   >
@@ -852,7 +852,7 @@ export const PopularProductsTabs = () => {
                     data-wow-delay=".1s"
                     style={{
                       visibility: "visible",
-                      "animation-delay": "0.1s",
+                      animationDelay: "0.1s",
                       animationName: "fadeIn",
                     }}
                   >
