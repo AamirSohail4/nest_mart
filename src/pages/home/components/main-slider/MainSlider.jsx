@@ -1,20 +1,8 @@
 import { useRef } from "react";
 import Slider from "react-slick";
 import { mainSlider } from "./data";
-import { useEffect } from "react";
-export const MainSlider = () => {
-  const HerroSlider_Url =
-    "https://msbooks.pk/api/msbooks_api.php?tag=get_images_list&mask=msbooks&intCompanyID=1&intGroupID=2";
-  // const [herroSlider, setHerroSlider] = useState([]);
 
-  useEffect(() => {
-    async function HerroSlider() {
-      const response = await fetch(HerroSlider_Url);
-      const mydata = await response.json();
-      console.log(mydata);
-    }
-    HerroSlider();
-  }, []);
+export const MainSlider = () => {
   const sliderRef = useRef(null);
 
   const next = () => {
@@ -51,14 +39,14 @@ export const MainSlider = () => {
                   key={index}
                 >
                   <div className="slider-content">
-                    <h1 className="display-2 mb-40 title">{item.title}</h1>
-                    <p className="mb-65">{item.news}</p>
-                    <form className="form-subcriber d-flex">
+                    {/* <h1 className="display-2 mb-40 title">{item.title}</h1>
+                    <p className="mb-65">{item.news}</p> */}
+                    {/* <form className="form-subcriber d-flex">
                       <input type="email" placeholder="Your emaill address" />
                       <button className="btn" type="submit">
                         Subscribe
                       </button>
-                    </form>
+                    </form> */}
                   </div>
                 </div>
               );

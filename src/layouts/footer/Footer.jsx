@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import img1 from "../../assets/imgs/theme/logo.svg";
+import img1 from "../../assets/imgs/theme/msbooks_logo.png";
 import img2 from "../../assets/imgs/theme/icons/icon-location.svg";
 import img3 from "../../assets/imgs/theme/icons/icon-contact.svg";
 import img4 from "../../assets/imgs/theme/icons/icon-email-2.svg";

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import img1 from "../assets/imgs/theme/flag-fr.png";
 import img2 from "../assets/imgs/theme/flag-dt.png";
 import img3 from "../assets/imgs/theme/flag-ru.png";
-import logo from "../assets/imgs/theme/logo.svg";
+import logo from "../assets/imgs/theme/msbooks_logo.png";
 import img4 from "../assets/imgs/theme/icons/icon-compare.svg";
 import img5 from "../assets/imgs/theme/icons/icon-heart.svg";
 import img6 from "../assets/imgs/theme/icons/icon-cart.svg";
@@ -32,12 +32,25 @@ import img28 from "../assets/imgs/theme/icons/icon-cart.svg";
 import img29 from "../assets/imgs/shop/thumbnail-3.jpg";
 import img30 from "../assets/imgs/shop/thumbnail-4.jpg";
 import img31 from "../assets/imgs/shop/thumbnail-4.jpg";
+
 import { useState, useEffect } from "react";
+import { Manu_Url } from "../config/env";
 
 export const Navbar = () => {
+  const [manu, setDataManu] = useState([]);
+  useEffect(() => {
+    async function ManuShow() {
+      const response = await fetch(Manu_Url);
+      const myManue = await response.json();
+
+      // console.log(myManue.data);
+    }
+    ManuShow();
+  }, []);
   const [scrolled, setScrolled] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
   const [moreCategory, setMoreCategory] = useState(false);
+
   const handelOpenCategory = () => {
     setOpenCategory(!openCategory);
     console.log(openCategory);
@@ -514,7 +527,7 @@ export const Navbar = () => {
                       <Link to="/products-grid">Hot Deals</Link>
                     </li>
                     <li>
-                      <Link className="active" to="/home">
+                      <Link className="active" to="/">
                         Home <i className="fi-rs-angle-down"></i>
                       </Link>
                       <ul className="sub-menu">

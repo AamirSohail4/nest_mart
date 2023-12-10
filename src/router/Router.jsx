@@ -18,17 +18,12 @@ import { PageNotFound } from "../pages/pagenotFound/PageNotFound";
 import { ProductsGrid } from "../pages/allproduct/ProductsGrid";
 import { QuickView } from "../pages/cart/QuickView";
 
-// import { AllProduct } from "../pages/allproduct/AllProduct";
-// import { SingleProduct } from "../pages/allproduct/SingleProduct";
-// import { PopularProductsTabs } from "../pages/allproduct/PopularProducts";
-
 export const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<FrontendLayout />}>
         <Route index element={<Home />} />
-        <Route path="home" element={<Home />} />
-        <Route path="single-product" element={<SingleProduct />} />
+        <Route path="single-product/:ids" element={<SingleProduct />} />
         <Route path="shop-cart" element={<ShopCart />} />
         <Route path="shop-wishlist" element={<ShopWishlist />} />
         <Route path="shop-compare" element={<ShopCompare />} />
@@ -44,10 +39,6 @@ export const Router = () => {
         <Route path="page-404" element={<PageNotFound />} />
         <Route path="products-grid" element={<ProductsGrid />} />
         <Route path="quick-view" element={<QuickView />} />
-
-        {/* <Route path="popularProduct" element={<PopularProducts />} /> */}
-        {/* <Route path="allproduct" element={<AllProduct />} />
-        <Route path="singleproduct/:id" element={<SingleProduct />} /> */}
       </Route>
     </Routes>
   );
