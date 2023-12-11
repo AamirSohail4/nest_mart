@@ -1,19 +1,19 @@
 import { Link } from "react-router-dom";
 
-import { AllProduct_Url } from "../../../../config/env";
+import { api_url } from "../../../../config/env";
 import { useEffect, useState } from "react";
 export const PopularProducts = () => {
   const [myproduct, setMyProduct] = useState([]);
   useEffect(() => {
     async function AllProductShow() {
-      const response = await fetch(AllProduct_Url);
+      const response = await fetch(`${api_url}&tag=get_items_web&limit=20`);
       const productData = await response.json();
 
       setMyProduct(productData.data);
     }
     AllProductShow();
   }, []);
-  // console.log(myproduct);
+  console.log(myproduct);
   return (
     <>
       <div className="product-tabs section-padding position-relative">
@@ -32,9 +32,8 @@ export const PopularProducts = () => {
             <div className="row product-grid-4">
               {myproduct?.map((item) => {
                 return (
-                  <Link
-                    to="/"
-                    key={item.intID}
+                  <div
+                    key={item.id}
                     className="col-lg-1-5 col-md-4 col-12 col-sm-6"
                   >
                     <div
@@ -48,7 +47,7 @@ export const PopularProducts = () => {
                     >
                       <div className="product-img-action-wrap">
                         <div className="product-img product-img-zoom">
-                          <Link to={`single-product/${item.intID}`}>
+                          <Link to={`single-product/${item.strSEOLink}`}>
                             <img
                               className="default-img"
                               src={item.strImageThumbnail}
@@ -65,17 +64,11 @@ export const PopularProducts = () => {
                           <Link
                             aria-label="Add To Wishlist"
                             className="action-btn"
-                            href="/shop-wishlist"
+                            to="/shop-wishlist"
                           >
                             <i className="fi-rs-heart"></i>
                           </Link>
-                          <Link
-                            aria-label="Compare"
-                            className="action-btn"
-                            href="/shop-compare"
-                          >
-                            <i className="fi-rs-shuffle"></i>
-                          </Link>
+
                           <Link
                             aria-label="Quick view"
                             className="action-btn"
@@ -91,12 +84,14 @@ export const PopularProducts = () => {
                       </div>
                       <div className="product-content-wrap">
                         <div className="product-category">
-                          <Link to="shop-grid-right.html">
+                          <Link to={`single-product/${item.strSEOLink}`}>
                             {item.strItemCategory}
                           </Link>
                         </div>
                         <h2>
-                          <Link href="/">{item.strDesc}</Link>
+                          <Link to={`single-product/${item.strSEOLink}`}>
+                            {item.strDesc}
+                          </Link>
                         </h2>
                         <div className="product-rate-cover">
                           <div className="product-rate d-inline-block">
@@ -110,20 +105,15 @@ export const PopularProducts = () => {
                             (3.5)
                           </span>
                         </div>
-                        <div>
-                          <span className="font-small text-muted">
-                            By<Link to="/">Author Name</Link>
-                          </span>
-                        </div>
+
                         <div className="product-card-bottom">
                           <div className="product-price">
-                            <span>{item.dblSalePrice}</span>
-                            <span className="old-price">$55.8</span>
+                            <span>Rs: {item.dblSalePrice}</span>
                           </div>
                           <div className="add-cart">
                             <Link
                               className="add"
-                              to={`single-product/${item.intID}`}
+                              to={`single-product/${item.strSEOLink}`}
                             >
                               <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                             </Link>
@@ -131,7 +121,7 @@ export const PopularProducts = () => {
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>

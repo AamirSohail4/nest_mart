@@ -1,10 +1,6 @@
 import Marquee from "react-fast-marquee";
 import { Link } from "react-router-dom";
-import img1 from "../assets/imgs/theme/flag-fr.png";
-import img2 from "../assets/imgs/theme/flag-dt.png";
-import img3 from "../assets/imgs/theme/flag-ru.png";
-import logo from "../assets/imgs/theme/msbooks_logo.png";
-import img4 from "../assets/imgs/theme/icons/icon-compare.svg";
+
 import img5 from "../assets/imgs/theme/icons/icon-heart.svg";
 import img6 from "../assets/imgs/theme/icons/icon-cart.svg";
 import img7 from "../assets/imgs/shop/thumbnail-3.jpg";
@@ -25,7 +21,7 @@ import img21 from "../assets/imgs/theme/icons/icon-1.svg";
 import img22 from "../assets/imgs/theme/icons/icon-2.svg";
 import img23 from "../assets/imgs/theme/icons/icon-3.svg";
 import img24 from "../assets/imgs/theme/icons/icon-4.svg";
-import img25 from "../assets/imgs/theme/icons/icon-hot.svg";
+
 import img26 from "../assets/imgs/banner/banner-menu.png";
 import img27 from "../assets/imgs/theme/icons/icon-headphone.svg";
 import img28 from "../assets/imgs/theme/icons/icon-cart.svg";
@@ -34,19 +30,18 @@ import img30 from "../assets/imgs/shop/thumbnail-4.jpg";
 import img31 from "../assets/imgs/shop/thumbnail-4.jpg";
 
 import { useState, useEffect } from "react";
-import { Manu_Url } from "../config/env";
 
 export const Navbar = () => {
-  const [manu, setDataManu] = useState([]);
-  useEffect(() => {
-    async function ManuShow() {
-      const response = await fetch(Manu_Url);
-      const myManue = await response.json();
+  // const [manu, setDataManu] = useState([]);
+  // useEffect(() => {
+  //   async function ManuShow() {
+  //     const response = await fetch(Manu_Url);
+  //     const myManue = await response.json();
 
-      // console.log(myManue.data);
-    }
-    ManuShow();
-  }, []);
+  //     // console.log(myManue.data);
+  //   }
+  //   ManuShow();
+  // }, []);
   const [scrolled, setScrolled] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
   const [moreCategory, setMoreCategory] = useState(false);
@@ -123,9 +118,9 @@ export const Navbar = () => {
                 <ul>
                   <li>
                     Need help? Call Us:{" "}
-                    <strong className="text-brand"> + 1800 900</strong>
+                    <strong className="text-brand"> + +92-42-35774780</strong>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link className="language-dropdown-active" href="#">
                       English <i className="fi-rs-angle-small-down"></i>
                     </Link>
@@ -174,7 +169,7 @@ export const Navbar = () => {
                         </Link>
                       </li>
                     </ul>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>
@@ -185,9 +180,7 @@ export const Navbar = () => {
         <div className="container">
           <div className="header-wrap">
             <div className="logo logo-width-1">
-              <Link to="/">
-                <img src={logo} alt="logo" />
-              </Link>
+              <Link to="/">{/* <img src={logo} alt="logo" /> */}</Link>
             </div>
             <div className="header-right">
               <div className="search-style-2">
@@ -210,7 +203,7 @@ export const Navbar = () => {
               </div>
               <div className="header-action-right">
                 <div className="header-action-2">
-                  <div className="search-location">
+                  {/* <div className="search-location">
                     <form action="#">
                       <select className="select-active">
                         <option>Your Location</option>
@@ -229,15 +222,15 @@ export const Navbar = () => {
                         <option>New York</option>
                       </select>
                     </form>
-                  </div>
+                  </div> */}
                   <div className="header-action-icon-2">
-                    <Link to="/shop-compare">
+                    {/* <Link to="/shop-compare">
                       <img className="svgInject" alt="Nest" src={img4} />
                       <span className="pro-count blue">3</span>
                     </Link>
                     <Link to="/shop-compare">
                       <span className="lable ml-0">Compare</span>
-                    </Link>
+                    </Link> */}
                   </div>
                   <div className="header-action-icon-2">
                     <Link to="/shop-wishlist">
@@ -386,10 +379,10 @@ export const Navbar = () => {
                   className={`categories-button-active ${
                     openCategory ? "open" : ""
                   }`}
-                  to="#"
+                  to="/"
                 >
                   <span className="fi-rs-apps"></span>{" "}
-                  <span className="et">Browse</span> All Categories
+                  <span className="et">Home</span>
                   <i
                     className="fi-rs-angle-down"
                     onClick={handelOpenCategory}
@@ -522,15 +515,15 @@ export const Navbar = () => {
               <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                 <nav>
                   <ul>
-                    <li className="hot-deals">
+                    {/* <li className="hot-deals">
                       <img src={img25} alt="hot deals" />
                       <Link to="/products-grid">Hot Deals</Link>
-                    </li>
+                    </li> */}
                     <li>
-                      <Link className="active" to="/">
+                      {/* <Link className="active" to="/">
                         Home <i className="fi-rs-angle-down"></i>
-                      </Link>
-                      <ul className="sub-menu">
+                      </Link> */}
+                      {/* <ul className="sub-menu">
                         <li>
                           <Link to="/single-product">Product Details</Link>
                         </li>
@@ -549,7 +542,7 @@ export const Navbar = () => {
                         <li>
                           <Link to="index-6.html">Home 6</Link>
                         </li>
-                      </ul>
+                      </ul> */}
                     </li>
                     <li>
                       <Link to="/about">About</Link>
@@ -930,7 +923,7 @@ export const Navbar = () => {
             <div className="hotline d-none d-lg-flex">
               <img src={img27} alt="hotline" />
               <p>
-                1900 - 888<span>24/7 Support Center</span>
+                92-42-35774780<span>24/7 Support Center</span>
               </p>
             </div>
             <div className="header-action-icon-2 d-block d-lg-none">

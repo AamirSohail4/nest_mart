@@ -10672,3 +10672,8 @@ footer .hotline img {
   }
 }
 /*# sourceMappingURL=main.css.map */
+.mobile_phone {
+  margin-right: 8px;
+  max-width: 16px;
+  color: #3bb77e;
+}

@@ -1,7 +1,18 @@
 import { PrimerySidbar } from "../../../components/breadcrumb/sidebar/PrimerySidbar";
 import img1 from "../../../assets/imgs/page/guide-1.png";
-
+import { useEffect, useState } from "react";
+import { api_url } from "../../../config/env";
 export const PurchaseGuid = () => {
+  const [product, setProductData] = useState({});
+  useEffect(() => {
+    async function SingleProductShow() {
+      const response = await fetch(`${api_url}&tag=get_items_web`);
+      const res = await response.json();
+      setProductData(res.data);
+    }
+    SingleProductShow();
+  }, []);
+  console.log(product);
   return (
     <>
       <main className="main pages" style={{ transform: "none" }}>

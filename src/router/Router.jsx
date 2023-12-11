@@ -23,7 +23,7 @@ export const Router = () => {
     <Routes>
       <Route path="/" element={<FrontendLayout />}>
         <Route index element={<Home />} />
-        <Route path="single-product/:ids" element={<SingleProduct />} />
+        <Route path="single-product/:seoLink" element={<SingleProduct />} />
         <Route path="shop-cart" element={<ShopCart />} />
         <Route path="shop-wishlist" element={<ShopWishlist />} />
         <Route path="shop-compare" element={<ShopCompare />} />
@@ -37,7 +37,7 @@ export const Router = () => {
         <Route path="purchase-guid" element={<PurchaseGuid />} />
         <Route path="terms" element={<Terms />} />
         <Route path="page-404" element={<PageNotFound />} />
-        <Route path="products-grid" element={<ProductsGrid />} />
+        <Route path="allProducts" element={<ProductsGrid />} />
         <Route path="quick-view" element={<QuickView />} />
       </Route>
     </Routes>

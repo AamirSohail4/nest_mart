@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import img1 from "../../assets/imgs/theme/msbooks_logo.png";
 import img2 from "../../assets/imgs/theme/icons/icon-location.svg";
-import img3 from "../../assets/imgs/theme/icons/icon-contact.svg";
 import img4 from "../../assets/imgs/theme/icons/icon-email-2.svg";
 import img5 from "../../assets/imgs/theme/icons/icon-clock.svg";
 import img6 from "../../assets/imgs/theme/app-store.jpg";
 import img7 from "../../assets/imgs/theme/google-play.jpg";
 import img8 from "../../assets/imgs/theme/payment-method.png";
 import { ScrollButton } from "./scrollbutton/ScrollButton";
+import { Icon } from "@iconify/react";
 import "./footer.css";
 
 export const Footer = () => {
@@ -33,28 +33,39 @@ export const Footer = () => {
                   <Link to="index.html" className="mb-15">
                     <img src={img1} alt="logo" />
                   </Link>
-                  <p className="font-lg text-heading">
-                    Awesome grocery store website template
-                  </p>
                 </div>
                 <ul className="contact-infor">
                   <li>
                     <img src={img2} alt="" />
                     <strong>Address: </strong>{" "}
-                    <span>
-                      5171 W Campbell Ave undefined Kent, Utah 53127 United
-                      States
-                    </span>
+                    <span>83-B1 Gulberg 3 ghalib market Lahore</span>
                   </li>
                   <li>
-                    <img src={img3} alt="" />
-                    <strong>Call Us:</strong>
-                    <span>(+91) - 540-025-124553</span>
+                    <Icon
+                      icon="fa6-solid:mobile-screen-button"
+                      className="mobile_phone"
+                    />
+                    <strong>Mobile:</strong>
+                    <span> 0333-4504507</span>
                   </li>
+                  <li>
+                    <Icon
+                      icon="fa6-solid:mobile-screen-button"
+                      className="mobile_phone"
+                    />
+                    <strong> Mobile:</strong>
+                    <span> 0333-4548651</span>
+                  </li>
+                  <li>
+                    <Icon icon="logos:whatsapp-icon" className="mobile_phone" />
+                    <strong>Whatsapp:</strong>
+                    <span> 03365774780</span>
+                  </li>
+
                   <li>
                     <img src={img4} alt="" />
                     <strong>Email:</strong>
-                    <span>sale@Nest.com</span>
+                    <span>info@msbooks.pk</span>
                   </li>
                   <li>
                     <img src={img5} alt="" />
@@ -131,9 +142,6 @@ export const Footer = () => {
                 <li>
                   <Link to="#">Shipping Details</Link>
                 </li>
-                <li>
-                  <Link to="#">Compare products</Link>
-                </li>
               </ul>
             </div>
             <div
@@ -145,28 +153,22 @@ export const Footer = () => {
                 animationName: "fadeInUp",
               }}
             >
-              <h4 className="widget-title">Corporate</h4>
+              <h4 className="widget-title">Products</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="#">Become a Vendor</Link>
+                  <Link to="/allProducts">All Products</Link>
                 </li>
                 <li>
-                  <Link to="#">Affiliate Program</Link>
+                  <Link to="#">A Level</Link>
                 </li>
                 <li>
-                  <Link to="#">Farm Business</Link>
+                  <Link to="#">O Level</Link>
                 </li>
                 <li>
-                  <Link to="#">Farm Careers</Link>
+                  <Link to="#">CheckPoint</Link>
                 </li>
                 <li>
-                  <Link to="#">Our Suppliers</Link>
-                </li>
-                <li>
-                  <Link to="#">Accessibility</Link>
-                </li>
-                <li>
-                  <Link to="#">Promotions</Link>
+                  <Link to="#">ICGS</Link>
                 </li>
               </ul>
             </div>
@@ -179,28 +181,22 @@ export const Footer = () => {
                 animationName: "fadeInUp",
               }}
             >
-              <h4 className="widget-title">Popular</h4>
+              <h4 className="widget-title">Out Website</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="#">Milk &amp; Flavoured Milk</Link>
+                  <Link to="#">Teacher</Link>
                 </li>
                 <li>
-                  <Link to="#">Butter and Margarine</Link>
+                  <Link to="#">BookShop</Link>
                 </li>
                 <li>
-                  <Link to="#">Eggs Substitutes</Link>
+                  <Link to="#">About</Link>
                 </li>
                 <li>
-                  <Link to="#">Marmalades</Link>
+                  <Link to="#">Singin</Link>
                 </li>
                 <li>
-                  <Link to="#">Sour Cream and Dips</Link>
-                </li>
-                <li>
-                  <Link to="#">Tea &amp; Kombucha</Link>
-                </li>
-                <li>
-                  <Link to="#">Cheese</Link>
+                  <Link to="#">Contact</Link>
                 </li>
               </ul>
             </div>

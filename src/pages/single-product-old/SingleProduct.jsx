@@ -90,26 +90,7 @@ export const SingleProduct = () => {
                               dolore impedit fuga eum eligendi.
                             </p>
                           </div>
-                          {/* <div className="attr-detail attr-size mb-30">
-                            <strong className="mr-10">Size / Weight: </strong>
-                            <ul className="list-filter size-filter font-small">
-                              <li>
-                                <Link to="#">50g</Link>
-                              </li>
-                              <li className="active">
-                                <Link to="#">60g</Link>
-                              </li>
-                              <li>
-                                <Link to="#">80g</Link>
-                              </li>
-                              <li>
-                                <Link to="#">100g</Link>
-                              </li>
-                              <li>
-                                <Link to="#">150g</Link>
-                              </li>
-                            </ul>
-                          </div> */}
+
                           <div className="detail-extralink mb-50">
                             <div className="detail-qty border radius">
                               <Link to="#" className="qty-down">
