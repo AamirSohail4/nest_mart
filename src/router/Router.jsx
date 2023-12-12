@@ -45,7 +45,7 @@ export const Router = () => {
         <Route path="quick-view" element={<QuickView />} />
         <Route path="shopmanubar" element={<ShopManubar />} />
         <Route path="teacher" element={<Teacher />} />
-        {/* <Route path="teacher-detail" element={<TeacherDetail />} /> */}
+        <Route path="teacher-detail" element={<TeacherDetail />} />
         <Route path="teacher-detail/:name" element={<TeacherDetail />} />
       </Route>
     </Routes>
