@@ -6,7 +6,9 @@ export const ProductsGrid = () => {
   const [allProducts, setAllProducts] = useState();
   useEffect(() => {
     async function AllProducts() {
-      const response = await fetch(`${api_url}&tag=get_items_web`);
+      const response = await fetch(
+        `${api_url}&tag=get_items_web&Pagination=20`
+      );
       const productData = await response.json();
       setAllProducts(productData.data);
     }

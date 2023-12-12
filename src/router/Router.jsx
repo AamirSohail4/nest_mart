@@ -18,6 +18,10 @@ import { PageNotFound } from "../pages/pagenotFound/PageNotFound";
 import { ProductsGrid } from "../pages/allproduct/ProductsGrid";
 import { QuickView } from "../pages/cart/QuickView";
 
+import { ShopManubar } from "../pages/home/components/teacherInfo/ShopManubar";
+import { Teacher } from "../pages/teacher/Teacher";
+import { TeacherDetail } from "../pages/teacher/TeacherDetail";
+
 export const Router = () => {
   return (
     <Routes>
@@ -39,6 +43,10 @@ export const Router = () => {
         <Route path="page-404" element={<PageNotFound />} />
         <Route path="allProducts" element={<ProductsGrid />} />
         <Route path="quick-view" element={<QuickView />} />
+        <Route path="shopmanubar" element={<ShopManubar />} />
+        <Route path="teacher" element={<Teacher />} />
+        {/* <Route path="teacher-detail" element={<TeacherDetail />} /> */}
+        <Route path="teacher-detail/:name" element={<TeacherDetail />} />
       </Route>
     </Routes>
   );

@@ -6,10 +6,10 @@ import { api_url } from "../../../config/env";
 export const ProductDetail = () => {
   const [cartItems, setCartItems] = useState([]);
   const [singleproduct, setSingleProduct] = useState({});
-  const [relatedproduct, setRelatedProduct] = useState([]);
+
   const [att, setAtt] = useState();
   const { seoLink } = useParams();
-  console.log("This is View =>", seoLink);
+  // console.log("This is View =>", seoLink);
 
   const handelAddToCart = () => {
     setCartItems(cartItems);
@@ -39,20 +39,20 @@ export const ProductDetail = () => {
     SingleProductShow();
   }, [seoLink]);
 
-  useEffect(() => {
-    async function RelatedProducts() {
-      const response = await fetch(
-        `${api_url}&tag=get_related_items&sql=1&intItemID==${singleproduct.intID}`
-      );
+  // useEffect(() => {
+  //   async function RelatedProducts() {
+  //     const response = await fetch(
+  //       `${api_url}&tag=get_related_items&sql=1&intItemID==${singleproduct.intID}`
+  //     );
 
-      const productData = await response.json();
+  //     const productData = await response.json();
 
-      setRelatedProduct(productData.data[0]);
-    }
-    RelatedProducts();
-  }, [intID]);
+  //     setRelatedProduct(productData.data[0]);
+  //   }
+  //   RelatedProducts();
+  // }, []);
 
-  console.log("Related Product=>", relatedproduct);
+  // console.log("Related Product=>", relatedproduct);
 
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);

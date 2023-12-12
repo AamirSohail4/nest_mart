@@ -32,19 +32,10 @@ import img31 from "../assets/imgs/shop/thumbnail-4.jpg";
 import { useState, useEffect } from "react";
 
 export const Navbar = () => {
-  // const [manu, setDataManu] = useState([]);
-  // useEffect(() => {
-  //   async function ManuShow() {
-  //     const response = await fetch(Manu_Url);
-  //     const myManue = await response.json();
-
-  //     // console.log(myManue.data);
-  //   }
-  //   ManuShow();
-  // }, []);
   const [scrolled, setScrolled] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
   const [moreCategory, setMoreCategory] = useState(false);
+  // const [categories, setCategories] = useState([]);
 
   const handelOpenCategory = () => {
     setOpenCategory(!openCategory);
@@ -63,6 +54,7 @@ export const Navbar = () => {
       setScrolled(false);
     }
   };
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
   }, []);

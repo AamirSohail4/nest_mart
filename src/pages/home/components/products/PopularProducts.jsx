@@ -13,7 +13,7 @@ export const PopularProducts = () => {
     }
     AllProductShow();
   }, []);
-  console.log(myproduct);
+  // console.log(myproduct);
   return (
     <>
       <div className="product-tabs section-padding position-relative">

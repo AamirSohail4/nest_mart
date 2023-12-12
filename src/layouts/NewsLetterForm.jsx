@@ -22,14 +22,8 @@ export const NewsLetterForm = () => {
                   </h2>
                   <p className="mb-45">
                     Start Your Daily Shopping with{" "}
-                    <span className="text-brand">Nest Mart</span>
+                    <span className="text-brand">MSBOOKS</span>
                   </p>
-                  <form className="form-subcriber d-flex">
-                    <input type="email" placeholder="Your emaill address" />
-                    <button className="btn" type="submit">
-                      Subscribe
-                    </button>
-                  </form>
                 </div>
                 <img src={img1} alt="newsletter" />
               </div>
