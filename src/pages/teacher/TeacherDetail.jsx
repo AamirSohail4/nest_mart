@@ -1,85 +1,105 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { teacher_url } from "../../config/env";
+import { api_url } from "../../config/env";
 import { Link, useParams } from "react-router-dom";
 Link;
 export const TeacherDetail = () => {
-  const { name } = useParams();
-  console.log(name);
-  const [allTeacher, setAllTeacher] = useState();
-  const [teacherDetail, setteacherDetail] = useState();
+  const { strSEOLink } = useParams();
+  const { teacherID } = useParams();
+  console.log(teacherID);
+
+  const [teacher, setTeacher] = useState({});
+  const [teacherDetail, setTeacherDetail] = useState([]);
+  const [publicationData, setPulicationData] = useState([]);
+
   useEffect(() => {
-    async function AllTeacher() {
-      const response = await fetch(teacher_url);
+    async function TeacherDetails() {
+      const response = await fetch(`${teacher_url}
+      &tag=get_teacher_detail&strSEOLink=${strSEOLink}`);
       const teacherData = await response.json();
-      setAllTeacher(teacherData.data.teacher_detail);
-      setteacherDetail(teacherData.data.teacher);
+      const teacher_detail = [];
+      const classes = [];
+      const subjects = [];
+      const institute = [];
+
+      teacherData.data.teacher_detail.forEach((detail) => {
+        if (detail.strType === "Class") {
+          classes.push(detail.strDesc);
+        } else if (detail.strType === "Subject") {
+          subjects.push(detail.strDesc);
+        } else if (detail.strType === "Institute") {
+          institute.push(detail.strDesc);
+        }
+      });
+      teacher_detail.push({ title: "Class", child: classes });
+      teacher_detail.push({ title: "Institute", child: institute });
+      teacher_detail.push({ title: "Subject Expertise", child: subjects });
+      setTeacher(teacherData.data.teacher[0]);
+      setTeacherDetail(teacher_detail);
     }
-    AllTeacher();
+    TeacherDetails();
   }, []);
-  console.log("This is teacher Detail Array=>", teacherDetail);
-  console.log("This Teacher array=>", allTeacher);
+
+  useEffect(() => {
+    return async function ShowPublication() {
+      const response = await fetch(
+        `${api_url}&tag=get_items_web& intSupplierID=${teacherID}`
+      );
+      const respData = await response.json();
+      console.log(respData);
+      setPulicationData(respData.data);
+    };
+  }, []);
+  console.log(publicationData);
   return (
     <>
-      <main className="main" style={{ transform: "none" }}>
-        <div className="page-header mt-30 mb-50">
-          <div className="container">
-            <div className="archive-header">
-              <div className="row align-items-center">
-                <div className="col-xl-12">
-                  <h1 className="mb-15">All Teacher</h1>
-                  <div className="breadcrumb">
-                    <Link to="/" rel="nofollow">
-                      <i className="fi-rs-home mr-5"></i>Home
-                    </Link>
-                    <span></span> Teacher <span></span>
-                  </div>
-                </div>
-              </div>
+      <div className="container mb-30">
+        <div
+          className="archive-header-3 mt-30 mb-80"
+          style={{ background: "#4fa0cf" }}
+        >
+          <div className="archive-header-3-inner">
+            <div className="vendor-logo mr-50">
+              <img src={teacher.strProfilePicture} alt="" />
             </div>
-          </div>
-        </div>
-        <div className="container mb-30" style={{ transform: "none" }}>
-          <div className="row" style={{ transform: "none" }}>
-            <div
-              className="col-lg-6-6
-            "
-            >
-              <div className="row product-grid">
-                {teacherDetail?.map((item) => {
+            <div className="vendor-content text-white">
+              <h3 className="mb-5">
+                <Link to="#" className="text-white">
+                  {teacher.strDesc}
+                </Link>
+              </h3>
+              <div className="change-to-white">{teacher.strProfile}</div>
+              <hr />
+              <div className="row">
+                {teacherDetail?.map((item, index) => {
                   return (
                     <div
-                      key={item.id}
-                      className="col-lg-1-5 col-md-4 col-12 col-sm-6"
-                      id="teacherCard"
+                      className="col-lg-3"
+                      style={{ width: "500px" }}
+                      key={index}
                     >
-                      <Link
-                        to={`/single-product/${item.strDesc}`}
-                        className="product-cart-wrap mb-30"
-                      >
-                        <div className="product-img-action-wrap">
-                          <div className="product-img product-img-zoom">
-                            <Link to={`/single-product/${item.strDesc}`}>
-                              <img src={item.strProfilePicture} />
-                              <img
-                                className="hover-img"
-                                src={item.strProfilePicture}
-                                alt=""
-                              />
-                            </Link>
-                          </div>
-                        </div>
-                        <div className="product-content-wrap">
-                          <h2>
-                            <Link to={`/single-product/${item.strDesc}`}>
-                              {item.strDesc}
-                            </Link>
-                          </h2>
-
-                          <div>
-                            <span className="font-small text-muted"></span>
-                          </div>
-                        </div>
-                      </Link>
+                      <div className="vendor-info text-white mb-15">
+                        <h3 className="mb-5 text-white">
+                          <Link to="#" className="text-white">
+                            {item.title}
+                          </Link>
+                        </h3>
+                        <ul className="font-sm mb-10">
+                          {item.child?.map((subItem, index) => {
+                            return (
+                              <li key={index}>
+                                <img
+                                  className="mr-5"
+                                  src="https://www.msbooks.pk/assets/imgs/theme/icons/icon-hot-white.svg"
+                                  alt=""
+                                />
+                                <strong>{subItem}</strong>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
                     </div>
                   );
                 })}
@@ -87,7 +107,110 @@ export const TeacherDetail = () => {
             </div>
           </div>
         </div>
-      </main>
+        <section className="product-tabs section-padding position-relative">
+          <div className="container">
+            <div
+              className="section-title style-2 wow animate__ animate__fadeIn animated"
+              style={{ visibility: "visible", animationName: "fadeIn" }}
+            >
+              <h3>Publication by Navid Saqib </h3>
+            </div>
+
+            <div className="tab-content" id="myTabContent">
+              <div
+                className="tab-pane fade show active"
+                id="tab-one"
+                role="tabpanel"
+                aria-labelledby="tab-one"
+              >
+                <div className="row product-grid-4">
+                  {Array.isArray(publicationData) ? (
+                    publicationData.map((items, index) => (
+                      <div
+                        key={index}
+                        className="col-lg-1-5 col-md-4 col-12 col-sm-6 "
+                      >
+                        <div
+                          className="product-cart-wrap mb-30 wow animate__ animate__fadeIn animated"
+                          data-wow-delay=".1s"
+                          style={{
+                            visibility: " visible",
+                            animationDelay: "0.1s",
+                            animationName: "fadeIn",
+                          }}
+                        >
+                          <div className="product-img-action-wrap">
+                            <div className="product-img product-img-zoom">
+                              <Link to="">
+                                <img
+                                  className="default-img"
+                                  src={items.strImageThumbnail}
+                                  alt=""
+                                />
+                                <img
+                                  className="hover-img"
+                                  src={items.strImageThumbnail}
+                                  alt=""
+                                />
+                              </Link>
+                            </div>
+                            <div className="product-action-1">
+                              <button
+                                id="wishlist-btn137"
+                                style={{
+                                  border: "none",
+                                  backgroundColor: "white",
+                                }}
+                                data-pid="137"
+                                aria-label="Add To Wishlist"
+                                className="action-btn btnAdd2Wishlist"
+                              >
+                                <i className="fi-rs-heart"></i>
+                              </button>
+                              <Link
+                                aria-label="Quick view"
+                                className="action-btn"
+                                to=""
+                              >
+                                <i className="fi-rs-eye"></i>
+                              </Link>
+                            </div>
+                          </div>
+                          <div className="product-content-wrap">
+                            <div className="product-category">
+                              <Link to="#">{items.strItemCategory}</Link>
+                            </div>
+                            <h2>
+                              <Link to="">{items.strDesc}</Link>
+                            </h2>
+                            <div className="product-card-bottom">
+                              <div className="product-price">
+                                <span>Rs. {items.dblSalePrice}</span>
+                              </div>
+                              <div className="add-cart">
+                                <Link
+                                  className="add add_in_cart"
+                                  data-value="137"
+                                  data-desc="O Level Computer Notes P1 &amp; P2 by Navid Saqib"
+                                >
+                                  <i className="fi-rs-shopping-cart mr-5"></i>
+                                  Add{" "}
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p>Publication data is not an array.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </>
   );
 };

@@ -91,25 +91,14 @@ export const Footer = () => {
               </h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="#">About Us</Link>
+                  <Link to="/about">About Us</Link>
+                </li>
+
+                <li>
+                  <Link to="/privacy-policy">Privacy Policy</Link>
                 </li>
                 <li>
-                  <Link to="#">Delivery Information</Link>
-                </li>
-                <li>
-                  <Link to="#">Privacy Policy</Link>
-                </li>
-                <li>
-                  <Link to="#">Terms &amp; Conditions</Link>
-                </li>
-                <li>
-                  <Link to="#">Contact Us</Link>
-                </li>
-                <li>
-                  <Link to="#">Support Center</Link>
-                </li>
-                <li>
-                  <Link to="#">Careers</Link>
+                  <Link to="/terms">Terms &amp; Conditions</Link>
                 </li>
               </ul>
             </div>
@@ -125,22 +114,19 @@ export const Footer = () => {
               <h4 className="widget-title">Account</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="#">Sign In</Link>
+                  <Link to="/sigin">Sign In</Link>
                 </li>
                 <li>
-                  <Link to="#">View Cart</Link>
+                  <Link to="/shop-cart">View Cart</Link>
                 </li>
                 <li>
-                  <Link to="#">My Wishlist</Link>
+                  <Link to="/shop-wishlist">My Wishlist</Link>
                 </li>
                 <li>
-                  <Link to="#">Track My Order</Link>
+                  <Link to="/account">Track My Order</Link>
                 </li>
                 <li>
-                  <Link to="#">Help Ticket</Link>
-                </li>
-                <li>
-                  <Link to="#">Shipping Details</Link>
+                  <Link to="/account">Shipping Details</Link>
                 </li>
               </ul>
             </div>
@@ -184,19 +170,17 @@ export const Footer = () => {
               <h4 className="widget-title">Out Website</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="#">Teacher</Link>
+                  <Link to="/teacher">Teacher</Link>
                 </li>
                 <li>
-                  <Link to="#">BookShop</Link>
+                  <Link to="/book-Shop">BookShop</Link>
+                </li>
+
+                <li>
+                  <Link to="sigin">Singin</Link>
                 </li>
                 <li>
-                  <Link to="#">About</Link>
-                </li>
-                <li>
-                  <Link to="#">Singin</Link>
-                </li>
-                <li>
-                  <Link to="#">Contact</Link>
+                  <Link to="/contact">Contact</Link>
                 </li>
               </ul>
             </div>

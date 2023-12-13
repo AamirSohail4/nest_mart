@@ -4,18 +4,18 @@ import { Link } from "react-router-dom";
 Link;
 export const Teacher = () => {
   const [allTeacher, setAllTeacher] = useState();
-  const [teacherDetail, setteacherDetail] = useState();
+
   useEffect(() => {
     async function AllTeacher() {
       const response = await fetch(`${teacher_url}
-      &tag=get_teacher_detail`);
+      &tag=get_teachers_web`);
       const teacherData = await response.json();
-      setAllTeacher(teacherData.data.teacher_detail);
-      setteacherDetail(teacherData.data.teacher);
+      // console.log("MyDat======>", teacherData);
+      setAllTeacher(teacherData.data);
     }
     AllTeacher();
   }, []);
-  console.log("This is teacher Detail Array=>", teacherDetail);
+
   console.log("This Teacher array=>", allTeacher);
   return (
     <>
@@ -37,25 +37,36 @@ export const Teacher = () => {
             </div>
           </div>
         </div>
-        <div className="container mb-30" style={{ transform: "none" }}>
-          <div className="row" style={{ transform: "none" }}>
-            <div className="col-lg-5-5">
+        <div className="container mb-30">
+          <div className="row flex-row-reverse">
+            <div className="col-lg-4-5">
+              <div className="shop-product-fillter">
+                <div className="totall-product">
+                  <p>
+                    We found <strong className="text-brand">25</strong> teachers
+                    for you!
+                  </p>
+                </div>
+              </div>
               <div className="row product-grid">
-                {teacherDetail?.map((item) => {
+                {allTeacher?.map((item) => {
                   return (
-                    <div
+                    <Link
+                      to={`/teacher-detail/${item.strSEOLink}/${item.intID}`}
                       key={item.id}
                       className="col-lg-1-5 col-md-4 col-12 col-sm-6"
-                      id="teacherCard"
                     >
-                      <Link
-                        to={`/teacher-detail/${item.strDesc}`}
-                        className="product-cart-wrap mb-30"
-                      >
+                      <div className="product-cart-wrap mb-30">
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
-                            <Link to={`/teacher-detail/${item.strDesc}`}>
-                              <img src={item.strProfilePicture} />
+                            <Link
+                              to={`/teacher-detail/${item.strSEOLink}/${item.intID}`}
+                            >
+                              <img
+                                className="default-img"
+                                src={item.strProfilePicture}
+                                alt=""
+                              />
                               <img
                                 className="hover-img"
                                 src={item.strProfilePicture}
@@ -66,17 +77,15 @@ export const Teacher = () => {
                         </div>
                         <div className="product-content-wrap">
                           <h2>
-                            <Link to={`/teacher-detail/${item.strDesc}`}>
+                            <Link
+                              to={`/teacher-detail/${item.strSEOLink}/${item.intID}`}
+                            >
                               {item.strDesc}
                             </Link>
                           </h2>
-
-                          <div>
-                            <span className="font-small text-muted"></span>
-                          </div>
                         </div>
-                      </Link>
-                    </div>
+                      </div>
+                    </Link>
                   );
                 })}
               </div>

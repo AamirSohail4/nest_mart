@@ -540,113 +540,9 @@ export const Navbar = () => {
                       <Link to="/about">About</Link>
                     </li>
                     <li>
-                      <Link to="shop-grid-right.html">
+                      <Link to="/book-Shop">
                         Shop <i className="fi-rs-angle-down"></i>
                       </Link>
-                      <ul className="sub-menu">
-                        <li>
-                          <Link to="shop-grid-right.html">
-                            Shop Grid – Right Sidebar
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="shop-grid-left.html">
-                            Shop Grid – Left Sidebar
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="shop-list-right.html">
-                            Shop List – Right Sidebar
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="shop-list-left.html">
-                            Shop List – Left Sidebar
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="shop-fullwidth.html">Shop - Wide</Link>
-                        </li>
-                        <li>
-                          <Link to="#">
-                            Single Product <i className="fi-rs-angle-right"></i>
-                          </Link>
-                          <ul className="level-menu">
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Product – Right Sidebar
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-left.html">
-                                Product – Left Sidebar
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-full.html">
-                                Product – No sidebar
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-vendor.html">
-                                Product – Vendor Info
-                              </Link>
-                            </li>
-                          </ul>
-                        </li>
-                        <li>
-                          <Link to="shop-filter.html">Shop – Filter</Link>
-                        </li>
-                        <li>
-                          <Link to="shop-wishlist.html">Shop – Wishlist</Link>
-                        </li>
-                        <li>
-                          <Link to="shop-cart.html">Shop – Cart</Link>
-                        </li>
-                        <li>
-                          <Link to="shop-checkout.html">Shop – Checkout</Link>
-                        </li>
-                        <li>
-                          <Link to="shop-compare.html">Shop – Compare</Link>
-                        </li>
-                        <li>
-                          <Link to="#">
-                            Shop Invoice<i className="fi-rs-angle-right"></i>
-                          </Link>
-                          <ul className="level-menu">
-                            <li>
-                              <Link to="shop-invoice-1.html">
-                                Shop Invoice 1
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-invoice-2.html">
-                                Shop Invoice 2
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-invoice-3.html">
-                                Shop Invoice 3
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-invoice-4.html">
-                                Shop Invoice 4
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-invoice-5.html">
-                                Shop Invoice 5
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-invoice-6.html">
-                                Shop Invoice 6
-                              </Link>
-                            </li>
-                          </ul>
-                        </li>
-                      </ul>
                     </li>
                     <li>
                       <Link to="#">
@@ -825,8 +721,8 @@ export const Navbar = () => {
                       </ul>
                     </li>
                     <li>
-                      <Link to="blog-category-grid.html">
-                        Blog <i className="fi-rs-angle-down"></i>
+                      <Link to="/teacher">
+                        Teacher <i className="fi-rs-angle-down"></i>
                       </Link>
                       <ul className="sub-menu">
                         <li>

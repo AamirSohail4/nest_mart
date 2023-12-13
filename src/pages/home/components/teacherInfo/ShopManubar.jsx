@@ -9,7 +9,7 @@ export const ShopManubar = () => {
           <div className="row">
             <div className="col-lg-1-5 col-md-4 col-12 col-sm-6 mb-md-4 mb-xl-0"></div>
             <div className="col-lg-1-5 col-md-4 col-12 col-sm-6 mb-md-4 mb-xl-0">
-              <Link to="/teacher" className="product-cart-wrap hover-up">
+              <div className="product-cart-wrap hover-up">
                 <div className="product-img-action-wrap">
                   <div className="product-img product-img-zoom">
                     <Link to="/teacher" tabIndex="0">
@@ -20,21 +20,21 @@ export const ShopManubar = () => {
                   <div className="product-action-1"></div>
                   <div className="product-badges product-badges-position product-badges-mrg"></div>
                 </div>
-                <div className="product-content-wrap">
+                <div className="product-content-wrap" id="productContent">
                   <h2>
                     <Link to="/teacher" tabIndex="0">
                       Teachers
                     </Link>
                   </h2>
                 </div>
-              </Link>
+              </div>
             </div>
             <div className="col-lg-1-5 col-md-4 col-12 col-sm-6 mb-md-4 mb-xl-0"></div>
             <div className="col-lg-1-5 col-md-4 col-12 col-sm-6 mb-md-4 mb-xl-0">
               <div className="product-cart-wrap hover-up">
                 <div className="product-img-action-wrap">
                   <div className="product-img product-img-zoom">
-                    <Link to="shop-product-right.html" tabIndex="0">
+                    <Link to="/book-Shop" tabIndex="0">
                       <img className="default-img" src={img2} alt="" />
                       <img className="hover-img" src={img2} alt="" />
                     </Link>
@@ -42,9 +42,9 @@ export const ShopManubar = () => {
                   <div className="product-action-1"></div>
                   <div className="product-badges product-badges-position product-badges-mrg"></div>
                 </div>
-                <div className="product-content-wrap">
+                <div className="product-content-wrap" id="productContent">
                   <h2>
-                    <Link to="shop-product-right.html" tabIndex="0">
+                    <Link to="/book-Shop" tabIndex="0">
                       Authorized Book Shops
                     </Link>
                   </h2>

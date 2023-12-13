@@ -21,13 +21,14 @@ import { QuickView } from "../pages/cart/QuickView";
 import { ShopManubar } from "../pages/home/components/teacherInfo/ShopManubar";
 import { Teacher } from "../pages/teacher/Teacher";
 import { TeacherDetail } from "../pages/teacher/TeacherDetail";
+import { BookShop } from "../pages/shop/BookShop";
 
 export const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<FrontendLayout />}>
         <Route index element={<Home />} />
-        <Route path="single-product/:seoLink" element={<SingleProduct />} />
+        <Route path="single-product/:seoLink/:id" element={<SingleProduct />} />
         <Route path="shop-cart" element={<ShopCart />} />
         <Route path="shop-wishlist" element={<ShopWishlist />} />
         <Route path="shop-compare" element={<ShopCompare />} />
@@ -46,7 +47,11 @@ export const Router = () => {
         <Route path="shopmanubar" element={<ShopManubar />} />
         <Route path="teacher" element={<Teacher />} />
         <Route path="teacher-detail" element={<TeacherDetail />} />
-        <Route path="teacher-detail/:name" element={<TeacherDetail />} />
+        <Route
+          path="teacher-detail/:strSEOLink/:teacherID"
+          element={<TeacherDetail />}
+        />
+        <Route path="book-Shop" element={<BookShop />} />
       </Route>
     </Routes>
   );

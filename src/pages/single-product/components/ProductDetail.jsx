@@ -1,15 +1,22 @@
 import Slider from "react-slick";
 import Zoom from "react-img-zoom-gdn";
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { api_url } from "../../../config/env";
+import { relateProd_url } from "../../../config/env";
+
 export const ProductDetail = () => {
+  const navigate = useNavigate();
+  console.log(navigate);
   const [cartItems, setCartItems] = useState([]);
   const [singleproduct, setSingleProduct] = useState({});
+  // const [itemId, setItemId] = useState();
+  // console.log("My ApI========>", relateProd_url);
 
-  const [att, setAtt] = useState();
-  const { seoLink } = useParams();
-  // console.log("This is View =>", seoLink);
+  const [relProduct, setRelatedProduct] = useState();
+  const { seoLink, id } = useParams();
+
+  // console.log("This is View of Id =>", id);
 
   const handelAddToCart = () => {
     setCartItems(cartItems);
@@ -38,7 +45,18 @@ export const ProductDetail = () => {
     }
     SingleProductShow();
   }, [seoLink]);
-
+  // console.log(singleproduct.intID);
+  useEffect(() => {
+    async function RelatedProductsShow() {
+      const response = await fetch(
+        `${relateProd_url}&tag=get_related_items&intItemID=1500`
+      );
+      const myReleted = await response.json();
+      setRelatedProduct(myReleted.data);
+    }
+    RelatedProductsShow();
+  }, [id]);
+  console.log("Related Product=>", relProduct);
   // useEffect(() => {
   //   async function RelatedProducts() {
   //     const response = await fetch(
@@ -218,10 +236,10 @@ export const ProductDetail = () => {
               </ul>
               <ul className="float-start">
                 <li className="mb-5">
-                  Syllabus: :<Link to="#">{att}</Link>
+                  Syllabus: :<Link to="#"></Link>
                 </li>
                 <li className="mb-5">
-                  Banding: {singleproduct.intID}
+                  Banding:
                   <Link to="#" rel="Binding">
                     {singleproduct?.Binding}
                   </Link>
@@ -243,258 +261,81 @@ export const ProductDetail = () => {
         </div>
         <div className="col-12">
           <div className="row related-products">
-            <div className="col-lg-3 col-md-4 col-12 col-sm-6">
-              <div className="product-cart-wrap hover-up">
-                <div className="product-img-action-wrap">
-                  <div className="product-img product-img-zoom">
-                    <Link to="shop-product-right.html" tabIndex="0">
-                      <img
-                        className="default-img"
-                        src="assets/imgs/shop/product-2-1.jpg"
-                        alt=""
-                      />
-                      <img
-                        className="hover-img"
-                        src="assets/imgs/shop/product-2-2.jpg"
-                        alt=""
-                      />
-                    </Link>
-                  </div>
-                  <div className="product-action-1">
-                    <Link
-                      aria-label="Quick view"
-                      className="action-btn small hover-up"
-                      data-bs-toggle="modal"
-                      data-bs-target="#quickViewModal"
-                    >
-                      <i className="fi-rs-search"></i>
-                    </Link>
-                    <Link
-                      aria-label="Add To Wishlist"
-                      className="action-btn small hover-up"
-                      to="shop-wishlist.html"
-                      tabIndex="0"
-                    >
-                      <i className="fi-rs-heart"></i>
-                    </Link>
-                    <Link
-                      aria-label="Compare"
-                      className="action-btn small hover-up"
-                      to="shop-compare.html"
-                      tabIndex="0"
-                    >
-                      <i className="fi-rs-shuffle"></i>
-                    </Link>
-                  </div>
-                  <div className="product-badges product-badges-position product-badges-mrg">
-                    <span className="hot">Hot</span>
-                  </div>
-                </div>
-                <div className="product-content-wrap">
-                  <h2>
-                    <Link to="shop-product-right.html" tabIndex="0">
-                      Ulstra Bass Headphone
-                    </Link>
-                  </h2>
-                  <div className="rating-result" title="90%">
-                    <span> </span>
-                  </div>
-                  <div className="product-price">
-                    <span>$238.85 </span>
-                    <span className="old-price">$245.8</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 col-md-4 col-12 col-sm-6">
-              <div className="product-cart-wrap hover-up">
-                <div className="product-img-action-wrap">
-                  <div className="product-img product-img-zoom">
-                    <Link to="shop-product-right.html" tabIndex="0">
-                      <img
-                        className="default-img"
-                        src="assets/imgs/shop/product-3-1.jpg"
-                        alt=""
-                      />
-                      <img
-                        className="hover-img"
-                        src="assets/imgs/shop/product-4-2.jpg"
-                        alt=""
-                      />
-                    </Link>
-                  </div>
-                  <div className="product-action-1">
-                    <Link
-                      aria-label="Quick view"
-                      className="action-btn small hover-up"
-                      data-bs-toggle="modal"
-                      data-bs-target="#quickViewModal"
-                    >
-                      <i className="fi-rs-search"></i>
-                    </Link>
-                    <Link
-                      aria-label="Add To Wishlist"
-                      className="action-btn small hover-up"
-                      to="shop-wishlist.html"
-                      tabIndex="0"
-                    >
-                      <i className="fi-rs-heart"></i>
-                    </Link>
-                    <Link
-                      aria-label="Compare"
-                      className="action-btn small hover-up"
-                      to="shop-compare.html"
-                      tabIndex="0"
-                    >
-                      <i className="fi-rs-shuffle"></i>
-                    </Link>
-                  </div>
-                  <div className="product-badges product-badges-position product-badges-mrg">
-                    <span className="sale">-12%</span>
+            {relProduct?.map((item) => {
+              return (
+                <div
+                  key={item.id}
+                  className="col-lg-3 col-md-4 col-12 col-sm-6"
+                  // onClick={() => {
+                  //   return navigate(`/single-product/${item.id}`, {
+                  //     replace: true,
+                  //   });
+                  // }}
+                >
+                  <div className="product-cart-wrap hover-up">
+                    <div className="product-img-action-wrap">
+                      <div className="product-img product-img-zoom">
+                        <Link to="/" tabIndex="0">
+                          <img
+                            className="default-img"
+                            src={item.strImage}
+                            alt=""
+                          />
+                          <img
+                            className="hover-img"
+                            src={item.strImageThumbnail}
+                            alt=""
+                          />
+                        </Link>
+                      </div>
+                      <div className="product-action-1">
+                        <Link
+                          aria-label="Quick view"
+                          className="action-btn small hover-up"
+                          data-bs-toggle="modal"
+                          data-bs-target="#quickViewModal"
+                        >
+                          <i className="fi-rs-search"></i>
+                        </Link>
+                        <Link
+                          aria-label="Add To Wishlist"
+                          className="action-btn small hover-up"
+                          to="/shop-wishlist"
+                          tabIndex="0"
+                        >
+                          <i className="fi-rs-heart"></i>
+                        </Link>
+                      </div>
+                      <div className="product-badges product-badges-position product-badges-mrg"></div>
+                    </div>
+                    <div className="product-content-wrap">
+                      <div className="product-category">
+                        <Link to="#">{singleproduct?.Grade}</Link>
+                      </div>
+                      <h2>
+                        <Link to="/">{item.strItemDesc}</Link>
+                      </h2>
+                      <div className="product-card-bottom">
+                        <div className="product-price">
+                          <span>Rs. {item.dblItemSalesPrice}</span>
+                        </div>
+                        <div className="add-cart">
+                          <button
+                            id="feature-prod-btn1484"
+                            type="button"
+                            className="btn btn-heading add_in_cart"
+                            data-value="1484"
+                          >
+                            <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
+                          </button>
+                          <div className="overlay"></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="product-content-wrap">
-                  <h2>
-                    <Link to="shop-product-right.html" tabIndex="0">
-                      Smart Bluetooth Speaker
-                    </Link>
-                  </h2>
-                  <div className="rating-result" title="90%">
-                    <span> </span>
-                  </div>
-                  <div className="product-price">
-                    <span>$138.85 </span>
-                    <span className="old-price">$145.8</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 col-md-4 col-12 col-sm-6">
-              <div className="product-cart-wrap hover-up">
-                <div className="product-img-action-wrap">
-                  <div className="product-img product-img-zoom">
-                    <Link to="shop-product-right.html" tabIndex="0">
-                      <img
-                        className="default-img"
-                        src="assets/imgs/shop/product-4-1.jpg"
-                        alt=""
-                      />
-                      <img
-                        className="hover-img"
-                        src="assets/imgs/shop/product-4-2.jpg"
-                        alt=""
-                      />
-                    </Link>
-                  </div>
-                  <div className="product-action-1">
-                    <Link
-                      aria-label="Quick view"
-                      className="action-btn small hover-up"
-                      data-bs-toggle="modal"
-                      data-bs-target="#quickViewModal"
-                    >
-                      <i className="fi-rs-search"></i>
-                    </Link>
-                    <Link
-                      aria-label="Add To Wishlist"
-                      className="action-btn small hover-up"
-                      to="shop-wishlist.html"
-                      tabIndex="0"
-                    >
-                      <i className="fi-rs-heart"></i>
-                    </Link>
-                    <Link
-                      aria-label="Compare"
-                      className="action-btn small hover-up"
-                      to="shop-compare.html"
-                      tabIndex="0"
-                    >
-                      <i className="fi-rs-shuffle"></i>
-                    </Link>
-                  </div>
-                  <div className="product-badges product-badges-position product-badges-mrg">
-                    <span className="new">New</span>
-                  </div>
-                </div>
-                <div className="product-content-wrap">
-                  <h2>
-                    <Link to="shop-product-right.html" tabIndex="0">
-                      HomeSpeak 12UEA Goole
-                    </Link>
-                  </h2>
-                  <div className="rating-result" title="90%">
-                    <span> </span>
-                  </div>
-                  <div className="product-price">
-                    <span>$738.85 </span>
-                    <span className="old-price">$1245.8</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-3 col-md-4 col-12 col-sm-6 d-lg-block d-none">
-              <div className="product-cart-wrap hover-up mb-0">
-                <div className="product-img-action-wrap">
-                  <div className="product-img product-img-zoom">
-                    <Link to="shop-product-right.html" tabIndex="0">
-                      <img
-                        className="default-img"
-                        src="assets/imgs/shop/product-5-1.jpg"
-                        alt=""
-                      />
-                      <img
-                        className="hover-img"
-                        src="assets/imgs/shop/product-3-2.jpg"
-                        alt=""
-                      />
-                    </Link>
-                  </div>
-                  <div className="product-action-1">
-                    <Link
-                      aria-label="Quick view"
-                      className="action-btn small hover-up"
-                      data-bs-toggle="modal"
-                      data-bs-target="#quickViewModal"
-                    >
-                      <i className="fi-rs-search"></i>
-                    </Link>
-                    <Link
-                      aria-label="Add To Wishlist"
-                      className="action-btn small hover-up"
-                      to="shop-wishlist.html"
-                      tabIndex="0"
-                    >
-                      <i className="fi-rs-heart"></i>
-                    </Link>
-                    <Link
-                      aria-label="Compare"
-                      className="action-btn small hover-up"
-                      to="shop-compare.html"
-                      tabIndex="0"
-                    >
-                      <i className="fi-rs-shuffle"></i>
-                    </Link>
-                  </div>
-                  <div className="product-badges product-badges-position product-badges-mrg">
-                    <span className="hot">Hot</span>
-                  </div>
-                </div>
-                <div className="product-content-wrap">
-                  <h2>
-                    <Link to="shop-product-right.html" tabIndex="0">
-                      Dadua Camera 4K 2021EF
-                    </Link>
-                  </h2>
-                  <div className="rating-result" title="90%">
-                    <span> </span>
-                  </div>
-                  <div className="product-price">
-                    <span>$89.8 </span>
-                    <span className="old-price">$98.8</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>

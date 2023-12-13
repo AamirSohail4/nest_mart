@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-
 import { api_url } from "../../../../config/env";
 import { useEffect, useState } from "react";
+
 export const PopularProducts = () => {
   const [myproduct, setMyProduct] = useState([]);
   useEffect(() => {
@@ -30,10 +30,10 @@ export const PopularProducts = () => {
           </div>
           <div className="tab-content" id="myTabContent">
             <div className="row product-grid-4">
-              {myproduct?.map((item) => {
+              {myproduct?.map((item, index) => {
                 return (
                   <div
-                    key={item.id}
+                    key={index}
                     className="col-lg-1-5 col-md-4 col-12 col-sm-6"
                   >
                     <div
@@ -47,7 +47,9 @@ export const PopularProducts = () => {
                     >
                       <div className="product-img-action-wrap">
                         <div className="product-img product-img-zoom">
-                          <Link to={`single-product/${item.strSEOLink}`}>
+                          <Link
+                            to={`/single-product/${item.strSEOLink}/${item.intID}`}
+                          >
                             <img
                               className="default-img"
                               src={item.strImageThumbnail}
@@ -101,7 +103,6 @@ export const PopularProducts = () => {
                             ></div>
                           </div>
                           <span className="font-small ml-5 text-muted">
-                            {" "}
                             (3.5)
                           </span>
                         </div>
