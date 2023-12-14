@@ -28,7 +28,7 @@ export const Router = () => {
     <Routes>
       <Route path="/" element={<FrontendLayout />}>
         <Route index element={<Home />} />
-        <Route path="single-product/:seoLink/:id" element={<SingleProduct />} />
+        <Route path="single-product/:seoLink" element={<SingleProduct />} />
         <Route path="shop-cart" element={<ShopCart />} />
         <Route path="shop-wishlist" element={<ShopWishlist />} />
         <Route path="shop-compare" element={<ShopCompare />} />
@@ -47,10 +47,7 @@ export const Router = () => {
         <Route path="shopmanubar" element={<ShopManubar />} />
         <Route path="teacher" element={<Teacher />} />
         <Route path="teacher-detail" element={<TeacherDetail />} />
-        <Route
-          path="teacher-detail/:strSEOLink/:teacherID"
-          element={<TeacherDetail />}
-        />
+        <Route path="teacher-detail/:strSEOLink" element={<TeacherDetail />} />
         <Route path="book-Shop" element={<BookShop />} />
       </Route>
     </Routes>

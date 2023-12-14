@@ -52,16 +52,14 @@ export const Teacher = () => {
                 {allTeacher?.map((item) => {
                   return (
                     <Link
-                      to={`/teacher-detail/${item.strSEOLink}/${item.intID}`}
+                      to={`/teacher-detail/${item.strSEOLink}`}
                       key={item.id}
                       className="col-lg-1-5 col-md-4 col-12 col-sm-6"
                     >
                       <div className="product-cart-wrap mb-30">
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
-                            <Link
-                              to={`/teacher-detail/${item.strSEOLink}/${item.intID}`}
-                            >
+                            <Link to={`/teacher-detail/${item.strSEOLink}`}>
                               <img
                                 className="default-img"
                                 src={item.strProfilePicture}

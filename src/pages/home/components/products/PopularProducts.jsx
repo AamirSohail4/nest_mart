@@ -47,9 +47,7 @@ export const PopularProducts = () => {
                     >
                       <div className="product-img-action-wrap">
                         <div className="product-img product-img-zoom">
-                          <Link
-                            to={`/single-product/${item.strSEOLink}/${item.intID}`}
-                          >
+                          <Link to={`/single-product/${item.strSEOLink}`}>
                             <img
                               className="default-img"
                               src={item.strImageThumbnail}

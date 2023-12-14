@@ -46,14 +46,12 @@ export const ProductsGrid = () => {
                       className="col-lg-1-5 col-md-4 col-12 col-sm-6"
                     >
                       <Link
-                        to={`/single-product/${item.strSEOLink}/${item.intID}`}
+                        to={`/single-product/${item.strSEOLink}`}
                         className="product-cart-wrap mb-30"
                       >
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
-                            <Link
-                              to={`/single-product/${item.strSEOLink}/${item.intID}`}
-                            >
+                            <Link to={`/single-product/${item.strSEOLink}`}>
                               <img src={item.strImageThumbnail} />
                               <img
                                 className="hover-img"
@@ -83,16 +81,12 @@ export const ProductsGrid = () => {
                         </div>
                         <div className="product-content-wrap">
                           <div className="product-category">
-                            <Link
-                              to={`/single-product/${item.strSEOLink}/${item.intID}`}
-                            >
+                            <Link to={`/single-product/${item.strSEOLink}`}>
                               {item.strItemCategory}
                             </Link>
                           </div>
                           <h2>
-                            <Link
-                              to={`/single-product/${item.strSEOLink}/${item.intID}`}
-                            >
+                            <Link to={`/single-product/${item.strSEOLink}`}>
                               {item.strDesc}
                             </Link>
                           </h2>
@@ -114,7 +108,7 @@ export const ProductsGrid = () => {
                             <div className="add-cart">
                               <Link
                                 className="add"
-                                to={`/single-product/${item.strSEOLink}/${item.intID}`}
+                                to={`/single-product/${item.strSEOLink}`}
                               >
                                 <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                               </Link>

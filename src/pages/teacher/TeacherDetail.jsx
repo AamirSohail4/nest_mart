@@ -6,8 +6,6 @@ import { Link, useParams } from "react-router-dom";
 Link;
 export const TeacherDetail = () => {
   const { strSEOLink } = useParams();
-  const { teacherID } = useParams();
-  console.log(teacherID);
 
   const [teacher, setTeacher] = useState({});
   const [teacherDetail, setTeacherDetail] = useState([]);
@@ -41,16 +39,16 @@ export const TeacherDetail = () => {
     TeacherDetails();
   }, []);
 
-  useEffect(() => {
-    return async function ShowPublication() {
-      const response = await fetch(
-        `${api_url}&tag=get_items_web& intSupplierID=${teacherID}`
-      );
-      const respData = await response.json();
-      console.log(respData);
-      setPulicationData(respData.data);
-    };
-  }, []);
+  // useEffect(() => {
+  //   return async function ShowPublication() {
+  //     const response = await fetch(
+  //       `${api_url}&tag=get_items_web& intSupplierID=${teacherID}`
+  //     );
+  //     const respData = await response.json();
+  //     console.log(respData);
+  //     setPulicationData(respData.data);
+  //   };
+  // }, []);
   console.log(publicationData);
   return (
     <>
