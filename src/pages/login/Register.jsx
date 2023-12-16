@@ -1,4 +1,3 @@
-import { Breadcrumb } from "../../components/breadcrumb/Breadcrumb";
 import img1 from "../../assets/imgs/theme/icons/logo-facebook.svg";
 import img2 from "../../assets/imgs/theme/icons/logo-google.svg";
 import img3 from "../../assets/imgs/theme/icons/logo-apple.svg";
@@ -6,7 +5,6 @@ import img3 from "../../assets/imgs/theme/icons/logo-apple.svg";
 export const Register = () => {
   return (
     <>
-      <Breadcrumb />
       <main className="main pages">
         <div className="page-content pt-150 pb-150">
           <div className="container">

@@ -1,6 +1,22 @@
 import img1 from "../assets/imgs/banner/banner-9.png";
 
 export const NewsLetterForm = () => {
+  // const [webText, setWebText] = useState();
+  // const [bannerText, setbannerText] = useState();
+
+  // useEffect(() => {
+  //   async function TextDisplay() {
+  //     const response = await fetch(
+  //       `${bannerText_url}&tag=get_webtext_content&intID=15`
+  //     );
+  //     const teacherData = await response.json();
+  //     // console.log("MyDat======>", teacherData);
+  //     setWebText(teacherData.data[0].strText);
+  //     setbannerText(teacherData.data[0].strText);
+  //   }
+  //   TextDisplay();
+  // }, []);
+  // console.log("-This is Banner WebTex-===>", webText);
   return (
     <>
       <section
@@ -22,14 +38,8 @@ export const NewsLetterForm = () => {
                   </h2>
                   <p className="mb-45">
                     Start Your Daily Shopping with{" "}
-                    <span className="text-brand">Nest Mart</span>
+                    <span className="text-brand">MSBOOKS</span>
                   </p>
-                  <form className="form-subcriber d-flex">
-                    <input type="email" placeholder="Your emaill address" />
-                    <button className="btn" type="submit">
-                      Subscribe
-                    </button>
-                  </form>
                 </div>
                 <img src={img1} alt="newsletter" />
               </div>

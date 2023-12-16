@@ -1,16 +1,11 @@
-import Marquee from "react-fast-marquee";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import img1 from "../assets/imgs/theme/flag-fr.png";
-import img2 from "../assets/imgs/theme/flag-dt.png";
-import img3 from "../assets/imgs/theme/flag-ru.png";
-import logo from "../assets/imgs/theme/logo.svg";
-import img4 from "../assets/imgs/theme/icons/icon-compare.svg";
 import img5 from "../assets/imgs/theme/icons/icon-heart.svg";
 import img6 from "../assets/imgs/theme/icons/icon-cart.svg";
 import img7 from "../assets/imgs/shop/thumbnail-3.jpg";
 import img8 from "../assets/imgs/shop/thumbnail-2.jpg";
 import img9 from "../assets/imgs/theme/icons/icon-user.svg";
-import img10 from "../assets/imgs/theme/logo.svg";
+import img10 from "../assets/imgs/theme/msbooks_logo.png";
 import img11 from "../assets/imgs/theme/icons/category-1.svg";
 import img12 from "../assets/imgs/theme/icons/category-2.svg";
 import img13 from "../assets/imgs/theme/icons/category-3.svg";
@@ -25,17 +20,58 @@ import img21 from "../assets/imgs/theme/icons/icon-1.svg";
 import img22 from "../assets/imgs/theme/icons/icon-2.svg";
 import img23 from "../assets/imgs/theme/icons/icon-3.svg";
 import img24 from "../assets/imgs/theme/icons/icon-4.svg";
-import img25 from "../assets/imgs/theme/icons/icon-hot.svg";
-import img26 from "../assets/imgs/banner/banner-menu.png";
 import img27 from "../assets/imgs/theme/icons/icon-headphone.svg";
 import img28 from "../assets/imgs/theme/icons/icon-cart.svg";
 import img29 from "../assets/imgs/shop/thumbnail-3.jpg";
 import img30 from "../assets/imgs/shop/thumbnail-4.jpg";
 import img31 from "../assets/imgs/shop/thumbnail-4.jpg";
-import { useState, useEffect } from "react";
+import { api_url } from "../config/env";
+import { relateProd_url } from "../config/env";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+
+  const [searchBarCategory, setSearchBarCategory] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  // const [mydata, setMydata] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Function Perform on Click and Fetch data.
+  const handleSearchButtonClick = async () => {
+    console.log("search ===>", searchQuery);
+    try {
+      const response = await fetch(
+        `${relateProd_url}&tag=get_items_web&intCategoryID=${selectedCategoryId}&strSearch=${searchQuery}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const myQueryData = await response.json();
+      console.log("my data==>", myQueryData);
+
+      // setMydata(myQueryData.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  // Function for Selected Option .
+  const handleCategoryChange = (event) => {
+    const selectedId = event.target.value;
+    setSelectedCategoryId(selectedId === "all" ? "" : parseInt(selectedId, 10));
+  };
+
+  async function SearchBarCategory() {
+    const response = await fetch(`${api_url}&tag=get_category_web`);
+    const categoryData = await response.json();
+    setSearchBarCategory(categoryData.data);
+  }
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -45,9 +81,12 @@ export const Navbar = () => {
       setScrolled(false);
     }
   };
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
+    SearchBarCategory();
   }, []);
+
   return (
     <header className="header-area header-style-1 header-height-2">
       <div className="mobile-promotion">
@@ -63,36 +102,23 @@ export const Navbar = () => {
               <div className="header-info">
                 <ul>
                   <li>
-                    <Link to="page-about.htlm">About Us</Link>
+                    <Link to="/about">About Us</Link>
                   </li>
                   <li>
-                    <Link to="page-account.html">My Account</Link>
+                    <Link to="/myacount">My Account</Link>
                   </li>
                   <li>
-                    <Link to="shop-wishlist.html">Wishlist</Link>
+                    <Link to="/shop-wishlist">Wishlist</Link>
                   </li>
                   <li>
-                    <Link to="shop-order.html">Order Tracking</Link>
+                    <Link to="#">Order Tracking</Link>
                   </li>
                 </ul>
               </div>
             </div>
             <div className="col-xl-6 col-lg-4">
               <div className="text-center">
-                <div id="news-flash" className="d-inline-block">
-                  <ul>
-                    <Marquee>
-                      100% Secure delivery without contacting the courier Supper
-                      Value Deals - Save more with coupons Trendy 25silver
-                      jewelry, save up 35% off today
-                    </Marquee>
-                  </ul>
-                  {/* <ul>
-                    <li>100% Secure delivery without contacting the courier</li>
-                    <li>Supper Value Deals - Save more with coupons</li>
-                    <li>Trendy 25silver jewelry, save up 35% off today</li>
-                  </ul> */}
-                </div>
+                <div id="news-flash" className="d-inline-block"></div>
               </div>
             </div>
             <div className="col-xl-3 col-lg-4">
@@ -100,9 +126,9 @@ export const Navbar = () => {
                 <ul>
                   <li>
                     Need help? Call Us:{" "}
-                    <strong className="text-brand"> + 1800 900</strong>
+                    <strong className="text-brand"> + +92-42-35774780</strong>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link className="language-dropdown-active" href="#">
                       English <i className="fi-rs-angle-small-down"></i>
                     </Link>
@@ -128,7 +154,7 @@ export const Navbar = () => {
                     </ul>
                   </li>
                   <li>
-                    <Link className="language-dropdown-active" href="#">
+                    <Link className="language-dropdown-active" to="#">
                       USD <i className="fi-rs-angle-small-down"></i>
                     </Link>
                     <ul className="language-dropdown">
@@ -151,7 +177,7 @@ export const Navbar = () => {
                         </Link>
                       </li>
                     </ul>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>
@@ -162,75 +188,54 @@ export const Navbar = () => {
         <div className="container">
           <div className="header-wrap">
             <div className="logo logo-width-1">
-              <Link to="index.html">
-                <img src={logo} alt="logo" />
+              <Link to="/">
+                <img src={img10} alt="logo" />
               </Link>
             </div>
             <div className="header-right">
               <div className="search-style-2">
-                <form action="#">
-                  <select className="select-active">
-                    <option>All Categories</option>
-                    <option>Milks and Dairies</option>
-                    <option>Wines & Alcohol</option>
-                    <option>Clothing & Beauty</option>
-                    <option>Pet Foods & Toy</option>
-                    <option>Fast food</option>
-                    <option>Baking material</option>
-                    <option>Vegetables</option>
-                    <option>Fresh Seafood</option>
-                    <option>Noodles & Rice</option>
-                    <option>Ice cream</option>
+                <form>
+                  <select
+                    value={selectedCategoryId}
+                    onChange={handleCategoryChange}
+                  >
+                    <option value="all">All Categories</option>
+                    {searchBarCategory?.map((item, index) => {
+                      return (
+                        <option key={index} value={item.intID}>
+                          {item.strDesc}
+                        </option>
+                      );
+                    })}
                   </select>
-                  <input type="text" placeholder="Search for items..." />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={handleInputChange}
+                  />
+                  <button type="button" onClick={handleSearchButtonClick}>
+                    Search
+                  </button>
                 </form>
               </div>
               <div className="header-action-right">
                 <div className="header-action-2">
-                  <div className="search-location">
-                    <form action="#">
-                      <select className="select-active">
-                        <option>Your Location</option>
-                        <option>Alabama</option>
-                        <option>Alaska</option>
-                        <option>Arizona</option>
-                        <option>Delaware</option>
-                        <option>Florida</option>
-                        <option>Georgia</option>
-                        <option>Hawaii</option>
-                        <option>Indiana</option>
-                        <option>Maryland</option>
-                        <option>Nevada</option>
-                        <option>New Jersey</option>
-                        <option>New Mexico</option>
-                        <option>New York</option>
-                      </select>
-                    </form>
-                  </div>
+                  <div className="header-action-icon-2"></div>
                   <div className="header-action-icon-2">
-                    <Link to="shop-compare.html">
-                      <img className="svgInject" alt="Nest" src={img4} />
-                      <span className="pro-count blue">3</span>
-                    </Link>
-                    <Link to="shop-compare.html">
-                      <span className="lable ml-0">Compare</span>
-                    </Link>
-                  </div>
-                  <div className="header-action-icon-2">
-                    <Link to="shop-wishlist.html">
+                    <Link to="/shop-wishlist">
                       <img className="svgInject" alt="Nest" src={img5} />
                       <span className="pro-count blue">6</span>
                     </Link>
-                    <Link to="shop-wishlist.html">
+                    <Link to="/shop-wishlist">
                       <span className="lable">Wishlist</span>
                     </Link>
                   </div>
                   <div className="header-action-icon-2">
-                    <Link className="mini-cart-icon" href="shop-cart.html">
+                    <Link className="mini-cart-icon" href="/shop-cart">
                       <img alt="Nest" src={img6} />
                       <span className="pro-count blue">2</span>
                     </Link>
-                    <Link to="shop-cart.html">
+                    <Link to="/shop-cart">
                       <span className="lable">Cart</span>
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2">
@@ -287,52 +292,52 @@ export const Navbar = () => {
                           </h4>
                         </div>
                         <div className="shopping-cart-button">
-                          <Link to="shop-cart.html" className="outline">
+                          <Link to="/shop-cart" className="outline">
                             View cart
                           </Link>
-                          <Link to="shop-checkout.html">Checkout</Link>
+                          <Link to="/shop-checkout">Checkout</Link>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="header-action-icon-2">
-                    <Link to="page-account.html">
+                    <Link to="/myacount">
                       <img className="svgInject" alt="Nest" src={img9} />
                     </Link>
-                    <Link to="page-account.html">
+                    <Link to="/myacount">
                       <span className="lable ml-0">Account</span>
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                       <ul>
                         <li>
-                          <Link to="page-account.html">
+                          <Link to="/myacount">
                             <i className="fi fi-rs-user mr-10"></i>My Account
                           </Link>
                         </li>
                         <li>
-                          <Link to="page-account.html">
+                          <Link to="/myacount">
                             <i className="fi fi-rs-location-alt mr-10"></i>Order
                             Tracking
                           </Link>
                         </li>
                         <li>
-                          <Link to="page-account.html">
+                          <Link to="/myacount">
                             <i className="fi fi-rs-label mr-10"></i>My Voucher
                           </Link>
                         </li>
                         <li>
-                          <Link to="shop-wishlist.html">
+                          <Link to="/shop-wishlist">
                             <i className="fi fi-rs-heart mr-10"></i>My Wishlist
                           </Link>
                         </li>
                         <li>
-                          <Link to="page-account.html">
+                          <Link to="/myacount">
                             <i className="fi fi-rs-settings-sliders mr-10"></i>
                             Setting
                           </Link>
                         </li>
                         <li>
-                          <Link to="page-login.html">
+                          <Link to="/login">
                             <i className="fi fi-rs-sign-out mr-10"></i>Sign out
                           </Link>
                         </li>
@@ -359,31 +364,23 @@ export const Navbar = () => {
             </div>
             <div className="header-nav d-none d-lg-flex">
               <div className="main-categori-wrap d-none d-lg-block">
-                <Link className="categories-button-active" href="#">
-                  <span className="fi-rs-apps"></span>{" "}
-                  <span className="et">Browse</span> All Categories
-                  <i className="fi-rs-angle-down"></i>
-                </Link>
-                <div className="categories-dropdown-wrap categories-dropdown-active-large font-heading">
+                <div className="categories-dropdown-wrap categories-dropdown-active-large font-heading ">
                   <div className="d-flex categori-dropdown-inner">
                     <ul>
                       <li>
                         <Link to="shop-grid-right.html">
-                          {" "}
                           <img src={img11} alt="" />
                           Milks and Dairies
                         </Link>
                       </li>
                       <li>
                         <Link to="shop-grid-right.html">
-                          {" "}
                           <img src={img12} alt="" />
                           Clothing & beauty
                         </Link>
                       </li>
                       <li>
                         <Link to="shop-grid-right.html">
-                          {" "}
                           <img src={img13} alt="" />
                           Pet Foods & Toy
                         </Link>
@@ -441,7 +438,7 @@ export const Navbar = () => {
                       </li>
                     </ul>
                   </div>
-                  <div className="more_slide_open" style={{ display: "none" }}>
+                  <div className="more_slide_ope">
                     <div className="d-flex categori-dropdown-inner">
                       <ul>
                         <li>
@@ -486,146 +483,18 @@ export const Navbar = () => {
               <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                 <nav>
                   <ul>
-                    <li className="hot-deals">
-                      <img src={img25} alt="hot deals" />
-                      <Link to="shop-grid-right.html">Hot Deals</Link>
-                    </li>
                     <li>
-                      <Link className="active" href="index.html">
-                        Home <i className="fi-rs-angle-down"></i>
+                      <Link className="active" to="/">
+                        Home
                       </Link>
-                      <ul className="sub-menu">
-                        <li>
-                          <Link to="index.html">Home 1</Link>
-                        </li>
-                        <li>
-                          <Link to="index-2.html">Home 2</Link>
-                        </li>
-                        <li>
-                          <Link to="index-3.html">Home 3</Link>
-                        </li>
-                        <li>
-                          <Link to="index-4.html">Home 4</Link>
-                        </li>
-                        <li>
-                          <Link to="index-5.html">Home 5</Link>
-                        </li>
-                        <li>
-                          <Link to="index-6.html">Home 6</Link>
-                        </li>
-                      </ul>
                     </li>
                     <li>
-                      <Link to="page-about.html">About</Link>
+                      <Link to="/about">About</Link>
                     </li>
                     <li>
-                      <Link to="shop-grid-right.html">
+                      <Link to="/book-shop">
                         Shop <i className="fi-rs-angle-down"></i>
                       </Link>
-                      <ul className="sub-menu">
-                        <li>
-                          <Link to="shop-grid-right.html">
-                            Shop Grid – Right Sidebar
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="shop-grid-left.html">
-                            Shop Grid – Left Sidebar
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="shop-list-right.html">
-                            Shop List – Right Sidebar
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="shop-list-left.html">
-                            Shop List – Left Sidebar
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="shop-fullwidth.html">Shop - Wide</Link>
-                        </li>
-                        <li>
-                          <Link to="#">
-                            Single Product <i className="fi-rs-angle-right"></i>
-                          </Link>
-                          <ul className="level-menu">
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Product – Right Sidebar
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-left.html">
-                                Product – Left Sidebar
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-full.html">
-                                Product – No sidebar
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-vendor.html">
-                                Product – Vendor Info
-                              </Link>
-                            </li>
-                          </ul>
-                        </li>
-                        <li>
-                          <Link to="shop-filter.html">Shop – Filter</Link>
-                        </li>
-                        <li>
-                          <Link to="shop-wishlist.html">Shop – Wishlist</Link>
-                        </li>
-                        <li>
-                          <Link to="shop-cart.html">Shop – Cart</Link>
-                        </li>
-                        <li>
-                          <Link to="shop-checkout.html">Shop – Checkout</Link>
-                        </li>
-                        <li>
-                          <Link to="shop-compare.html">Shop – Compare</Link>
-                        </li>
-                        <li>
-                          <Link to="#">
-                            Shop Invoice<i className="fi-rs-angle-right"></i>
-                          </Link>
-                          <ul className="level-menu">
-                            <li>
-                              <Link to="shop-invoice-1.html">
-                                Shop Invoice 1
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-invoice-2.html">
-                                Shop Invoice 2
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-invoice-3.html">
-                                Shop Invoice 3
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-invoice-4.html">
-                                Shop Invoice 4
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-invoice-5.html">
-                                Shop Invoice 5
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-invoice-6.html">
-                                Shop Invoice 6
-                              </Link>
-                            </li>
-                          </ul>
-                        </li>
-                      </ul>
                     </li>
                     <li>
                       <Link to="#">
@@ -658,154 +527,10 @@ export const Navbar = () => {
                         </li>
                       </ul>
                     </li>
-                    <li className="position-static">
-                      <Link to="#">
-                        Mega menu <i className="fi-rs-angle-down"></i>
-                      </Link>
-                      <ul className="mega-menu">
-                        <li className="sub-mega-menu sub-mega-menu-width-22">
-                          <Link className="menu-title" href="#">
-                            Fruit & Vegetables
-                          </Link>
-                          <ul>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Meat & Poultry
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Fresh Vegetables
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Herbs & Seasonings
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Cuts & Sprouts
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Exotic Fruits & Veggies
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Packaged Produce
-                              </Link>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="sub-mega-menu sub-mega-menu-width-22">
-                          <Link className="menu-title" href="#">
-                            Breakfast & Dairy
-                          </Link>
-                          <ul>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Milk & Flavoured Milk
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Butter and Margarine
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Eggs Substitutes
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Marmalades
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Sour Cream
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">Cheese</Link>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="sub-mega-menu sub-mega-menu-width-22">
-                          <Link className="menu-title" href="#">
-                            Meat & Seafood
-                          </Link>
-                          <ul>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Breakfast Sausage
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Dinner Sausage
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">Chicken</Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Sliced Deli Meat
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Wild Caught Fillets
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Crab and Shellfish
-                              </Link>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="sub-mega-menu sub-mega-menu-width-34">
-                          <div className="menu-banner-wrap">
-                            <Link to="shop-product-right.html">
-                              <img src={img26} alt="Nest" />
-                            </Link>
-                            <div className="menu-banner-content">
-                              <h4>Hot deals</h4>
-                              <h3>
-                                Don&apos;t miss
-                                <br />
-                                Trending
-                              </h3>
-                              <div className="menu-banner-price">
-                                <span className="new-price text-success">
-                                  Save to 50%
-                                </span>
-                              </div>
-                              <div className="menu-banner-btn">
-                                <Link to="shop-product-right.html">
-                                  Shop now
-                                </Link>
-                              </div>
-                            </div>
-                            <div className="menu-banner-discount">
-                              <h3>
-                                <span>25%</span>
-                                off
-                              </h3>
-                            </div>
-                          </div>
-                        </li>
-                      </ul>
-                    </li>
+
                     <li>
-                      <Link to="blog-category-grid.html">
-                        Blog <i className="fi-rs-angle-down"></i>
+                      <Link to="/teacher">
+                        Teacher <i className="fi-rs-angle-down"></i>
                       </Link>
                       <ul className="sub-menu">
                         <li>
@@ -856,40 +581,36 @@ export const Navbar = () => {
                       </Link>
                       <ul className="sub-menu">
                         <li>
-                          <Link to="page-about.html">About Us</Link>
+                          <Link to="/about">About Us</Link>
                         </li>
                         <li>
-                          <Link to="page-contact.html">Contact</Link>
+                          <Link to="/contact">Contact</Link>
                         </li>
                         <li>
-                          <Link to="page-account.html">My Account</Link>
+                          <Link to="/myacount">My Account</Link>
                         </li>
                         <li>
-                          <Link to="page-login.html">Login</Link>
+                          <Link to="/login">Login</Link>
                         </li>
                         <li>
-                          <Link to="page-register.html">Register</Link>
+                          <Link to="/register">Register</Link>
                         </li>
                         <li>
-                          <Link to="page-purchase-guide.html">
-                            Purchase Guide
-                          </Link>
+                          <Link to="/purchase-guid">Purchase Guide</Link>
                         </li>
                         <li>
-                          <Link to="page-privacy-policy.html">
-                            Privacy Policy
-                          </Link>
+                          <Link to="/privacy-policy">Privacy Policy</Link>
                         </li>
                         <li>
-                          <Link to="page-terms.html">Terms of Service</Link>
+                          <Link to="/terms">Terms of Service</Link>
                         </li>
                         <li>
-                          <Link to="page-404.html">404 Page</Link>
+                          <Link to="/page-404">404 Page</Link>
                         </li>
                       </ul>
                     </li>
                     <li>
-                      <Link to="page-contact.html">Contact</Link>
+                      <Link to="/contact">Contact</Link>
                     </li>
                   </ul>
                 </nav>
@@ -898,7 +619,7 @@ export const Navbar = () => {
             <div className="hotline d-none d-lg-flex">
               <img src={img27} alt="hotline" />
               <p>
-                1900 - 888<span>24/7 Support Center</span>
+                92-42-35774780<span>24/7 Support Center</span>
               </p>
             </div>
             <div className="header-action-icon-2 d-block d-lg-none">

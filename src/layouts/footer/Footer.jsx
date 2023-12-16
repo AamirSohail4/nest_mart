@@ -1,16 +1,17 @@
 import { Link } from "react-router-dom";
-import img1 from "../../assets/imgs/theme/logo.svg";
+import img1 from "../../assets/imgs/theme/msbooks_logo.png";
 import img2 from "../../assets/imgs/theme/icons/icon-location.svg";
-import img3 from "../../assets/imgs/theme/icons/icon-contact.svg";
 import img4 from "../../assets/imgs/theme/icons/icon-email-2.svg";
 import img5 from "../../assets/imgs/theme/icons/icon-clock.svg";
 import img6 from "../../assets/imgs/theme/app-store.jpg";
 import img7 from "../../assets/imgs/theme/google-play.jpg";
-import img8 from "../../assets/imgs/theme/payment-method.png";
 import { ScrollButton } from "./scrollbutton/ScrollButton";
+import { Icon } from "@iconify/react";
 import "./footer.css";
 
+
 export const Footer = () => {
+  
   return (
     <>
       <section className="section-padding footer-mid">
@@ -33,28 +34,39 @@ export const Footer = () => {
                   <Link to="index.html" className="mb-15">
                     <img src={img1} alt="logo" />
                   </Link>
-                  <p className="font-lg text-heading">
-                    Awesome grocery store website template
-                  </p>
                 </div>
                 <ul className="contact-infor">
                   <li>
                     <img src={img2} alt="" />
                     <strong>Address: </strong>{" "}
-                    <span>
-                      5171 W Campbell Ave undefined Kent, Utah 53127 United
-                      States
-                    </span>
+                    <span>83-B1 Gulberg 3 ghalib market Lahore</span>
                   </li>
                   <li>
-                    <img src={img3} alt="" />
-                    <strong>Call Us:</strong>
-                    <span>(+91) - 540-025-124553</span>
+                    <Icon
+                      icon="fa6-solid:mobile-screen-button"
+                      className="mobile_phone"
+                    />
+                    <strong>Mobile:</strong>
+                    <span> 0333-4504507</span>
                   </li>
+                  <li>
+                    <Icon
+                      icon="fa6-solid:mobile-screen-button"
+                      className="mobile_phone"
+                    />
+                    <strong> Mobile:</strong>
+                    <span> 0333-4548651</span>
+                  </li>
+                  <li>
+                    <Icon icon="logos:whatsapp-icon" className="mobile_phone" />
+                    <strong>Whatsapp:</strong>
+                    <span> 03365774780</span>
+                  </li>
+
                   <li>
                     <img src={img4} alt="" />
                     <strong>Email:</strong>
-                    <span>sale@Nest.com</span>
+                    <span>info@msbooks.pk</span>
                   </li>
                   <li>
                     <img src={img5} alt="" />
@@ -65,40 +77,30 @@ export const Footer = () => {
               </div>
             </div>
             <div
-              className="footer-link-widget col wow animate__ animate__fadeInUp animated animated animate__animated animate__bounce"
-              data-wow-delay=".1s"
+              className="footer-link-widget col wow animate__ animate__fadeInUp animated  animated animate__animated animate__bounce"
+              data-wow-delay=".3s"
+              style={{
+                visibility: "visible",
+                animationDelay: "0.7s",
+                animationName: "fadeInUp",
+              }}
             >
-              <h4
-                className="widget-title"
-                style={{
-                  visibility: "visible",
-                  animationDelay: "0.5s",
-                  animationName: "fadeInUp",
-                }}
-              >
-                Company
-              </h4>
+              <h4 className="widget-title">Products</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="#">About Us</Link>
+                  <Link to="/allProducts">All Products</Link>
                 </li>
                 <li>
-                  <Link to="#">Delivery Information</Link>
+                  <Link to="#">A Level</Link>
                 </li>
                 <li>
-                  <Link to="#">Privacy Policy</Link>
+                  <Link to="#">O Level</Link>
                 </li>
                 <li>
-                  <Link to="#">Terms &amp; Conditions</Link>
+                  <Link to="#">CheckPoint</Link>
                 </li>
                 <li>
-                  <Link to="#">Contact Us</Link>
-                </li>
-                <li>
-                  <Link to="#">Support Center</Link>
-                </li>
-                <li>
-                  <Link to="#">Careers</Link>
+                  <Link to="#">ICGS</Link>
                 </li>
               </ul>
             </div>
@@ -111,99 +113,26 @@ export const Footer = () => {
                 animationName: "fadeInUp",
               }}
             >
-              <h4 className="widget-title">Account</h4>
+              <h4 className="widget-title">Our Website</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="#">Sign In</Link>
+                  <Link to="/sigin">Sign In</Link>
                 </li>
                 <li>
-                  <Link to="#">View Cart</Link>
+                  <Link to="/shop-cart">View Cart</Link>
                 </li>
                 <li>
-                  <Link to="#">My Wishlist</Link>
+                  <Link to="/shop-wishlist">My Wishlist</Link>
                 </li>
                 <li>
-                  <Link to="#">Track My Order</Link>
+                  <Link to="/account">Track My Order</Link>
                 </li>
                 <li>
-                  <Link to="#">Help Ticket</Link>
-                </li>
-                <li>
-                  <Link to="#">Shipping Details</Link>
-                </li>
-                <li>
-                  <Link to="#">Compare products</Link>
+                  <Link to="/account">Shipping Details</Link>
                 </li>
               </ul>
             </div>
-            <div
-              className="footer-link-widget col wow animate__ animate__fadeInUp animated  animated animate__animated animate__bounce"
-              data-wow-delay=".3s"
-              style={{
-                visibility: "visible",
-                animationDelay: "0.7s",
-                animationName: "fadeInUp",
-              }}
-            >
-              <h4 className="widget-title">Corporate</h4>
-              <ul className="footer-list mb-sm-5 mb-md-0">
-                <li>
-                  <Link to="#">Become a Vendor</Link>
-                </li>
-                <li>
-                  <Link to="#">Affiliate Program</Link>
-                </li>
-                <li>
-                  <Link to="#">Farm Business</Link>
-                </li>
-                <li>
-                  <Link to="#">Farm Careers</Link>
-                </li>
-                <li>
-                  <Link to="#">Our Suppliers</Link>
-                </li>
-                <li>
-                  <Link to="#">Accessibility</Link>
-                </li>
-                <li>
-                  <Link to="#">Promotions</Link>
-                </li>
-              </ul>
-            </div>
-            <div
-              className="footer-link-widget col wow animate__ animate__fadeInUp animated animated animate__animated animate__bounce"
-              data-wow-delay=".4s"
-              style={{
-                visibility: "visible",
-                animationDelay: "0.8s",
-                animationName: "fadeInUp",
-              }}
-            >
-              <h4 className="widget-title">Popular</h4>
-              <ul className="footer-list mb-sm-5 mb-md-0">
-                <li>
-                  <Link to="#">Milk &amp; Flavoured Milk</Link>
-                </li>
-                <li>
-                  <Link to="#">Butter and Margarine</Link>
-                </li>
-                <li>
-                  <Link to="#">Eggs Substitutes</Link>
-                </li>
-                <li>
-                  <Link to="#">Marmalades</Link>
-                </li>
-                <li>
-                  <Link to="#">Sour Cream and Dips</Link>
-                </li>
-                <li>
-                  <Link to="#">Tea &amp; Kombucha</Link>
-                </li>
-                <li>
-                  <Link to="#">Cheese</Link>
-                </li>
-              </ul>
-            </div>
+
             <div
               className="footer-link-widget widget-install-app col wow animate__ animate__fadeInUp animated animated animate__animated animate__bounce"
               data-wow-delay=".5s"
@@ -223,8 +152,6 @@ export const Footer = () => {
                   <img src={img7} alt="" />
                 </Link>
               </div>
-              <p className="mb-20">Secured Payment Gateways</p>
-              <img className="" src={img8} alt="" />
             </div>
           </div>
         </div>

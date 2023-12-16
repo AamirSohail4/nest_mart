@@ -1,4 +1,3 @@
-import { Breadcrumb } from "../../components/breadcrumb/Breadcrumb";
 import img1 from "../../assets/imgs/shop/product-1-1.jpg";
 import img2 from "../../assets/imgs/shop/product-2-1.jpg";
 import img3 from "../../assets/imgs/shop/product-1-1.jpg";
@@ -6,8 +5,6 @@ import img3 from "../../assets/imgs/shop/product-1-1.jpg";
 export const ShopCart = () => {
   return (
     <>
-      <Breadcrumb />
-      <h3>Shoping Cart</h3>
       <main className="main">
         <div className="page-header breadcrumb-wrap">
           <div className="container">
@@ -681,7 +678,7 @@ export const ShopCart = () => {
                         <td className="cart_total_amount">
                           <h5 className="text-heading text-end">Free </h5>
                         </td>
-                      </tr>{" "}
+                      </tr>
                       <tr>
                         <td className="cart_total_label">
                           <h6 className="text-muted">Estimate for</h6>
@@ -691,7 +688,7 @@ export const ShopCart = () => {
                             United Kingdom{" "}
                           </h5>
                         </td>
-                      </tr>{" "}
+                      </tr>
                       <tr>
                         <td scope="col" colSpan="2">
                           <div className="divider-2 mt-10 mb-10"></div>

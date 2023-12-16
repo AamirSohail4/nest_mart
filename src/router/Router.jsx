@@ -8,26 +8,46 @@ import { ShopCompare } from "../pages/cart/ShopCompare";
 import { ShopCheckout } from "../pages/cart/ShopCheckout";
 import { Login } from "../pages/login/Login";
 import { Register } from "../pages/login/Register";
-// import { AllProduct } from "../pages/allproduct/AllProduct";
-// import { SingleProduct } from "../pages/allproduct/SingleProduct";
-// import { PopularProductsTabs } from "../pages/allproduct/PopularProducts";
+import { About } from "../pages/about/About";
+import { MyAccount } from "../pages/myAccount/MyAccount";
+import { PrivacyPolicy } from "../pages/privacyPolicy/PrivacyPolicy";
+import { Contact } from "../pages/contact/Contact";
+import { PurchaseGuide } from "../pages/purchaseGuide/PurchaseGuide";
+import { Terms } from "../pages/termsAndServices/Terms";
+import { PageNotFound } from "../pages/pagenotFound/PageNotFound";
+import { ProductsGrid } from "../pages/allproduct/ProductsGrid";
+import { QuickView } from "../pages/cart/QuickView";
+import { Teacher } from "../pages/teacher/Teacher";
+import { TeacherDetail } from "../pages/teacher/TeacherDetail";
+import { BookShop } from "../pages/shop/BookShop";
 
 export const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<FrontendLayout />}>
         <Route index element={<Home />} />
-        <Route path="home" element={<Home />} />
-        <Route path="single-product" element={<SingleProduct />} />
+        <Route path="allProducts" element={<ProductsGrid />} />
+        <Route path="single-product/:seoLink" element={<SingleProduct />} />
         <Route path="shop-cart" element={<ShopCart />} />
         <Route path="shop-wishlist" element={<ShopWishlist />} />
         <Route path="shop-compare" element={<ShopCompare />} />
-        <Route path="shop.checkout" element={<ShopCheckout />} />
-        <Route path="login-page" element={<Login />} />
-        <Route path="register-page" element={<Register />} />
-        {/* <Route path="popularProduct" element={<PopularProducts />} /> */}
-        {/* <Route path="allproduct" element={<AllProduct />} />
-        <Route path="singleproduct/:id" element={<SingleProduct />} /> */}
+        <Route path="checkout" element={<ShopCheckout />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="about" element={<About />} />
+        <Route path="myacount" element={<MyAccount />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="contact" element={<Contact />} />
+        <Route path="purchase-guide" element={<PurchaseGuide />} />
+        <Route path="terms" element={<Terms />} />
+        <Route path="quick-view" element={<QuickView />} />
+        <Route path="teacher" element={<Teacher />} />
+        <Route
+          path="teacher-detail/:strSEOLink/:id"
+          element={<TeacherDetail />}
+        />
+        <Route path="book-shop" element={<BookShop />} />
+        <Route path="page-404" element={<PageNotFound />} />
       </Route>
     </Routes>
   );

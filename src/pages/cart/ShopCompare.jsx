@@ -1,6 +1,7 @@
 import img1 from "../../assets/imgs/shop/product-2-1.jpg";
 import img2 from "../../assets/imgs/shop/product-1-1.jpg";
 import img3 from "../../assets/imgs/shop/product-3-1.jpg";
+
 export const ShopCompare = () => {
   return (
     <>

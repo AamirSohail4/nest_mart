@@ -7,8 +7,13 @@ import img4 from "../../assets/imgs/theme/icons/icon-twitter-white.svg";
 import img5 from "../../assets/imgs/theme/icons/icon-instagram-white.svg";
 import img6 from "../../assets/imgs/theme/icons/icon-pinterest-white.svg";
 import img7 from "../../assets/imgs/theme/icons/icon-youtube-white.svg";
+import { bannerText_url } from "../../config/env";
+import { useEffect, useState } from "react";
 
 export const CopyRight = () => {
+  const [companyContacNo, setcompanyContacNo] = useState();
+
+  console.log("companyContacNo");
   return (
     <>
       <div
@@ -26,21 +31,22 @@ export const CopyRight = () => {
           </div>
           <div className="col-xl-4 col-lg-6 col-md-6">
             <p className="font-sm mb-0">
-              © 2021, <strong className="text-brand">Nest</strong> - HTML
-              Ecommerce Template <br></br>All rights reserved
+              © 2023, <strong className="text-brand">MSBOOKS</strong> -{" "}
+              <br></br>All rights reserved
             </p>
           </div>
           <div className="col-xl-4 col-lg-6 text-center d-none d-xl-block">
             <div className="hotline d-lg-inline-flex mr-30">
               <img src={img1} alt="hotline" />
               <p>
-                1900 - 6666<span>Working 8:00 - 22:00</span>
+                +923334548651<span>Working 8:00 - 22:00</span>
               </p>
             </div>
             <div className=" footer hotline d-lg-inline-flex">
               <img src={img2} alt="hotline" />
               <p>
-                1900 - 8888<span>24/7 Support Center</span>
+                +923334504507
+                <span>24/7 Support Center</span>
               </p>
             </div>
           </div>
