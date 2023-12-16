@@ -6,14 +6,16 @@ export const PopularProducts = () => {
   const [myproduct, setMyProduct] = useState([]);
   useEffect(() => {
     async function AllProductShow() {
-      const response = await fetch(`${api_url}&tag=get_items_web&limit=20`);
+      const response = await fetch(
+        `${api_url}&tag=get_items_web&intCategoryID=1&btIsFeatured=1&limit=20`
+      );
       const productData = await response.json();
 
       setMyProduct(productData.data);
     }
     AllProductShow();
   }, []);
-  // console.log(myproduct);
+
   return (
     <>
       <div className="product-tabs section-padding position-relative">

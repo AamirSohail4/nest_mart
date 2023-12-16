@@ -10680,3 +10680,6 @@ footer .hotline img {
 div#productContent {
   padding: 25px 20px 15px 47px;
 }
+.change-to-white p {
+  color: white;
+}

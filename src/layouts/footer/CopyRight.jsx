@@ -7,8 +7,13 @@ import img4 from "../../assets/imgs/theme/icons/icon-twitter-white.svg";
 import img5 from "../../assets/imgs/theme/icons/icon-instagram-white.svg";
 import img6 from "../../assets/imgs/theme/icons/icon-pinterest-white.svg";
 import img7 from "../../assets/imgs/theme/icons/icon-youtube-white.svg";
+import { bannerText_url } from "../../config/env";
+import { useEffect, useState } from "react";
 
 export const CopyRight = () => {
+  const [companyContacNo, setcompanyContacNo] = useState();
+
+  console.log("companyContacNo");
   return (
     <>
       <div

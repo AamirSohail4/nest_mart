@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
-import { teacher_url } from "../../config/env";
 import { Link } from "react-router-dom";
-Link;
+import { teacher_url } from "../../config/env";
+
 export const Teacher = () => {
   const [allTeacher, setAllTeacher] = useState();
 
   useEffect(() => {
     async function AllTeacher() {
-      const response = await fetch(`${teacher_url}
-      &tag=get_teachers_web`);
+      const response = await fetch(`${teacher_url}&tag=get_teachers_web`);
       const teacherData = await response.json();
-      // console.log("MyDat======>", teacherData);
       setAllTeacher(teacherData.data);
     }
     AllTeacher();
   }, []);
 
-  console.log("This Teacher array=>", allTeacher);
   return (
     <>
       <main className="main" style={{ transform: "none" }}>
@@ -49,17 +46,18 @@ export const Teacher = () => {
                 </div>
               </div>
               <div className="row product-grid">
-                {allTeacher?.map((item) => {
+                {allTeacher?.map((item, index) => {
                   return (
-                    <Link
-                      to={`/teacher-detail/${item.strSEOLink}`}
-                      key={item.id}
+                    <div
+                      key={index}
                       className="col-lg-1-5 col-md-4 col-12 col-sm-6"
                     >
                       <div className="product-cart-wrap mb-30">
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
-                            <Link to={`/teacher-detail/${item.strSEOLink}`}>
+                            <Link
+                              to={`/teacher-detail/${item.strSEOLink}/${item.intID}`}
+                            >
                               <img
                                 className="default-img"
                                 src={item.strProfilePicture}
@@ -83,7 +81,7 @@ export const Teacher = () => {
                           </h2>
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   );
                 })}
               </div>

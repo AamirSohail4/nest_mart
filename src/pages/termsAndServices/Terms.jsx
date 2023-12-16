@@ -1,5 +1,3 @@
-import { PrimerySidbar } from "../../components/breadcrumb/sidebar/PrimerySidbar";
-
 export const Terms = () => {
   return (
     <>
@@ -22,7 +20,7 @@ export const Terms = () => {
                 style={{ transform: "none" }}
               >
                 <div className="row" style={{ transform: "none" }}>
-                  <div className="col-lg-9">
+                  <div className="col-lg-12">
                     <div className="single-page pr-30 mb-lg-0 mb-sm-5">
                       <div className="single-header style-2">
                         <h2>Terms of Service</h2>
@@ -154,41 +152,6 @@ export const Terms = () => {
                           <a href="page-contact.html">contact us</a>.
                         </p>
                       </div>
-                    </div>
-                  </div>
-                  <div
-                    className="col-lg-3 primary-sidebar sticky-sidebar"
-                    style={{
-                      position: "relative",
-                      overflow: " visible",
-                      boxSizing: "border-box",
-                      minHeight: "1px",
-                    }}
-                  >
-                    <div
-                      className="theiaStickySidebar"
-                      style={{
-                        paddingTop: "0px",
-                        paddingBottom: "1px",
-                        position: "static",
-                        transform: "none",
-                        Top: "0px",
-                        left: "1298.91px",
-                      }}
-                    >
-                      <div className="widget-area">
-                        <div className="sidebar-widget-2 widget_search mb-50">
-                          <div className="search-form">
-                            <form action="#">
-                              <input type="text" placeholder="Search…" />
-                              <button type="submit">
-                                <i className="fi-rs-search"></i>
-                              </button>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                      <PrimerySidbar />
                     </div>
                   </div>
                 </div>

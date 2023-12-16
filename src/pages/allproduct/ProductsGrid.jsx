@@ -15,6 +15,7 @@ export const ProductsGrid = () => {
     AllProducts();
   }, []);
   console.log(allProducts);
+
   return (
     <>
       <main className="main" style={{ transform: "none" }}>
@@ -39,23 +40,20 @@ export const ProductsGrid = () => {
           <div className="row" style={{ transform: "none" }}>
             <div className="col-lg-5-5">
               <div className="row product-grid">
-                {allProducts?.map((item) => {
+                {allProducts?.map((item, index) => {
                   return (
                     <div
-                      key={item.id}
+                      key={index}
                       className="col-lg-1-5 col-md-4 col-12 col-sm-6"
                     >
-                      <Link
-                        to={`/single-product/${item.strSEOLink}`}
-                        className="product-cart-wrap mb-30"
-                      >
+                      <div className="product-cart-wrap mb-30">
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
                             <Link to={`/single-product/${item.strSEOLink}`}>
-                              <img src={item.strImageThumbnail} />
+                              <img src={item?.strImageThumbnail} />
                               <img
                                 className="hover-img"
-                                src={item.strImageThumbnail}
+                                src={item?.strImageThumbnail}
                                 alt=""
                               />
                             </Link>
@@ -115,7 +113,7 @@ export const ProductsGrid = () => {
                             </div>
                           </div>
                         </div>
-                      </Link>
+                      </div>
                     </div>
                   );
                 })}

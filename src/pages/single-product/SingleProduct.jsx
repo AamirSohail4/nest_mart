@@ -1,8 +1,5 @@
 import { Link } from "react-router-dom";
 import { Icon } from "@iconify/react";
-
-// import { Icon } from "@iconify/react";
-
 import { ProductDetail } from "./components/ProductDetail";
 
 export const SingleProduct = () => {

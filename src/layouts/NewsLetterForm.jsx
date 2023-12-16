@@ -1,6 +1,22 @@
 import img1 from "../assets/imgs/banner/banner-9.png";
 
 export const NewsLetterForm = () => {
+  // const [webText, setWebText] = useState();
+  // const [bannerText, setbannerText] = useState();
+
+  // useEffect(() => {
+  //   async function TextDisplay() {
+  //     const response = await fetch(
+  //       `${bannerText_url}&tag=get_webtext_content&intID=15`
+  //     );
+  //     const teacherData = await response.json();
+  //     // console.log("MyDat======>", teacherData);
+  //     setWebText(teacherData.data[0].strText);
+  //     setbannerText(teacherData.data[0].strText);
+  //   }
+  //   TextDisplay();
+  // }, []);
+  // console.log("-This is Banner WebTex-===>", webText);
   return (
     <>
       <section

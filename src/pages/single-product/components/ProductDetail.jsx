@@ -1,4 +1,5 @@
 import Slider from "react-slick";
+import he from "he";
 import Zoom from "react-img-zoom-gdn";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -8,16 +9,18 @@ export const ProductDetail = () => {
   const { seoLink } = useParams();
 
   const [singleproduct, setSingleProduct] = useState();
+  const [strSpec, setStrSpec] = useState("");
+  const [teacherProfileData, setTeacherProfile] = useState("");
 
-  const [quantity, setQuantity] = useState(1);
-  const handleDec = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
-  const handleInc = () => {
-    setQuantity(quantity + 1);
-  };
+  // const [quantity, setQuantity] = useState(1);
+  // const handleDec = () => {
+  //   if (quantity > 1) {
+  //     setQuantity(quantity - 1);
+  //   }
+  // };
+  // const handleInc = () => {
+  //   setQuantity(quantity + 1);
+  // };
 
   useEffect(() => {
     async function SingleProductShow() {
@@ -25,11 +28,18 @@ export const ProductDetail = () => {
         `${api_url}&tag=get_items_web&strSEOLink=${seoLink}`
       );
       const productData = await response.json();
+      // console.log(productData);
       setSingleProduct(productData.data[0]);
+      setStrSpec(productData.data[0]?.strSpecifications);
+      setTeacherProfile(productData.data[0].supplier[0].strProfile);
+      // console.log("Check it", productData.data[0].supplier[0].strProfile);
     }
     SingleProductShow();
   }, [seoLink]);
-  // console.log(singleproduct);
+  let profileValue = teacherProfileData;
+  const htmlContent = he.decode(strSpec);
+  const htmlContent1 = he.decode(profileValue);
+  // console.log(htmlContent1);
 
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -79,6 +89,7 @@ export const ProductDetail = () => {
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
   };
+  // console.log("Teacher Data", singleproduct);
   return (
     <div className="product-detail accordion-detail">
       <div className="row mb-50 mt-30">
@@ -155,13 +166,6 @@ export const ProductDetail = () => {
                 >
                   <i className="fi-rs-heart"></i>
                 </Link>
-                <Link
-                  aria-label="Compare"
-                  className="action-btn hover-up"
-                  to="shop-compare.html"
-                >
-                  <i className="fi-rs-shuffle"></i>
-                </Link>
               </div>
             </div>
 
@@ -204,9 +208,11 @@ export const ProductDetail = () => {
             <br></br>
             <div className="row">
               <div className="short-desc mb-30">
-                <p className="font-lg"></p>
-                {singleproduct?.strSpecifications &&
-                  singleproduct?.strSpecifications}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: htmlContent,
+                  }}
+                />
               </div>
             </div>
             <div className="row">
@@ -226,7 +232,9 @@ export const ProductDetail = () => {
                           <div className="product-cart-wrap">
                             <div className="product-img-action-wrap">
                               <div className="product-img product-img-zoom">
-                                <Link to="">
+                                <Link
+                                  to={`/teacher-detail/${singleproduct?.supplier[0].strSEOLink}/${singleproduct?.supplier[0].intID}`}
+                                >
                                   <img
                                     className="default-img"
                                     src={
@@ -253,6 +261,14 @@ export const ProductDetail = () => {
                     {singleproduct?.supplier[0]?.strDesc && (
                       <h6>{singleproduct.supplier[0].strDesc}</h6>
                     )}
+
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: htmlContent1,
+                      }}
+                    />
+                    {singleproduct?.supplier[0]?.strProfile &&
+                      singleproduct?.supplier[0]?.strProfile}
                   </div>
                 </section>
               </div>
@@ -269,14 +285,11 @@ export const ProductDetail = () => {
             {singleproduct?.related_items.map((item, index) => {
               return (
                 <div key={index} className="col-lg-3 col-md-4 col-12 col-sm-6">
-                  <Link
-                    to={`/single-product/${item.strSEOLink}`}
-                    className="product-cart-wrap hover-up"
-                  >
+                  <div className="product-cart-wrap hover-up">
                     <div className="product-img-action-wrap">
                       <div className="product-img product-img-zoom">
                         <Link
-                          // to={`/single-product/${item.strSEOLink}`}
+                          to={`/single-product/${item.strSEOLink}`}
                           tabIndex="0"
                         >
                           <img
@@ -342,7 +355,7 @@ export const ProductDetail = () => {
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               );
             })}

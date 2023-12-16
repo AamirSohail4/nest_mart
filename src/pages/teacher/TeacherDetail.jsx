@@ -1,21 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import he from "he";
 import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { teacher_url } from "../../config/env";
 import { api_url } from "../../config/env";
-import { Link, useParams } from "react-router-dom";
-Link;
+
 export const TeacherDetail = () => {
   const { strSEOLink } = useParams();
-
+  const { id } = useParams();
   const [teacher, setTeacher] = useState({});
   const [teacherDetail, setTeacherDetail] = useState([]);
   const [publicationData, setPulicationData] = useState([]);
+  const [strSpec, setStrSpec] = useState("");
+
+  async function ShowPublication() {
+    const response = await fetch(
+      `${api_url}&tag=get_items_web& intSupplierID=${id}`
+    );
+    const respData = await response.json();
+    console.log("dkjflsdjf", respData);
+    setPulicationData(respData.data);
+  }
 
   useEffect(() => {
     async function TeacherDetails() {
-      const response = await fetch(`${teacher_url}
-      &tag=get_teacher_detail&strSEOLink=${strSEOLink}`);
+      const response = await fetch(
+        `${teacher_url}&tag=get_teacher_detail&strSEOLink=${strSEOLink}`
+      );
       const teacherData = await response.json();
+      setStrSpec(teacherData.data.teacher[0].strProfile);
       const teacher_detail = [];
       const classes = [];
       const subjects = [];
@@ -37,19 +50,11 @@ export const TeacherDetail = () => {
       setTeacherDetail(teacher_detail);
     }
     TeacherDetails();
+    ShowPublication();
   }, []);
 
-  // useEffect(() => {
-  //   return async function ShowPublication() {
-  //     const response = await fetch(
-  //       `${api_url}&tag=get_items_web& intSupplierID=${teacherID}`
-  //     );
-  //     const respData = await response.json();
-  //     console.log(respData);
-  //     setPulicationData(respData.data);
-  //   };
-  // }, []);
-  console.log(publicationData);
+  const htmlContent = he.decode(strSpec);
+
   return (
     <>
       <div className="container mb-30">
@@ -67,7 +72,14 @@ export const TeacherDetail = () => {
                   {teacher.strDesc}
                 </Link>
               </h3>
-              <div className="change-to-white">{teacher.strProfile}</div>
+              <div className="change-to-white">
+                <div
+                  style={{ color: "white" }}
+                  dangerouslySetInnerHTML={{
+                    __html: htmlContent,
+                  }}
+                />
+              </div>
               <hr />
               <div className="row">
                 {teacherDetail?.map((item, index) => {
@@ -87,11 +99,7 @@ export const TeacherDetail = () => {
                           {item.child?.map((subItem, index) => {
                             return (
                               <li key={index}>
-                                <img
-                                  className="mr-5"
-                                  src="https://www.msbooks.pk/assets/imgs/theme/icons/icon-hot-white.svg"
-                                  alt=""
-                                />
+                                <img className="mr-5" src="" alt="" />
                                 <strong>{subItem}</strong>
                               </li>
                             );
@@ -111,7 +119,7 @@ export const TeacherDetail = () => {
               className="section-title style-2 wow animate__ animate__fadeIn animated"
               style={{ visibility: "visible", animationName: "fadeIn" }}
             >
-              <h3>Publication by Navid Saqib </h3>
+              <h3>Publication by {teacher.strDesc} </h3>
             </div>
 
             <div className="tab-content" id="myTabContent">
@@ -139,7 +147,7 @@ export const TeacherDetail = () => {
                         >
                           <div className="product-img-action-wrap">
                             <div className="product-img product-img-zoom">
-                              <Link to="">
+                              <Link to={`/single-product/${items.strSEOLink}`}>
                                 <img
                                   className="default-img"
                                   src={items.strImageThumbnail}

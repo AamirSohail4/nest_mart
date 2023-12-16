@@ -1,12 +1,11 @@
-import Marquee from "react-fast-marquee";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import img5 from "../assets/imgs/theme/icons/icon-heart.svg";
 import img6 from "../assets/imgs/theme/icons/icon-cart.svg";
 import img7 from "../assets/imgs/shop/thumbnail-3.jpg";
 import img8 from "../assets/imgs/shop/thumbnail-2.jpg";
 import img9 from "../assets/imgs/theme/icons/icon-user.svg";
-import img10 from "../assets/imgs/theme/logo.svg";
+import img10 from "../assets/imgs/theme/msbooks_logo.png";
 import img11 from "../assets/imgs/theme/icons/category-1.svg";
 import img12 from "../assets/imgs/theme/icons/category-2.svg";
 import img13 from "../assets/imgs/theme/icons/category-3.svg";
@@ -21,30 +20,58 @@ import img21 from "../assets/imgs/theme/icons/icon-1.svg";
 import img22 from "../assets/imgs/theme/icons/icon-2.svg";
 import img23 from "../assets/imgs/theme/icons/icon-3.svg";
 import img24 from "../assets/imgs/theme/icons/icon-4.svg";
-
-import img26 from "../assets/imgs/banner/banner-menu.png";
 import img27 from "../assets/imgs/theme/icons/icon-headphone.svg";
 import img28 from "../assets/imgs/theme/icons/icon-cart.svg";
 import img29 from "../assets/imgs/shop/thumbnail-3.jpg";
 import img30 from "../assets/imgs/shop/thumbnail-4.jpg";
 import img31 from "../assets/imgs/shop/thumbnail-4.jpg";
-
-import { useState, useEffect } from "react";
+import { api_url } from "../config/env";
+import { relateProd_url } from "../config/env";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [openCategory, setOpenCategory] = useState(false);
-  const [moreCategory, setMoreCategory] = useState(false);
-  // const [categories, setCategories] = useState([]);
 
-  const handelOpenCategory = () => {
-    setOpenCategory(!openCategory);
-    console.log(openCategory);
+  const [searchBarCategory, setSearchBarCategory] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  // const [mydata, setMydata] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleInputChange = (event) => {
+    setSearchQuery(event.target.value);
   };
-  const handelMoreCategory = () => {
-    setMoreCategory(!moreCategory);
-    console.log(openCategory);
+
+  // Function Perform on Click and Fetch data.
+  const handleSearchButtonClick = async () => {
+    console.log("search ===>", searchQuery);
+    try {
+      const response = await fetch(
+        `${relateProd_url}&tag=get_items_web&intCategoryID=${selectedCategoryId}&strSearch=${searchQuery}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const myQueryData = await response.json();
+      console.log("my data==>", myQueryData);
+
+      // setMydata(myQueryData.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
+
+  // Function for Selected Option .
+  const handleCategoryChange = (event) => {
+    const selectedId = event.target.value;
+    setSelectedCategoryId(selectedId === "all" ? "" : parseInt(selectedId, 10));
+  };
+
+  async function SearchBarCategory() {
+    const response = await fetch(`${api_url}&tag=get_category_web`);
+    const categoryData = await response.json();
+    setSearchBarCategory(categoryData.data);
+  }
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -57,7 +84,9 @@ export const Navbar = () => {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
+    SearchBarCategory();
   }, []);
+
   return (
     <header className="header-area header-style-1 header-height-2">
       <div className="mobile-promotion">
@@ -89,20 +118,7 @@ export const Navbar = () => {
             </div>
             <div className="col-xl-6 col-lg-4">
               <div className="text-center">
-                <div id="news-flash" className="d-inline-block">
-                  <ul>
-                    <Marquee>
-                      100% Secure delivery without contacting the courier Supper
-                      Value Deals - Save more with coupons Trendy 25silver
-                      jewelry, save up 35% off today
-                    </Marquee>
-                  </ul>
-                  {/* <ul>
-                    <li>100% Secure delivery without contacting the courier</li>
-                    <li>Supper Value Deals - Save more with coupons</li>
-                    <li>Trendy 25silver jewelry, save up 35% off today</li>
-                  </ul> */}
-                </div>
+                <div id="news-flash" className="d-inline-block"></div>
               </div>
             </div>
             <div className="col-xl-3 col-lg-4">
@@ -172,58 +188,39 @@ export const Navbar = () => {
         <div className="container">
           <div className="header-wrap">
             <div className="logo logo-width-1">
-              <Link to="/">{/* <img src={logo} alt="logo" /> */}</Link>
+              <Link to="/">
+                <img src={img10} alt="logo" />
+              </Link>
             </div>
             <div className="header-right">
               <div className="search-style-2">
-                <form action="#">
-                  <select className="select-active">
-                    <option>All Categories</option>
-                    <option>Milks and Dairies</option>
-                    <option>Wines & Alcohol</option>
-                    <option>Clothing & Beauty</option>
-                    <option>Pet Foods & Toy</option>
-                    <option>Fast food</option>
-                    <option>Baking material</option>
-                    <option>Vegetables</option>
-                    <option>Fresh Seafood</option>
-                    <option>Noodles & Rice</option>
-                    <option>Ice cream</option>
+                <form>
+                  <select
+                    value={selectedCategoryId}
+                    onChange={handleCategoryChange}
+                  >
+                    <option value="all">All Categories</option>
+                    {searchBarCategory?.map((item, index) => {
+                      return (
+                        <option key={index} value={item.intID}>
+                          {item.strDesc}
+                        </option>
+                      );
+                    })}
                   </select>
-                  <input type="text" placeholder="Search for items..." />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={handleInputChange}
+                  />
+                  <button type="button" onClick={handleSearchButtonClick}>
+                    Search
+                  </button>
                 </form>
               </div>
               <div className="header-action-right">
                 <div className="header-action-2">
-                  {/* <div className="search-location">
-                    <form action="#">
-                      <select className="select-active">
-                        <option>Your Location</option>
-                        <option>Alabama</option>
-                        <option>Alaska</option>
-                        <option>Arizona</option>
-                        <option>Delaware</option>
-                        <option>Florida</option>
-                        <option>Georgia</option>
-                        <option>Hawaii</option>
-                        <option>Indiana</option>
-                        <option>Maryland</option>
-                        <option>Nevada</option>
-                        <option>New Jersey</option>
-                        <option>New Mexico</option>
-                        <option>New York</option>
-                      </select>
-                    </form>
-                  </div> */}
-                  <div className="header-action-icon-2">
-                    {/* <Link to="/shop-compare">
-                      <img className="svgInject" alt="Nest" src={img4} />
-                      <span className="pro-count blue">3</span>
-                    </Link>
-                    <Link to="/shop-compare">
-                      <span className="lable ml-0">Compare</span>
-                    </Link> */}
-                  </div>
+                  <div className="header-action-icon-2"></div>
                   <div className="header-action-icon-2">
                     <Link to="/shop-wishlist">
                       <img className="svgInject" alt="Nest" src={img5} />
@@ -367,24 +364,7 @@ export const Navbar = () => {
             </div>
             <div className="header-nav d-none d-lg-flex">
               <div className="main-categori-wrap d-none d-lg-block">
-                <Link
-                  className={`categories-button-active ${
-                    openCategory ? "open" : ""
-                  }`}
-                  to="/"
-                >
-                  <span className="fi-rs-apps"></span>{" "}
-                  <span className="et">Home</span>
-                  <i
-                    className="fi-rs-angle-down"
-                    onClick={handelOpenCategory}
-                  ></i>
-                </Link>
-                <div
-                  className={`categories-dropdown-wrap categories-dropdown-active-large font-heading ${
-                    openCategory ? "show" : ""
-                  }`}
-                >
+                <div className="categories-dropdown-wrap categories-dropdown-active-large font-heading ">
                   <div className="d-flex categori-dropdown-inner">
                     <ul>
                       <li>
@@ -458,11 +438,7 @@ export const Navbar = () => {
                       </li>
                     </ul>
                   </div>
-                  <div
-                    className={`more_slide_open ${
-                      moreCategory ? "show" : "hide"
-                    }`}
-                  >
+                  <div className="more_slide_ope">
                     <div className="d-flex categori-dropdown-inner">
                       <ul>
                         <li>
@@ -499,7 +475,7 @@ export const Navbar = () => {
                     </div>
                   </div>
                   <div className="more_categories">
-                    <span className="icon" onClick={handelMoreCategory}></span>{" "}
+                    <span className="icon"></span>{" "}
                     <span className="heading-sm-1">Show more...</span>
                   </div>
                 </div>
@@ -507,40 +483,16 @@ export const Navbar = () => {
               <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                 <nav>
                   <ul>
-                    {/* <li className="hot-deals">
-                      <img src={img25} alt="hot deals" />
-                      <Link to="/products-grid">Hot Deals</Link>
-                    </li> */}
                     <li>
-                      {/* <Link className="active" to="/">
-                        Home <i className="fi-rs-angle-down"></i>
-                      </Link> */}
-                      {/* <ul className="sub-menu">
-                        <li>
-                          <Link to="/single-product">Product Details</Link>
-                        </li>
-                        <li>
-                          <Link to="index-2.html">Home 2</Link>
-                        </li>
-                        <li>
-                          <Link to="index-3.html">Home 3</Link>
-                        </li>
-                        <li>
-                          <Link to="index-4.html">Home 4</Link>
-                        </li>
-                        <li>
-                          <Link to="index-5.html">Home 5</Link>
-                        </li>
-                        <li>
-                          <Link to="index-6.html">Home 6</Link>
-                        </li>
-                      </ul> */}
+                      <Link className="active" to="/">
+                        Home
+                      </Link>
                     </li>
                     <li>
                       <Link to="/about">About</Link>
                     </li>
                     <li>
-                      <Link to="/book-Shop">
+                      <Link to="/book-shop">
                         Shop <i className="fi-rs-angle-down"></i>
                       </Link>
                     </li>
@@ -575,151 +527,7 @@ export const Navbar = () => {
                         </li>
                       </ul>
                     </li>
-                    <li className="position-static">
-                      <Link to="#">
-                        Mega menu <i className="fi-rs-angle-down"></i>
-                      </Link>
-                      <ul className="mega-menu">
-                        <li className="sub-mega-menu sub-mega-menu-width-22">
-                          <Link className="menu-title" href="#">
-                            Fruit & Vegetables
-                          </Link>
-                          <ul>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Meat & Poultry
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Fresh Vegetables
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Herbs & Seasonings
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Cuts & Sprouts
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Exotic Fruits & Veggies
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Packaged Produce
-                              </Link>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="sub-mega-menu sub-mega-menu-width-22">
-                          <Link className="menu-title" href="#">
-                            Breakfast & Dairy
-                          </Link>
-                          <ul>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Milk & Flavoured Milk
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Butter and Margarine
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Eggs Substitutes
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Marmalades
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Sour Cream
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">Cheese</Link>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="sub-mega-menu sub-mega-menu-width-22">
-                          <Link className="menu-title" href="#">
-                            Meat & Seafood
-                          </Link>
-                          <ul>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Breakfast Sausage
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Dinner Sausage
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">Chicken</Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Sliced Deli Meat
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Wild Caught Fillets
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="shop-product-right.html">
-                                Crab and Shellfish
-                              </Link>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="sub-mega-menu sub-mega-menu-width-34">
-                          <div className="menu-banner-wrap">
-                            <Link to="shop-product-right.html">
-                              <img src={img26} alt="Nest" />
-                            </Link>
-                            <div className="menu-banner-content">
-                              <h4>Hot deals</h4>
-                              <h3>
-                                Don&apos;t miss
-                                <br />
-                                Trending
-                              </h3>
-                              <div className="menu-banner-price">
-                                <span className="new-price text-success">
-                                  Save to 50%
-                                </span>
-                              </div>
-                              <div className="menu-banner-btn">
-                                <Link to="shop-product-right.html">
-                                  Shop now
-                                </Link>
-                              </div>
-                            </div>
-                            <div className="menu-banner-discount">
-                              <h3>
-                                <span>25%</span>
-                                off
-                              </h3>
-                            </div>
-                          </div>
-                        </li>
-                      </ul>
-                    </li>
+
                     <li>
                       <Link to="/teacher">
                         Teacher <i className="fi-rs-angle-down"></i>
