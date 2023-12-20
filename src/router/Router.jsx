@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { FrontendLayout } from "../layouts/FrontendLayout";
 import { Home } from "../pages/home/Home";
@@ -20,11 +21,21 @@ import { QuickView } from "../pages/cart/QuickView";
 import { Teacher } from "../pages/teacher/Teacher";
 import { TeacherDetail } from "../pages/teacher/TeacherDetail";
 import { BookShop } from "../pages/shop/BookShop";
+import { Categories } from "../pages/allproduct/Category/Categories";
+import { Verify } from "../pages/login/Verify";
+import { ModelView } from "../pages/cart/ModelView";
 
 export const Router = () => {
+  const [mydata, setMydata] = useState([]);
+  const [userPhone, setUserPhone] = useState("");
   return (
     <Routes>
-      <Route path="/" element={<FrontendLayout />}>
+      <Route
+        path="/"
+        element={
+          <FrontendLayout setMydata={setMydata} setUserPhone={setUserPhone} />
+        }
+      >
         <Route index element={<Home />} />
         <Route path="allProducts" element={<ProductsGrid />} />
         <Route path="single-product/:seoLink" element={<SingleProduct />} />
@@ -32,8 +43,8 @@ export const Router = () => {
         <Route path="shop-wishlist" element={<ShopWishlist />} />
         <Route path="shop-compare" element={<ShopCompare />} />
         <Route path="checkout" element={<ShopCheckout />} />
+        <Route path="signUp" element={<Register />} />
         <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
         <Route path="about" element={<About />} />
         <Route path="myacount" element={<MyAccount />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
@@ -48,6 +59,9 @@ export const Router = () => {
         />
         <Route path="book-shop" element={<BookShop />} />
         <Route path="page-404" element={<PageNotFound />} />
+        <Route path="category" element={<Categories fetchData={mydata} />} />
+        <Route path="verify" element={<Verify user_phone={userPhone} />} />
+        <Route path="modelview" element={<ModelView />} />
       </Route>
     </Routes>
   );

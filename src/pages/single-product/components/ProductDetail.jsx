@@ -1,26 +1,56 @@
 import Slider from "react-slick";
 import he from "he";
 import Zoom from "react-img-zoom-gdn";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api_url } from "../../../config/env";
+import { cart_url } from "../../../config/env";
+import { CartContext } from "../../../context/CartContext";
 
 export const ProductDetail = () => {
   const { seoLink } = useParams();
+  const { CartItemDisplay } = useContext(CartContext);
 
   const [singleproduct, setSingleProduct] = useState();
   const [strSpec, setStrSpec] = useState("");
   const [teacherProfileData, setTeacherProfile] = useState("");
+  const [myItemid, setMyItemId] = useState();
+  // const [additemtoCart, setAddItemToCart] = useState();
 
-  // const [quantity, setQuantity] = useState(1);
-  // const handleDec = () => {
-  //   if (quantity > 1) {
-  //     setQuantity(quantity - 1);
-  //   }
-  // };
-  // const handleInc = () => {
-  //   setQuantity(quantity + 1);
-  // };
+  const [quantity, setQuantity] = useState(1);
+  const handleDec = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+  const handleInc = () => {
+    setQuantity(quantity + 1);
+  };
+
+  // Function for Posting Cart Data
+  const handelAddToCart = async () => {
+    let data = new FormData();
+    // TODO: Change the intUserID to dynamic value.
+    data.append("intUserID", localStorage.getItem("userId"));
+    data.append("intItemID", myItemid);
+    data.append("dblItemQty", quantity);
+    data.append("strItemRemarks", "");
+
+    // console.log("Form Data:", data);
+    const response = await fetch(`${cart_url}&tag=add_user_cart_item`, {
+      method: "POST",
+      body: data,
+    });
+    if (response.ok) {
+      const resData = await response.json();
+      // setAddItemToCart(resData);
+      // navigate("/", { state: { userId } });
+      // alert("item added in cart successfully");
+      CartItemDisplay();
+      console.log("Item added in  Cart api res", resData);
+    }
+  };
+  console.log("This my Itemid throug state ", myItemid, quantity);
 
   useEffect(() => {
     async function SingleProductShow() {
@@ -30,12 +60,15 @@ export const ProductDetail = () => {
       const productData = await response.json();
       // console.log(productData);
       setSingleProduct(productData.data[0]);
+      const myid = productData.data[0].intID;
+      setMyItemId(myid);
       setStrSpec(productData.data[0]?.strSpecifications);
-      setTeacherProfile(productData.data[0].supplier[0].strProfile);
-      // console.log("Check it", productData.data[0].supplier[0].strProfile);
+      setTeacherProfile(productData.data[0]?.supplier[0].strProfile);
+      // console.log("Check it", singleproduct);
     }
     SingleProductShow();
   }, [seoLink]);
+
   let profileValue = teacherProfileData;
   const htmlContent = he.decode(strSpec);
   const htmlContent1 = he.decode(profileValue);
@@ -90,6 +123,7 @@ export const ProductDetail = () => {
     nextArrow: <NextArrow />,
   };
   // console.log("Teacher Data", singleproduct);
+  
   return (
     <div className="product-detail accordion-detail">
       <div className="row mb-50 mt-30">
@@ -148,15 +182,19 @@ export const ProductDetail = () => {
             <div className="detail-extralink mb-50">
               <div className="detail-qty border radius">
                 <Link to="#" className="qty-down">
-                  <i className="fi-rs-angle-small-down"></i>
+                  <i className="fi-rs-angle-small-down" onClick={handleDec}></i>
                 </Link>
-                <span className="qty-val">1</span>
-                <Link to="#" className="qty-up">
+                <span className="qty-val">{quantity}</span>
+                <Link to="#" className="qty-up" onClick={handleInc}>
                   <i className="fi-rs-angle-small-up"></i>
                 </Link>
               </div>
               <div className="product-extra-link2">
-                <button type="submit" className="button button-add-to-cart">
+                <button
+                  type="submit"
+                  className="button button-add-to-cart"
+                  onClick={handelAddToCart}
+                >
                   <i className="fi-rs-shopping-cart"></i>Add to cart
                 </button>
                 <Link
@@ -173,7 +211,7 @@ export const ProductDetail = () => {
               <div className="font-xs">
                 <ul className="mr-50 float-start">
                   <li className="mb-5">
-                    Grade:{" "}
+                    Grade:
                     <span className="text-brand">{singleproduct?.Grade}</span>
                   </li>
                   <li className="mb-5">
@@ -181,19 +219,19 @@ export const ProductDetail = () => {
                     <span className="text-brand">{singleproduct?.Type}</span>
                   </li>
                   <li>
-                    Author:{" "}
+                    Author:
                     <span className="text-brand">{singleproduct?.Author}</span>
                   </li>
                 </ul>
                 <ul className="float-start">
                   <li className="mb-5">
-                    Syllabus:{" "}
+                    Syllabus:
                     <Link to="#">
                       {singleproduct?.attributes[4].strAttributeValue}
                     </Link>
                   </li>
                   <li className="mb-5">
-                    Binding:{" "}
+                    Binding:
                     <Link to="#" rel="tag">
                       Ring Binding
                     </Link>
@@ -258,17 +296,11 @@ export const ProductDetail = () => {
                         </div>
                       )}
 
-                    {singleproduct?.supplier[0]?.strDesc && (
-                      <h6>{singleproduct.supplier[0].strDesc}</h6>
-                    )}
-
                     <div
                       dangerouslySetInnerHTML={{
                         __html: htmlContent1,
                       }}
                     />
-                    {singleproduct?.supplier[0]?.strProfile &&
-                      singleproduct?.supplier[0]?.strProfile}
                   </div>
                 </section>
               </div>

@@ -18,7 +18,7 @@ export const TeacherDetail = () => {
       `${api_url}&tag=get_items_web& intSupplierID=${id}`
     );
     const respData = await response.json();
-    console.log("dkjflsdjf", respData);
+
     setPulicationData(respData.data);
   }
 

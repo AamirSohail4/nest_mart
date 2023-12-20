@@ -1,17 +1,15 @@
 import { Link } from "react-router-dom";
 import img1 from "../../assets/imgs/theme/msbooks_logo.png";
-import img2 from "../../assets/imgs/theme/icons/icon-location.svg";
-import img4 from "../../assets/imgs/theme/icons/icon-email-2.svg";
-import img5 from "../../assets/imgs/theme/icons/icon-clock.svg";
 import img6 from "../../assets/imgs/theme/app-store.jpg";
 import img7 from "../../assets/imgs/theme/google-play.jpg";
 import { ScrollButton } from "./scrollbutton/ScrollButton";
-import { Icon } from "@iconify/react";
 import "./footer.css";
-
+import { useContext } from "react";
+import { AddressContext } from "../../context/AddresContext";
 
 export const Footer = () => {
-  
+  const { address } = useContext(AddressContext);
+
   return (
     <>
       <section className="section-padding footer-mid">
@@ -37,39 +35,19 @@ export const Footer = () => {
                 </div>
                 <ul className="contact-infor">
                   <li>
-                    <img src={img2} alt="" />
                     <strong>Address: </strong>{" "}
-                    <span>83-B1 Gulberg 3 ghalib market Lahore</span>
-                  </li>
-                  <li>
-                    <Icon
-                      icon="fa6-solid:mobile-screen-button"
-                      className="mobile_phone"
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: address,
+                      }}
                     />
-                    <strong>Mobile:</strong>
-                    <span> 0333-4504507</span>
-                  </li>
-                  <li>
-                    <Icon
-                      icon="fa6-solid:mobile-screen-button"
-                      className="mobile_phone"
-                    />
-                    <strong> Mobile:</strong>
-                    <span> 0333-4548651</span>
-                  </li>
-                  <li>
-                    <Icon icon="logos:whatsapp-icon" className="mobile_phone" />
-                    <strong>Whatsapp:</strong>
-                    <span> 03365774780</span>
                   </li>
 
                   <li>
-                    <img src={img4} alt="" />
                     <strong>Email:</strong>
                     <span>info@msbooks.pk</span>
                   </li>
                   <li>
-                    <img src={img5} alt="" />
                     <strong>Hours:</strong>
                     <span>10:00 - 18:00, Mon - Sat</span>
                   </li>

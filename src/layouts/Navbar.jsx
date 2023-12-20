@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+// import { AddressContext } from "../context/AddresContext";
+import { Link, useNavigate } from "react-router-dom";
 import img5 from "../assets/imgs/theme/icons/icon-heart.svg";
 import img6 from "../assets/imgs/theme/icons/icon-cart.svg";
-import img7 from "../assets/imgs/shop/thumbnail-3.jpg";
-import img8 from "../assets/imgs/shop/thumbnail-2.jpg";
+
 import img9 from "../assets/imgs/theme/icons/icon-user.svg";
 import img10 from "../assets/imgs/theme/msbooks_logo.png";
 import img11 from "../assets/imgs/theme/icons/category-1.svg";
@@ -25,24 +25,36 @@ import img28 from "../assets/imgs/theme/icons/icon-cart.svg";
 import img29 from "../assets/imgs/shop/thumbnail-3.jpg";
 import img30 from "../assets/imgs/shop/thumbnail-4.jpg";
 import img31 from "../assets/imgs/shop/thumbnail-4.jpg";
-import { api_url } from "../config/env";
-import { relateProd_url } from "../config/env";
+import { api_url, relateProd_url } from "../config/env";
+import { Icon } from "@iconify/react";
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
-export const Navbar = () => {
+export const Navbar = ({ setMydata }) => {
+  const navigate = useNavigate();
+  const { cartItem, DeleteCartSingleItem } = useContext(CartContext);
+
   const [scrolled, setScrolled] = useState(false);
-
-  const [searchBarCategory, setSearchBarCategory] = useState([]);
+  // console.log(address);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
-  // const [mydata, setMydata] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchBarCategory, setSearchBarCategory] = useState([]);
 
-  const handleInputChange = (event) => {
-    setSearchQuery(event.target.value);
+  const calculateSubtotal = () => {
+    if (!cartItem || cartItem.length === 0) {
+      return 0; // or any default value you prefer
+    }
+
+    let subtotal = 0;
+
+    cartItem.forEach((item) => {
+      subtotal += item.dblItemQty * item.item.dblSalePrice;
+    });
+
+    return subtotal.toFixed(2);
   };
-
   // Function Perform on Click and Fetch data.
   const handleSearchButtonClick = async () => {
-    console.log("search ===>", searchQuery);
     try {
       const response = await fetch(
         `${relateProd_url}&tag=get_items_web&intCategoryID=${selectedCategoryId}&strSearch=${searchQuery}`
@@ -53,15 +65,19 @@ export const Navbar = () => {
       }
 
       const myQueryData = await response.json();
-      console.log("my data==>", myQueryData);
-
-      // setMydata(myQueryData.data);
+      if (myQueryData.status === "1") {
+        setMydata(myQueryData.data);
+        navigate("/category");
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  // Function for Selected Option .
+  const handleInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   const handleCategoryChange = (event) => {
     const selectedId = event.target.value;
     setSelectedCategoryId(selectedId === "all" ? "" : parseInt(selectedId, 10));
@@ -86,7 +102,7 @@ export const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     SearchBarCategory();
   }, []);
-
+  // console.log("This is Cart item ", cartItem);
   return (
     <header className="header-area header-style-1 header-height-2">
       <div className="mobile-promotion">
@@ -128,56 +144,6 @@ export const Navbar = () => {
                     Need help? Call Us:{" "}
                     <strong className="text-brand"> + +92-42-35774780</strong>
                   </li>
-                  {/* <li>
-                    <Link className="language-dropdown-active" href="#">
-                      English <i className="fi-rs-angle-small-down"></i>
-                    </Link>
-                    <ul className="language-dropdown">
-                      <li>
-                        <Link to="#">
-                          <img src={img1} alt="" />
-                          Français
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="#">
-                          <img src={img2} alt="" />
-                          Deutsch
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="#">
-                          <img src={img3} alt="" />
-                          Pусский
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <Link className="language-dropdown-active" to="#">
-                      USD <i className="fi-rs-angle-small-down"></i>
-                    </Link>
-                    <ul className="language-dropdown">
-                      <li>
-                        <Link to="#">
-                          <img src={img1} alt="" />
-                          INR
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="#">
-                          <img src={img2} alt="" />
-                          MBP
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="#">
-                          <img src={img3} alt="" />
-                          EU
-                        </Link>
-                      </li>
-                    </ul>
-                  </li> */}
                 </ul>
               </div>
             </div>
@@ -193,30 +159,33 @@ export const Navbar = () => {
               </Link>
             </div>
             <div className="header-right">
-              <div className="search-style-2">
-                <form>
-                  <select
-                    value={selectedCategoryId}
-                    onChange={handleCategoryChange}
-                  >
-                    <option value="all">All Categories</option>
-                    {searchBarCategory?.map((item, index) => {
-                      return (
-                        <option key={index} value={item.intID}>
-                          {item.strDesc}
-                        </option>
-                      );
-                    })}
-                  </select>
+              <div className="search-style-2_my">
+                <select
+                  value={selectedCategoryId}
+                  onChange={handleCategoryChange}
+                >
+                  <option value="all">All Categories</option>
+                  {searchBarCategory?.map((item, index) => {
+                    return (
+                      <option key={index} value={item.intID}>
+                        {item.strDesc}
+                      </option>
+                    );
+                  })}
+                </select>
+                <div className="input_wrap">
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={handleInputChange}
                   />
-                  <button type="button" onClick={handleSearchButtonClick}>
-                    Search
+                  <button type="button">
+                    <Icon
+                      icon="ic:sharp-search"
+                      onClick={handleSearchButtonClick}
+                    />
                   </button>
-                </form>
+                </div>
               </div>
               <div className="header-action-right">
                 <div className="header-action-2">
@@ -233,62 +202,49 @@ export const Navbar = () => {
                   <div className="header-action-icon-2">
                     <Link className="mini-cart-icon" href="/shop-cart">
                       <img alt="Nest" src={img6} />
-                      <span className="pro-count blue">2</span>
+                      <span className="pro-count blue">{cartItem?.length}</span>
                     </Link>
                     <Link to="/shop-cart">
                       <span className="lable">Cart</span>
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2">
                       <ul>
-                        <li>
-                          <div className="shopping-cart-img">
-                            <Link to="shop-product-right.html">
-                              <img alt="Nest" src={img7} />
-                            </Link>
-                          </div>
-                          <div className="shopping-cart-title">
-                            <h4>
-                              <Link to="shop-product-right.html">
-                                Daisy Casual Bag
-                              </Link>
-                            </h4>
-                            <h4>
-                              <span>1 × </span>$800.00
-                            </h4>
-                          </div>
-                          <div className="shopping-cart-delete">
-                            <Link to="#">
-                              <i className="fi-rs-cross-small"></i>
-                            </Link>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="shopping-cart-img">
-                            <Link to="shop-product-right.html">
-                              <img alt="Nest" src={img8} />
-                            </Link>
-                          </div>
-                          <div className="shopping-cart-title">
-                            <h4>
-                              <Link to="shop-product-right.html">
-                                Corduroy Shirts
-                              </Link>
-                            </h4>
-                            <h4>
-                              <span>1 × </span>$3200.00
-                            </h4>
-                          </div>
-                          <div className="shopping-cart-delete">
-                            <Link to="#">
-                              <i className="fi-rs-cross-small"></i>
-                            </Link>
-                          </div>
-                        </li>
+                        {cartItem?.map((item, index) => {
+                          return (
+                            <li key={index}>
+                              <div className="shopping-cart-img">
+                                <Link to="/shop-cart">
+                                  <img
+                                    alt="Nest"
+                                    src={item.item.strImageThumbnail}
+                                  />
+                                </Link>
+                              </div>
+                              <div className="shopping-cart-title">
+                                <h4>
+                                  <Link to="shop-product-right.html"></Link>
+                                </h4>
+                                <h4>
+                                  <span>{item.dblItemQty} × </span>
+                                  {item.item.dblSalePrice}
+                                </h4>
+                              </div>
+                              <div
+                                className="shopping-cart-delete"
+                                onClick={() => DeleteCartSingleItem(item)}
+                              >
+                                <Link to="#">
+                                  <i className="fi-rs-cross-small"></i>
+                                </Link>
+                              </div>
+                            </li>
+                          );
+                        })}
                       </ul>
                       <div className="shopping-cart-footer">
                         <div className="shopping-cart-total">
                           <h4>
-                            Total <span>$4000.00</span>
+                            Total <span>${calculateSubtotal()}</span>
                           </h4>
                         </div>
                         <div className="shopping-cart-button">

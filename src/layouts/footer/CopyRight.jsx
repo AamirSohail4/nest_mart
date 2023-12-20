@@ -3,17 +3,17 @@ import { Link } from "react-router-dom";
 import img1 from "../../assets/imgs/theme/icons/phone-call.svg";
 import img2 from "../../assets/imgs/theme/icons/phone-call.svg";
 import img3 from "../../assets/imgs/theme/icons/icon-facebook-white.svg";
-import img4 from "../../assets/imgs/theme/icons/icon-twitter-white.svg";
 import img5 from "../../assets/imgs/theme/icons/icon-instagram-white.svg";
-import img6 from "../../assets/imgs/theme/icons/icon-pinterest-white.svg";
-import img7 from "../../assets/imgs/theme/icons/icon-youtube-white.svg";
-import { bannerText_url } from "../../config/env";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { AddressContext } from "../../context/AddresContext";
 
 export const CopyRight = () => {
-  const [companyContacNo, setcompanyContacNo] = useState();
-
-  console.log("companyContacNo");
+  const { contactNo, contactNo2 } = useContext(AddressContext);
+  // console.log(
+  //   "This contect Detail in copyRight Section",
+  //   setContacNo2,
+  //   setContacNo
+  // );
   return (
     <>
       <div
@@ -38,40 +38,34 @@ export const CopyRight = () => {
           <div className="col-xl-4 col-lg-6 text-center d-none d-xl-block">
             <div className="hotline d-lg-inline-flex mr-30">
               <img src={img1} alt="hotline" />
-              <p>
-                +923334548651<span>Working 8:00 - 22:00</span>
-              </p>
+              <div
+                style={{ color: "white" }}
+                dangerouslySetInnerHTML={{
+                  __html: contactNo,
+                }}
+              />
             </div>
             <div className=" footer hotline d-lg-inline-flex">
               <img src={img2} alt="hotline" />
-              <p>
-                +923334504507
-                <span>24/7 Support Center</span>
-              </p>
+              <div
+                style={{ color: "white" }}
+                dangerouslySetInnerHTML={{
+                  __html: contactNo2,
+                }}
+              />
             </div>
           </div>
           <div className="col-xl-4 col-lg-6 col-md-6 text-end d-none d-md-block">
             <div className="mobile-social-icon">
               <h6>Follow Us</h6>
-              <Link to="#">
+              <Link to="https://web.facebook.com/MSBooks.pk">
                 <img src={img3} alt="" />
               </Link>
-              <Link to="#">
-                <img src={img4} alt="" />
-              </Link>
-              <Link to="#">
+
+              <Link to="https://www.instagram.com/msbooks.pk">
                 <img src={img5} alt="" />
               </Link>
-              <Link to="#">
-                <img src={img6} alt="" />
-              </Link>
-              <Link to="#">
-                <img src={img7} alt="" />
-              </Link>
             </div>
-            <p className="font-sm">
-              Up to 15% discount on your first subscribe
-            </p>
           </div>
         </div>
       </div>
