@@ -23,7 +23,8 @@ import { TeacherDetail } from "../pages/teacher/TeacherDetail";
 import { BookShop } from "../pages/shop/BookShop";
 import { Categories } from "../pages/allproduct/Category/Categories";
 import { Verify } from "../pages/login/Verify";
-import { ModelView } from "../pages/cart/ModelView";
+
+import { Test } from "../layouts/Test";
 
 export const Router = () => {
   const [mydata, setMydata] = useState([]);
@@ -61,7 +62,7 @@ export const Router = () => {
         <Route path="page-404" element={<PageNotFound />} />
         <Route path="category" element={<Categories fetchData={mydata} />} />
         <Route path="verify" element={<Verify user_phone={userPhone} />} />
-        <Route path="modelview" element={<ModelView />} />
+        <Route path="test" element={<Test />} />
       </Route>
     </Routes>
   );

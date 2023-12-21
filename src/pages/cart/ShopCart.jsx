@@ -1,10 +1,12 @@
 import { useContext, useEffect } from "react";
 import { CartContext } from "../../context/CartContext";
 import { useState } from "react";
-import { api_url, cart_url, singUp_url } from "../../config/env";
+import { api_url, cart_url } from "../../config/env";
 
 export const ShopCart = () => {
-  const { cartItem, showPaymentMode } = useContext(CartContext);
+  const myUserId = localStorage.getItem("userId");
+  const { cartItem, showPaymentMode, shipmentAddres, fetchShipmentAddres } =
+    useContext(CartContext);
   const { handleDeleteClick, DeleteCartSingleItem } = useContext(CartContext);
   const [open, setOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -12,6 +14,8 @@ export const ShopCart = () => {
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [locatCities, setCities] = useState([]);
 
+  // console.log("My User Id is ", myUserId);
+  // console.log("This My Shipment Addres===>", shipmentAddres);
   const handleAddModalClick = () => {
     console.log("button click");
     console.log("open =>>", open);
@@ -35,11 +39,11 @@ export const ShopCart = () => {
         setPaymentDetails(data.data.strDetails);
       } catch (error) {
         console.error("Error fetching payment details:", error);
-        // Handle error as needed
+       
       }
     }
   };
-  console.log("This is Value of Check Box Selelct", paymentDetails);
+ 
   const handleDec = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
@@ -60,7 +64,7 @@ export const ShopCart = () => {
     );
   };
   const [formData, setFormData] = useState({
-    contactname: "",
+    name: "",
     email: "",
     phone: "",
     address: "",
@@ -73,12 +77,13 @@ export const ShopCart = () => {
       [name]: value,
     }));
   };
+
   const handleButtonClick = async () => {
     let data = new FormData();
-    data.append("intUserID", localStorage.getItem("userId"));
-    data.append("strShipmentContactPerson", formData.contactname);
+    data.append("intUserID", myUserId);
+    data.append("strShipmentContactPerson", formData.name);
     data.append("strShipmentAddress", formData.address);
-    data.append("strShipmentEmail,formData.email");
+    data.append("strShipmentEmail", formData.email);
     data.append("intCityID", formData.city);
     data.append("strAlternateContactNo", formData.phone);
 
@@ -91,17 +96,9 @@ export const ShopCart = () => {
       const resData = await response.json();
 
       console.log("Shipment api res", resData);
+      fetchShipmentAddres();
       resetForm();
     }
-    const resetForm = () => {
-      setFormData({
-        contactname: "",
-        email: "",
-        phone: "",
-        address: "",
-        city: "",
-      });
-    };
   };
   useEffect(() => {
     const fetchCities = async () => {
@@ -117,6 +114,15 @@ export const ShopCart = () => {
 
     fetchCities();
   }, []);
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      city: "",
+    });
+  };
   return (
     <>
       <div className="page-header breadcrumb-wrap">
@@ -392,8 +398,7 @@ export const ShopCart = () => {
                                 data-target="#bankTranfer"
                                 aria-controls="bankTranfer"
                               >
-                                Mouza Depay wala Basti murshid waha Po Jallal
-                                Abad Tehsil and District Bahawalpur
+                                {shipmentAddres && shipmentAddres}
                               </label>
                             </div>
                           </div>
@@ -494,13 +499,27 @@ export const ShopCart = () => {
                         <input
                           required=""
                           className="form-control"
+                          name="name"
+                          id="address"
+                          type="text"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      {/* <div className="form-group col-md-6">
+                        <label>
+                          Contact Person <span className="required">*</span>
+                        </label>
+                        <input
+                          required=""
+                          className="form-control"
                           name="contact_person"
                           id="contact_person"
                           type="text"
                           value={formData.contactname}
                           onChange={handleInputChange}
                         />
-                      </div>
+                      </div> */}
                       <div className="form-group col-md-6">
                         <label>
                           Contact No <span className="required">*</span>

@@ -3,12 +3,13 @@ import { useState, useEffect, createContext } from "react";
 import { cart_url } from "../config/env";
 
 export const CartContext = createContext();
-
+const myUserId = localStorage.getItem("userId");
+// console.log("This My UserId===>", myUserId);
 export const CartProvider = ({ children }) => {
   const [cartItem, setCartItem] = useState();
   const [cartItems, setCartItems] = useState();
   const [showPaymentMode, setshowPaymentMode] = useState();
-
+  const [shipmentAddres, setShipmentAddres] = useState();
   async function CartItemDisplay() {
     const response = await fetch(
       `${cart_url}&tag=get_user_cart&intUserID=${localStorage.getItem(
@@ -71,9 +72,21 @@ export const CartProvider = ({ children }) => {
       console.error("Error during deletion:", error);
     }
   };
-
+  const fetchShipmentAddres = async () => {
+    try {
+      const response = await fetch(
+        `${cart_url}&tag=get_user_shipment_address&intUserID=${myUserId}`
+      );
+      const data = await response.json();
+      // console.log("This My Shipment Addres===>", data);
+      setShipmentAddres(data.data[0]?.strShipmentAddress);
+    } catch (error) {
+      console.error("Error fetching city data:", error);
+    }
+  };
+  // console.log("This My Shipment Addres===>", shipmentAddres);
   useEffect(() => {
-    
+    fetchShipmentAddres();
     CartItemDisplay();
     PaymentModeDisplay();
   }, [cartItems]);
@@ -85,7 +98,8 @@ export const CartProvider = ({ children }) => {
         CartItemDisplay,
         handleDeleteClick,
         DeleteCartSingleItem,
-        showPaymentMode,
+        shipmentAddres,
+        fetchShipmentAddres,
       }}
     >
       {children}

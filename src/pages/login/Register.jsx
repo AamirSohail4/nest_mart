@@ -4,6 +4,7 @@ import { api_url } from "../../config/env";
 import { singUp_url } from "../../config/env";
 
 export const Register = () => {
+  const myUserId = localStorage.getItem("userId");
   const [locatCities, setCities] = useState([]);
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export const Register = () => {
 
   const handleButtonClick = async () => {
     let data = new FormData();
-    data.append("intUserID", localStorage.getItem("userId"));
+    data.append("intUserID", myUserId);
     data.append("strFullName", formData.firstName + " " + formData.lastName);
     data.append("intRoleID", localStorage.getItem("roleId"));
     data.append("strEmail", formData.email);
