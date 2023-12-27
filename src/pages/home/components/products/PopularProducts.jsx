@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
 import { api_url } from "../../../../config/env";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { CartContext } from "../../../../context/CartContext";
 
 export const PopularProducts = () => {
+  const { addToCart } = useContext(CartContext);
   const [myproduct, setMyProduct] = useState([]);
+
   useEffect(() => {
     async function AllProductShow() {
       const response = await fetch(
         `${api_url}&tag=get_items_web&intCategoryID=1&btIsFeatured=1&limit=20`
       );
       const productData = await response.json();
-
       setMyProduct(productData.data);
     }
     AllProductShow();
@@ -72,6 +74,7 @@ export const PopularProducts = () => {
                           </Link>
 
                           <Link
+                            to={`single-product/${item.strSEOLink}`}
                             aria-label="Quick view"
                             className="action-btn"
                             data-bs-toggle="modal"
@@ -79,9 +82,6 @@ export const PopularProducts = () => {
                           >
                             <i className="fi-rs-eye"></i>
                           </Link>
-                        </div>
-                        <div className="product-badges product-badges-position product-badges-mrg">
-                          <span className="sale">Sale</span>
                         </div>
                       </div>
                       <div className="product-content-wrap">
@@ -95,18 +95,6 @@ export const PopularProducts = () => {
                             {item.strDesc}
                           </Link>
                         </h2>
-                        <div className="product-rate-cover">
-                          <div className="product-rate d-inline-block">
-                            <div
-                              className="product-rating"
-                              style={{ width: " 80%" }}
-                            ></div>
-                          </div>
-                          <span className="font-small ml-5 text-muted">
-                            (3.5)
-                          </span>
-                        </div>
-
                         <div className="product-card-bottom">
                           <div className="product-price">
                             <span>Rs: {item.dblSalePrice}</span>
@@ -114,7 +102,7 @@ export const PopularProducts = () => {
                           <div className="add-cart">
                             <Link
                               className="add"
-                              to={`single-product/${item.strSEOLink}`}
+                              onClick={() => addToCart(item.intID, 1)}
                             >
                               <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                             </Link>

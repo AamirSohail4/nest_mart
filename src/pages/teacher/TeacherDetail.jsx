@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import he from "he";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { teacher_url } from "../../config/env";
 import { api_url } from "../../config/env";
+import { CartContext } from "../../context/CartContext";
 
 export const TeacherDetail = () => {
+  const { addToCart } = useContext(CartContext);
   const { strSEOLink } = useParams();
   const { id } = useParams();
   const [teacher, setTeacher] = useState({});
@@ -131,7 +133,7 @@ export const TeacherDetail = () => {
               >
                 <div className="row product-grid-4">
                   {Array.isArray(publicationData) ? (
-                    publicationData.map((items, index) => (
+                    publicationData.map((item, index) => (
                       <div
                         key={index}
                         className="col-lg-1-5 col-md-4 col-12 col-sm-6 "
@@ -147,15 +149,15 @@ export const TeacherDetail = () => {
                         >
                           <div className="product-img-action-wrap">
                             <div className="product-img product-img-zoom">
-                              <Link to={`/single-product/${items.strSEOLink}`}>
+                              <Link to={`/single-product/${item?.strSEOLink}`}>
                                 <img
                                   className="default-img"
-                                  src={items.strImageThumbnail}
+                                  src={item?.strImageThumbnail}
                                   alt=""
                                 />
                                 <img
                                   className="hover-img"
-                                  src={items.strImageThumbnail}
+                                  src={item?.strImageThumbnail}
                                   alt=""
                                 />
                               </Link>
@@ -184,20 +186,19 @@ export const TeacherDetail = () => {
                           </div>
                           <div className="product-content-wrap">
                             <div className="product-category">
-                              <Link to="#">{items.strItemCategory}</Link>
+                              <Link to="#">{item?.strItemCategory}</Link>
                             </div>
                             <h2>
-                              <Link to="">{items.strDesc}</Link>
+                              <Link to="">{item?.strDesc}</Link>
                             </h2>
                             <div className="product-card-bottom">
                               <div className="product-price">
-                                <span>Rs. {items.dblSalePrice}</span>
+                                <span>Rs. {item?.dblSalePrice}</span>
                               </div>
                               <div className="add-cart">
                                 <Link
                                   className="add add_in_cart"
-                                  data-value="137"
-                                  data-desc="O Level Computer Notes P1 &amp; P2 by Navid Saqib"
+                                  onClick={() => addToCart(item?.intID, 1)}
                                 >
                                   <i className="fi-rs-shopping-cart mr-5"></i>
                                   Add{" "}

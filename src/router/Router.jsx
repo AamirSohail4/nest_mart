@@ -23,22 +23,16 @@ import { TeacherDetail } from "../pages/teacher/TeacherDetail";
 import { BookShop } from "../pages/shop/BookShop";
 import { Categories } from "../pages/allproduct/Category/Categories";
 import { Verify } from "../pages/login/Verify";
-
-import { Test } from "../layouts/Test";
+import { ManuCategory } from "../pages/allproduct/Category/ManuCategory";
 
 export const Router = () => {
   const [mydata, setMydata] = useState([]);
-  const [userPhone, setUserPhone] = useState("");
+
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <FrontendLayout setMydata={setMydata} setUserPhone={setUserPhone} />
-        }
-      >
+      <Route path="/" element={<FrontendLayout setMydata={setMydata} />}>
         <Route index element={<Home />} />
-        <Route path="allProducts" element={<ProductsGrid />} />
+        <Route path="allProducts/:page?" element={<ProductsGrid />} />
         <Route path="single-product/:seoLink" element={<SingleProduct />} />
         <Route path="shop-cart" element={<ShopCart />} />
         <Route path="shop-wishlist" element={<ShopWishlist />} />
@@ -60,9 +54,15 @@ export const Router = () => {
         />
         <Route path="book-shop" element={<BookShop />} />
         <Route path="page-404" element={<PageNotFound />} />
-        <Route path="category" element={<Categories fetchData={mydata} />} />
-        <Route path="verify" element={<Verify user_phone={userPhone} />} />
-        <Route path="test" element={<Test />} />
+        <Route
+          path="Categories/:page?"
+          element={<Categories fetchData={mydata} component={Categories} />}
+        />
+        <Route
+          path="manuCategory/:page?"
+          element={<ManuCategory component={ManuCategory} />}
+        />
+        <Route path="verify" element={<Verify />} />
       </Route>
     </Routes>
   );

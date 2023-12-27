@@ -5,7 +5,12 @@ import shopImg from "../../assets/imgs/banner/dummy-shop.png";
 
 export const BookShop = () => {
   const [allbookShops, setallBookShop] = useState();
-
+  const [open, setOpen] = useState(false);
+  const handleAddModalClick = () => {
+    console.log("button click");
+    console.log("open =>>", open);
+    setOpen(!open);
+  };
   useEffect(() => {
     async function allBookShops() {
       const response = await fetch(`${teacher_url}&tag=get_shops`);
@@ -53,8 +58,6 @@ export const BookShop = () => {
                             <Link to="/">
                               <button
                                 style={{ border: "none", background: "none" }}
-                                // onClick="change_text(this.value)"
-                                // value='{"intID":"10","strCode":"00010","strDesc":"Azeem Books ","strContactPerson":"","strAddress":"G-1 Market Johar Town ","intCityID":"2","strCity":"Lahore ","strCell":"03004530196","strPicture":""}'
                                 // data-toggle="modal"
                                 // data-target="#myModal"
                               >
@@ -80,7 +83,6 @@ export const BookShop = () => {
                             <Link to="/">
                               <button
                                 style={{ border: "none", background: "none" }}
-                                // value='{"intID":"10","strCode":"00010","strDesc":"Azeem Books ","strContactPerson":"","strAddress":"G-1 Market Johar Town ","intCityID":"2","strCity":"Lahore ","strCell":"03004530196","strPicture":""}'
                                 // data-toggle="modal"
                                 // data-target="#myModal"
                               >
@@ -90,10 +92,7 @@ export const BookShop = () => {
                           </h2>
 
                           <button
-                            // onClick="change_text(this.value)"
-                            // value='{"intID":"10","strCode":"00010","strDesc":"Azeem Books ","strContactPerson":"","strAddress":"G-1 Market Johar Town ","intCityID":"2","strCity":"Lahore ","strCell":"03004530196","strPicture":""}'
-                            // data-toggle="modal"
-                            // data-target="#myModal"
+                            onClick={handleAddModalClick}
                             className="btn w-100 hover-up"
                           >
                             Details
@@ -102,6 +101,9 @@ export const BookShop = () => {
                             className="modal fade"
                             id="myModal"
                             role="dialog"
+                            style={{
+                              display: `${open === true ? "block" : "none"}`,
+                            }}
                           >
                             <div className="modal-dialog">
                               <div className="modal-content">

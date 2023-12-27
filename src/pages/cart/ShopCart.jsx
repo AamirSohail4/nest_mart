@@ -2,67 +2,80 @@ import { useContext, useEffect } from "react";
 import { CartContext } from "../../context/CartContext";
 import { useState } from "react";
 import { api_url, cart_url } from "../../config/env";
+import { Link } from "react-router-dom";
+import { PaymentContext } from "../../context/PaymentMethod";
 
 export const ShopCart = () => {
-  const myUserId = localStorage.getItem("userId");
-  const { cartItem, showPaymentMode, shipmentAddres, fetchShipmentAddres } =
+  const currentUserId = localStorage.getItem("userId");
+  const { cartItem, deleteAllCartItems, deleteSingleCartItem } =
     useContext(CartContext);
-  const { handleDeleteClick, DeleteCartSingleItem } = useContext(CartContext);
+  const { shipmentAddress, fetchShipmentAddress, showPaymentMode } =
+    useContext(PaymentContext);
+
   const [open, setOpen] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const [selectedPayment, setSelectedPayment] = useState(null);
-  const [paymentDetails, setPaymentDetails] = useState(null);
+  const [quantities, setQuantities] = useState({});
+
+  // const [selectedPayment, setSelectedPayment] = useState(null);
+  // const [paymentDetails, setPaymentDetails] = useState(null);
   const [locatCities, setCities] = useState([]);
 
-  // console.log("My User Id is ", myUserId);
-  // console.log("This My Shipment Addres===>", shipmentAddres);
+  // console.log(showPaymentMode);
+
   const handleAddModalClick = () => {
-    console.log("button click");
-    console.log("open =>>", open);
     setOpen(!open);
   };
 
-  const handlePaymentSelection = async (value) => {
-    // console.log("Selected Payment Mode:", value); // Log the selected value to the console
-    const modeValue = value;
+  // const handlePaymentSelection = async (value) => {
+  //   // console.log("Selected Payment Mode:", value); // Log the selected value to the console
+  //   const modeValue = value;
 
-    setSelectedPayment(value);
+  //   setSelectedPayment(value);
 
-    if (modeValue === "3") {
-      try {
-        const response = await fetch(
-          `${cart_url}&tag=get_payment_mode_detail&intCompanyID=1&intPaymentModeID=${modeValue}`
-        );
+  //   if (modeValue === "3") {
+  //     try {
+  //       const response = await fetch(
+  //         `${cart_url}&tag=get_payment_mode_detail&intCompanyID=1&intPaymentModeID=${modeValue}`
+  //       );
 
-        const data = await response.json();
-        console.log("My Api Response Data", data.data.strDetails);
-        setPaymentDetails(data.data.strDetails);
-      } catch (error) {
-        console.error("Error fetching payment details:", error);
-       
-      }
+  //       const data = await response.json();
+  //       console.log("My Api Response Data", data.data.strDetails);
+  //       setPaymentDetails(data?.data?.strDetails);
+  //     } catch (error) {
+  //       console.error("Error fetching payment details:", error);
+  //     }
+  //   }
+  // };
+
+  const handleDec = (productID) => {
+    if (quantities[productID] > 1) {
+      setQuantities((prevQuantities) => ({
+        ...prevQuantities,
+        [productID]: prevQuantities[productID] - 1,
+      }));
     }
   };
- 
-  const handleDec = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
-  const handleInc = () => {
-    setQuantity(quantity + 1);
+
+  const handleInc = (productID) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [productID]: (prevQuantities[productID] || 0) + 1,
+    }));
   };
 
-  const calculateTotal = () => {
-    if (!cartItem || !cartItem.length) {
-      return 0; // Return 0 if cartItem is not defined or empty
-    }
+  // const calculateTotal = () => {
+  //   if (!cartItem || !cartItem.length) {
+  //     return 0; // Return 0 if cartItem is not defined or empty
+  //   }
 
-    return cartItem.reduce(
-      (total, item) => total + parseFloat(item.item.dblSalePrice) * quantity,
-      0
-    );
-  };
+  //   return cartItem.reduce(
+  //     (total, item) =>
+  //       total +
+  //       parseFloat(item?.item?.dblSalePrice) *
+  //         (quantities[item?.item?.intID] || 1),
+  //     0
+  //   );
+  // };
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -70,6 +83,7 @@ export const ShopCart = () => {
     address: "",
     city: "",
   });
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -80,7 +94,7 @@ export const ShopCart = () => {
 
   const handleButtonClick = async () => {
     let data = new FormData();
-    data.append("intUserID", myUserId);
+    data.append("intUserID", currentUserId);
     data.append("strShipmentContactPerson", formData.name);
     data.append("strShipmentAddress", formData.address);
     data.append("strShipmentEmail", formData.email);
@@ -96,10 +110,11 @@ export const ShopCart = () => {
       const resData = await response.json();
 
       console.log("Shipment api res", resData);
-      fetchShipmentAddres();
+      fetchShipmentAddress();
       resetForm();
     }
   };
+
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -114,6 +129,7 @@ export const ShopCart = () => {
 
     fetchCities();
   }, []);
+
   const resetForm = () => {
     setFormData({
       name: "",
@@ -123,15 +139,18 @@ export const ShopCart = () => {
       city: "",
     });
   };
+
   return (
     <>
       <div className="page-header breadcrumb-wrap">
         <div className="container">
           <div className="breadcrumb">
-            <a href="/" rel="nofollow">
+            <Link to="/" rel="nofollow">
               <i className="fi-rs-home mr-5"></i>Home
-            </a>
-            <span></span> Shop
+            </Link>
+            <Link to="/allproducts">
+              <span>Shop</span>
+            </Link>
             <span></span> Cart
           </div>
         </div>
@@ -146,7 +165,7 @@ export const ShopCart = () => {
             <h1 className="heading-2 mb-10">Your Cart</h1>
             <div className="d-flex justify-content-between">
               <h6 className="text-body">
-                There are <span className="text-brand">{cartItem?.length}</span>{" "}
+                There are <span className="text-brand">{cartItem}</span>{" "}
                 products in your cart
               </h6>
               <h6 className="text-body">
@@ -154,7 +173,9 @@ export const ShopCart = () => {
                   id="clr-cart"
                   style={{ border: "none", backgroundColor: "white" }}
                   className="text-muted clear-cart btnCartEmpty"
-                  onClick={handleDeleteClick}
+                  onClick={() => {
+                    deleteAllCartItems;
+                  }}
                 >
                   <i className="fi-rs-trash mr-5"></i>
                   Clear Cart
@@ -190,12 +211,12 @@ export const ShopCart = () => {
 
                 <tbody id="cartTable">
                   {cartItem?.map((item, index) => {
-                    // console.log("Single Cart Item", item);
+                    const productID = item?.item?.intID;
                     return (
                       <tr key={index} className="">
                         <td className="custome-checkbox pl-30"></td>
                         <td className="image product-thumbnail pt-40">
-                          <img src={item.item.strImage} alt="#" />
+                          <img src={item?.item?.strImage} alt="#" />
                         </td>
                         <td className="product-des product-name">
                           <h6 className="mb-5">
@@ -203,13 +224,14 @@ export const ShopCart = () => {
                               className="product-name mb-10 text-heading"
                               href=""
                             >
-                              {item.item.strDesc}
+                              {item?.item?.strDesc}
                             </a>
                           </h6>
                         </td>
                         <td className="price" data-title="Price">
                           <h4 className="text-body">
-                            {item.item.strUOM} {item.item.dblSalePrice}
+                            {item?.item?.strUOM}{" "}
+                            {parseFloat(item?.item?.dblSalePrice)}
                           </h4>
                         </td>
                         <td
@@ -226,11 +248,11 @@ export const ShopCart = () => {
                               >
                                 <i
                                   className="fi-rs-angle-small-down"
-                                  onClick={handleDec}
+                                  onClick={() => handleDec(productID)}
                                 ></i>
                               </a>
                               <span className="qty-val item-qty">
-                                {quantity}
+                                {quantities[productID] || 1}
                               </span>
                               <a
                                 href="#"
@@ -240,7 +262,7 @@ export const ShopCart = () => {
                               >
                                 <i
                                   className="fi-rs-angle-small-up"
-                                  onClick={handleInc}
+                                  onClick={() => handleInc(productID)}
                                 ></i>
                               </a>
                             </div>
@@ -248,8 +270,9 @@ export const ShopCart = () => {
                         </td>
                         <td className="price" data-title="Price">
                           <h4 className="text-brand">
-                            {item.item.strUOM}{" "}
-                            {parseFloat(item.item.dblSalePrice) * quantity}
+                            {item?.item?.strUOM}
+                            {parseFloat(item?.item?.dblSalePrice) *
+                              quantities[productID] || 1}
                           </h4>
                         </td>
                         <td className="action text-center" data-title="Remove">
@@ -258,7 +281,7 @@ export const ShopCart = () => {
                             id="del-btn1866"
                             className="text-body cartTableDel"
                             data-pid="1866"
-                            onClick={() => DeleteCartSingleItem(item)}
+                            onClick={() => deleteSingleCartItem(item)}
                           >
                             <i className="fi-rs-trash"></i>
                           </button>
@@ -325,9 +348,9 @@ export const ShopCart = () => {
                                   id={`paymentRadios${index}`}
                                   value={item.intID}
                                   data-name={item.strDesc}
-                                  onChange={() =>
-                                    handlePaymentSelection(item.intID)
-                                  }
+                                  // onChange={() =>
+                                  //   handlePaymentSelection(item.intID)
+                                  // }
                                 />
                                 <label
                                   className="form-check-label"
@@ -340,24 +363,20 @@ export const ShopCart = () => {
                                 </label>
                               </div>
                             ))}
-
                             <div id="bankTranfer">
-                              {/* Display payment details here based on the selected option */}
-                              {paymentDetails && (
+                              {/* {paymentDetails && (
                                 <div id="bank detail" className="Detail_dta">
-                                  {/* Render payment details dynamically based on the selected payment mode */}
                                   {selectedPayment === "3" ? (
                                     <>
                                       <p className="Detail_dta">
                                         {paymentDetails.toUpperCase()}
                                       </p>
-                                      {/* Add other details as needed */}
                                     </>
                                   ) : selectedPayment === "1" ? (
                                     <p>Cash on Delivery</p>
                                   ) : null}
                                 </div>
-                              )}
+                              )}*/}
                             </div>
                           </div>
                         </div>
@@ -398,7 +417,7 @@ export const ShopCart = () => {
                                 data-target="#bankTranfer"
                                 aria-controls="bankTranfer"
                               >
-                                {shipmentAddres && shipmentAddres}
+                                {shipmentAddress && shipmentAddress}
                               </label>
                             </div>
                           </div>
@@ -413,7 +432,8 @@ export const ShopCart = () => {
                         <input id="get-subtotal" type="hidden" value="11950" />
 
                         <h4 id="set-subtotal" className="text-brand text-end">
-                          {calculateTotal()}
+                          {/* {calculateTotal()} */}
+                          show total
                         </h4>
                       </td>
                     </tr>
@@ -450,14 +470,18 @@ export const ShopCart = () => {
                       <td className="cart_total_amount">
                         <input id="get-total" type="hidden" value="11950" />
                         <h4 id="set-total" className="text-brand text-end">
-                          Rs {calculateTotal()}
+                          Rs show total price
+                          {/* {calculateTotal()} */}
                         </h4>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <a href="#" className="btn mb-20 w-100 btnValidateCheckout">
+              <a
+                href="/checkout"
+                className="btn mb-20 w-100 btnValidateCheckout"
+              >
                 Proceed To CheckOut<i className="fi-rs-sign-out ml-15"></i>
               </a>
             </div>

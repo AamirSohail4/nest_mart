@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Icon } from "@iconify/react";
+
 import { ProductDetail } from "./components/ProductDetail";
 
 export const SingleProduct = () => {
@@ -9,12 +9,9 @@ export const SingleProduct = () => {
         <div className="container">
           <div className="breadcrumb">
             <Link to="/" rel="nofollow">
-              <Icon icon="mynaui:home" />
-              Home
+              <i className="fi-rs-home mr-5"></i>Home
             </Link>
-            <span></span>
-            <Link to="/"></Link>
-            <span></span>
+            <span></span> <Link to="#"></Link> <span></span>
           </div>
         </div>
       </div>

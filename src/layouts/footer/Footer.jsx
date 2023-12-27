@@ -1,14 +1,55 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import img1 from "../../assets/imgs/theme/msbooks_logo.png";
 import img6 from "../../assets/imgs/theme/app-store.jpg";
 import img7 from "../../assets/imgs/theme/google-play.jpg";
 import { ScrollButton } from "./scrollbutton/ScrollButton";
 import "./footer.css";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AddressContext } from "../../context/AddresContext";
+import { api_url, cart_url } from "../../config/env";
 
 export const Footer = () => {
   const { address } = useContext(AddressContext);
+  const [footerCategory, setFooterCategory] = useState();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const DisplayCategory = async () => {
+      const response = await fetch(
+        `${cart_url}&tag=get_all_category&intCompanyID=1`
+      );
+      const mydata = await response.json();
+      const mainData = mydata.data;
+      const filteredData = mainData.filter(
+        (item) => item.intParentID === "0" && item.intLevel === "1"
+      );
+      // console.log("bbb", filteredData);
+
+      setFooterCategory(filteredData);
+      // console.log("This is Category of Day", footerCategory);
+    };
+    DisplayCategory();
+  }, []);
+
+  const handleClick = async (categoryId, seolink) => {
+    const searchLink = seolink;
+    console.log(searchLink);
+    try {
+      const response = await fetch(
+        `${api_url}&tag=get_items_web&strCategorySEOLink=${seolink}`
+      );
+      const manudata = await response.json();
+
+      if (manudata.status === "1") {
+        // setManuCategory(manudata.data);
+        navigate("/manuCategory", { state: { manudata } });
+      }
+
+      // console.log("API response of Manue:", manudata);
+    } catch (error) {
+      console.error("Error calling API:", error);
+    }
+  };
 
   return (
     <>
@@ -66,20 +107,20 @@ export const Footer = () => {
               <h4 className="widget-title">Products</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="/allProducts">All Products</Link>
+                  <Link to="/allProducts">AllProducts</Link>
                 </li>
-                <li>
-                  <Link to="#">A Level</Link>
-                </li>
-                <li>
-                  <Link to="#">O Level</Link>
-                </li>
-                <li>
-                  <Link to="#">CheckPoint</Link>
-                </li>
-                <li>
-                  <Link to="#">ICGS</Link>
-                </li>
+                {footerCategory?.map((item, index) => {
+                  return (
+                    <li key={index}>
+                      <Link
+                        to="#"
+                        onClick={() => handleClick(item.intID, item.strSEOLink)}
+                      >
+                        {item.strDesc}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
             <div

@@ -1,37 +1,22 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 // import { AddressContext } from "../context/AddresContext";
 import { Link, useNavigate } from "react-router-dom";
 import img5 from "../assets/imgs/theme/icons/icon-heart.svg";
 import img6 from "../assets/imgs/theme/icons/icon-cart.svg";
-
 import img9 from "../assets/imgs/theme/icons/icon-user.svg";
 import img10 from "../assets/imgs/theme/msbooks_logo.png";
-import img11 from "../assets/imgs/theme/icons/category-1.svg";
-import img12 from "../assets/imgs/theme/icons/category-2.svg";
-import img13 from "../assets/imgs/theme/icons/category-3.svg";
-import img14 from "../assets/imgs/theme/icons/category-3.svg";
-import img15 from "../assets/imgs/theme/icons/category-5.svg";
-import img16 from "../assets/imgs/theme/icons/category-6.svg";
-import img17 from "../assets/imgs/theme/icons/category-7.svg";
-import img18 from "../assets/imgs/theme/icons/category-8.svg";
-import img19 from "../assets/imgs/theme/icons/category-9.svg";
-import img20 from "../assets/imgs/theme/icons/category-10.svg";
-import img21 from "../assets/imgs/theme/icons/icon-1.svg";
-import img22 from "../assets/imgs/theme/icons/icon-2.svg";
-import img23 from "../assets/imgs/theme/icons/icon-3.svg";
-import img24 from "../assets/imgs/theme/icons/icon-4.svg";
 import img27 from "../assets/imgs/theme/icons/icon-headphone.svg";
-import img28 from "../assets/imgs/theme/icons/icon-cart.svg";
-import img29 from "../assets/imgs/shop/thumbnail-3.jpg";
-import img30 from "../assets/imgs/shop/thumbnail-4.jpg";
-import img31 from "../assets/imgs/shop/thumbnail-4.jpg";
+
 import { api_url, relateProd_url } from "../config/env";
 import { Icon } from "@iconify/react";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
+import { cart_url } from "../config/env";
 
 export const Navbar = ({ setMydata }) => {
   const navigate = useNavigate();
+
   const { cartItem, DeleteCartSingleItem } = useContext(CartContext);
 
   const [scrolled, setScrolled] = useState(false);
@@ -39,6 +24,23 @@ export const Navbar = ({ setMydata }) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchBarCategory, setSearchBarCategory] = useState([]);
+
+  const [showManu, setShowManau] = useState();
+
+  // function for  ManauDisplay
+  async function ManuDisplay() {
+    const response = await fetch(
+      `${cart_url}&tag=get_all_category&intCompanyID=1`
+    );
+    const paymentMode = await response.json();
+    // console.log("all cart item api respo", bannerData);
+    const responseData = paymentMode.data;
+    setShowManau(responseData);
+  }
+  // console.log("show Manu Categories===", showManu);
+  useEffect(() => {
+    ManuDisplay();
+  }, []);
 
   const calculateSubtotal = () => {
     if (!cartItem || cartItem.length === 0) {
@@ -48,7 +50,7 @@ export const Navbar = ({ setMydata }) => {
     let subtotal = 0;
 
     cartItem.forEach((item) => {
-      subtotal += item.dblItemQty * item.item.dblSalePrice;
+      subtotal += item?.dblItemQty * item.item?.dblSalePrice;
     });
 
     return subtotal.toFixed(2);
@@ -67,7 +69,7 @@ export const Navbar = ({ setMydata }) => {
       const myQueryData = await response.json();
       if (myQueryData.status === "1") {
         setMydata(myQueryData.data);
-        navigate("/category");
+        navigate("/Categories");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -103,6 +105,26 @@ export const Navbar = ({ setMydata }) => {
     SearchBarCategory();
   }, []);
   // console.log("This is Cart item ", cartItem);
+  const handleClick = async (categoryId, seolink) => {
+    const searchLink = seolink;
+    console.log(searchLink);
+    try {
+      const response = await fetch(
+        `${api_url}&tag=get_items_web&strCategorySEOLink=${seolink}`
+      );
+      const manudata = await response.json();
+
+      if (manudata.status === "1") {
+        // setManuCategory(manudata.data);
+        navigate("/manuCategory", { state: { manudata } });
+      }
+
+      // console.log("API response of Manue:", manuCategory);
+    } catch (error) {
+      console.error("Error calling API:", error);
+    }
+  };
+
   return (
     <header className="header-area header-style-1 header-height-2">
       <div className="mobile-promotion">
@@ -216,7 +238,7 @@ export const Navbar = ({ setMydata }) => {
                                 <Link to="/shop-cart">
                                   <img
                                     alt="Nest"
-                                    src={item.item.strImageThumbnail}
+                                    src={item.item?.strImageThumbnail}
                                   />
                                 </Link>
                               </div>
@@ -225,13 +247,13 @@ export const Navbar = ({ setMydata }) => {
                                   <Link to="shop-product-right.html"></Link>
                                 </h4>
                                 <h4>
-                                  <span>{item.dblItemQty} × </span>
-                                  {item.item.dblSalePrice}
+                                  <span>{item?.dblItemQty} × </span>
+                                  {item.item?.dblSalePrice}
                                 </h4>
                               </div>
                               <div
                                 className="shopping-cart-delete"
-                                onClick={() => DeleteCartSingleItem(item)}
+                                onClick={() => DeleteCartSingleItem()}
                               >
                                 <Link to="#">
                                   <i className="fi-rs-cross-small"></i>
@@ -244,7 +266,7 @@ export const Navbar = ({ setMydata }) => {
                       <div className="shopping-cart-footer">
                         <div className="shopping-cart-total">
                           <h4>
-                            Total <span>${calculateSubtotal()}</span>
+                            Total <span>Rs. {calculateSubtotal()}</span>
                           </h4>
                         </div>
                         <div className="shopping-cart-button">
@@ -319,254 +341,122 @@ export const Navbar = ({ setMydata }) => {
               </Link>
             </div>
             <div className="header-nav d-none d-lg-flex">
-              <div className="main-categori-wrap d-none d-lg-block">
-                <div className="categories-dropdown-wrap categories-dropdown-active-large font-heading ">
-                  <div className="d-flex categori-dropdown-inner">
-                    <ul>
-                      <li>
-                        <Link to="shop-grid-right.html">
-                          <img src={img11} alt="" />
-                          Milks and Dairies
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="shop-grid-right.html">
-                          <img src={img12} alt="" />
-                          Clothing & beauty
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="shop-grid-right.html">
-                          <img src={img13} alt="" />
-                          Pet Foods & Toy
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="shop-grid-right.html">
-                          {" "}
-                          <img src={img14} alt="" />
-                          Baking material
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="shop-grid-right.html">
-                          {" "}
-                          <img src={img15} alt="" />
-                          Fresh Fruit
-                        </Link>
-                      </li>
-                    </ul>
-                    <ul className="end">
-                      <li>
-                        <Link to="shop-grid-right.html">
-                          {" "}
-                          <img src={img16} alt="" />
-                          Wines & Drinks
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="shop-grid-right.html">
-                          {" "}
-                          <img src={img17} alt="" />
-                          Fresh Seafood
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="shop-grid-right.html">
-                          {" "}
-                          <img src={img18} alt="" />
-                          Fast food
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="shop-grid-right.html">
-                          {" "}
-                          <img src={img19} alt="" />
-                          Vegetables
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="shop-grid-right.html">
-                          {" "}
-                          <img src={img20} alt="" />
-                          Bread and Juice
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="more_slide_ope">
-                    <div className="d-flex categori-dropdown-inner">
-                      <ul>
-                        <li>
-                          <Link to="shop-grid-right.html">
-                            {" "}
-                            <img src={img21} alt="" />
-                            Milks and Dairies
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="shop-grid-right.html">
-                            {" "}
-                            <img src={img22} alt="" />
-                            Clothing & beauty
-                          </Link>
-                        </li>
-                      </ul>
-                      <ul className="end">
-                        <li>
-                          <Link to="shop-grid-right.html">
-                            {" "}
-                            <img src={img23} alt="" />
-                            Wines & Drinks
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="shop-grid-right.html">
-                            {" "}
-                            <img src={img24} alt="" />
-                            Fresh Seafood
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="more_categories">
-                    <span className="icon"></span>{" "}
-                    <span className="heading-sm-1">Show more...</span>
-                  </div>
-                </div>
-              </div>
               <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                 <nav>
                   <ul>
                     <li>
-                      <Link className="active" to="/">
-                        Home
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/about">About</Link>
-                    </li>
-                    <li>
-                      <Link to="/book-shop">
-                        Shop <i className="fi-rs-angle-down"></i>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        Vendors <i className="fi-rs-angle-down"></i>
-                      </Link>
-                      <ul className="sub-menu">
-                        <li>
-                          <Link to="vendors-grid.html">Vendors Grid</Link>
-                        </li>
-                        <li>
-                          <Link to="vendors-list.html">Vendors List</Link>
-                        </li>
-                        <li>
-                          <Link to="vendor-details-1.html">
-                            Vendor Details 01
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="vendor-details-2.html">
-                            Vendor Details 02
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="vendor-dashboard.html">
-                            Vendor Dashboard
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="vendor-guide.html">Vendor Guide</Link>
-                        </li>
-                      </ul>
+                      <Link to="/ ">Home</Link>
                     </li>
 
+                    {showManu
+                      ?.filter(
+                        (item) =>
+                          item.intParentID === "0" && item.intLevel === "1"
+                      )
+                      .map((item, index) => (
+                        <li key={index}>
+                          <Link
+                            onClick={() =>
+                              handleClick(item.intID, item.strSEOLink)
+                            }
+                          >
+                            {item.strDesc}{" "}
+                            {showManu?.filter(
+                              (subItem) =>
+                                subItem.intParentID === item.intID &&
+                                subItem.intLevel === "2"
+                            ).length > 0 && (
+                              <i className="fi-rs-angle-down"></i>
+                            )}
+                          </Link>
+                          {showManu?.filter(
+                            (subItem) =>
+                              subItem.intParentID === item.intID &&
+                              subItem.intLevel === "2"
+                          ).length > 0 && (
+                            <ul className="sub-menu">
+                              {showManu
+                                ?.filter(
+                                  (subItem) =>
+                                    subItem.intParentID === item.intID &&
+                                    subItem.intLevel === "2"
+                                )
+                                .map((subItem, subIndex) => (
+                                  <li
+                                    key={subIndex}
+                                    style={{ paddingLeft: "20px" }}
+                                  >
+                                    <Link
+                                      to="#"
+                                      onClick={() =>
+                                        handleClick(
+                                          subItem.intID,
+                                          subItem.strSEOLink
+                                        )
+                                      }
+                                    >
+                                      {subItem.strDesc}{" "}
+                                      {showManu?.filter(
+                                        (thirdItem) =>
+                                          thirdItem.intParentID ===
+                                            subItem.intID &&
+                                          thirdItem.intLevel === "3"
+                                      ).length > 0 && (
+                                        <i className="fi-rs-angle-right"></i>
+                                      )}
+                                    </Link>
+                                    {showManu?.filter(
+                                      (thirdItem) =>
+                                        thirdItem.intParentID ===
+                                          subItem.intID &&
+                                        thirdItem.intLevel === "3"
+                                    ).length > 0 && (
+                                      <ul className="level-menu level-menu-modify">
+                                        {showManu
+                                          ?.filter(
+                                            (thirdItem) =>
+                                              thirdItem.intParentID ===
+                                                subItem.intID &&
+                                              thirdItem.intLevel === "3"
+                                          )
+                                          .map((thirdItem, thirdIndex) => (
+                                            <li
+                                              key={thirdIndex}
+                                              style={{ paddingLeft: "20px" }}
+                                            >
+                                              <Link
+                                                to="#"
+                                                onClick={() =>
+                                                  handleClick(
+                                                    thirdItem.intID,
+                                                    thirdItem.strSEOLink
+                                                  )
+                                                }
+                                              >
+                                                {thirdItem.strDesc}
+                                              </Link>
+                                            </li>
+                                          ))}
+                                      </ul>
+                                    )}
+                                  </li>
+                                ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+
                     <li>
-                      <Link to="/teacher">
-                        Teacher <i className="fi-rs-angle-down"></i>
-                      </Link>
-                      <ul className="sub-menu">
-                        <li>
-                          <Link to="blog-category-grid.html">
-                            Blog Category Grid
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="blog-category-list.html">
-                            Blog Category List
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="blog-category-big.html">
-                            Blog Category Big
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="blog-category-fullwidth.html">
-                            Blog Category Wide
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="#">
-                            Single Post <i className="fi-rs-angle-right"></i>
-                          </Link>
-                          <ul className="level-menu level-menu-modify">
-                            <li>
-                              <Link to="blog-post-left.html">Left Sidebar</Link>
-                            </li>
-                            <li>
-                              <Link to="blog-post-right.html">
-                                Right Sidebar
-                              </Link>
-                            </li>
-                            <li>
-                              <Link to="blog-post-fullwidth.html">
-                                No Sidebar
-                              </Link>
-                            </li>
-                          </ul>
-                        </li>
-                      </ul>
+                      <Link to="/teacher ">Teacher</Link>
                     </li>
                     <li>
-                      <Link to="#">
-                        Pages <i className="fi-rs-angle-down"></i>
-                      </Link>
-                      <ul className="sub-menu">
-                        <li>
-                          <Link to="/about">About Us</Link>
-                        </li>
-                        <li>
-                          <Link to="/contact">Contact</Link>
-                        </li>
-                        <li>
-                          <Link to="/myacount">My Account</Link>
-                        </li>
-                        <li>
-                          <Link to="/login">Login</Link>
-                        </li>
-                        <li>
-                          <Link to="/register">Register</Link>
-                        </li>
-                        <li>
-                          <Link to="/purchase-guid">Purchase Guide</Link>
-                        </li>
-                        <li>
-                          <Link to="/privacy-policy">Privacy Policy</Link>
-                        </li>
-                        <li>
-                          <Link to="/terms">Terms of Service</Link>
-                        </li>
-                        <li>
-                          <Link to="/page-404">404 Page</Link>
-                        </li>
-                      </ul>
+                      <Link to="bookshop ">Book Shops</Link>
                     </li>
                     <li>
-                      <Link to="/contact">Contact</Link>
+                      <Link to="about">About</Link>
+                    </li>
+                    <li>
+                      <Link to="contact ">Contact</Link>
                     </li>
                   </ul>
                 </nav>
@@ -585,81 +475,7 @@ export const Navbar = ({ setMydata }) => {
                 <span className="burger-icon-bottom"></span>
               </div>
             </div>
-            <div className="header-action-right d-block d-lg-none">
-              <div className="header-action-2">
-                <div className="header-action-icon-2">
-                  <Link to="shop-wishlist.html">
-                    <img alt="Nest" src={img28} />
-                    <span className="pro-count white">4</span>
-                  </Link>
-                </div>
-                <div className="header-action-icon-2">
-                  <Link className="mini-cart-icon" href="#">
-                    <img alt="Nest" src={img29} />
-                    <span className="pro-count white">2</span>
-                  </Link>
-                  <div className="cart-dropdown-wrap cart-dropdown-hm2">
-                    <ul>
-                      <li>
-                        <div className="shopping-cart-img">
-                          <Link to="shop-product-right.html">
-                            <img alt="Nest" src={img30} />
-                          </Link>
-                        </div>
-                        <div className="shopping-cart-title">
-                          <h4>
-                            <Link to="shop-product-right.html">
-                              Plain Striola Shirts
-                            </Link>
-                          </h4>
-                          <h3>
-                            <span>1 × </span>$800.00
-                          </h3>
-                        </div>
-                        <div className="shopping-cart-delete">
-                          <Link to="#">
-                            <i className="fi-rs-cross-small"></i>
-                          </Link>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="shopping-cart-img">
-                          <Link to="shop-product-right.html">
-                            <img alt="Nest" src={img31} />
-                          </Link>
-                        </div>
-                        <div className="shopping-cart-title">
-                          <h4>
-                            <Link to="shop-product-right.html">
-                              Macbook Pro 2022
-                            </Link>
-                          </h4>
-                          <h3>
-                            <span>1 × </span>$3500.00
-                          </h3>
-                        </div>
-                        <div className="shopping-cart-delete">
-                          <Link to="#">
-                            <i className="fi-rs-cross-small"></i>
-                          </Link>
-                        </div>
-                      </li>
-                    </ul>
-                    <div className="shopping-cart-footer">
-                      <div className="shopping-cart-total">
-                        <h4>
-                          Total <span>$383.00</span>
-                        </h4>
-                      </div>
-                      <div className="shopping-cart-button">
-                        <Link to="shop-cart.html">View cart</Link>
-                        <Link to="shop-checkout.html">Checkout</Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div className="header-action-right d-block d-lg-none"></div>
           </div>
         </div>
       </div>

@@ -1,13 +1,17 @@
-/* eslint-disable react/prop-types */
-
-import { Link, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { CartContext } from "../../../context/CartContext";
 
-export const Categories = ({ fetchData }) => {
+export const ManuCategory = () => {
   const { handelAddToCart } = useContext(CartContext);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const location = useLocation();
+  const { manudata } = location.state || {};
+  const mydata = manudata?.data;
+  console.log("Aamir====>", mydata);
+
+  const currentData = mydata || mydata;
 
   const productsPerPage = 20;
 
@@ -23,10 +27,9 @@ export const Categories = ({ fetchData }) => {
 
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
-  const displayedProducts = fetchData?.slice(startIndex, endIndex);
+  const displayedProducts = currentData?.slice(startIndex, endIndex);
 
-  const totalPages = Math.ceil(fetchData?.length / productsPerPage);
-
+  const totalPages = Math.ceil(currentData?.length / productsPerPage);
   return (
     <>
       {loading ? (
@@ -41,16 +44,16 @@ export const Categories = ({ fetchData }) => {
                     <div className="archive-header">
                       <div className="row align-items-center">
                         <div className="row">
-                          <h1 className="mb-15">Productsdffffffff</h1>
+                          <h1 className="mb-15">Products</h1>
                         </div>
                         <div className="row">
                           <div className="col-4">
                             <div className="col-xl">
                               <div className="breadcrumb">
-                                <a href="/" rel="nofollow">
+                                <Link to="/" rel="nofollow">
                                   <i className="fi-rs-home mr-5"></i>Home
-                                </a>
-                                <span></span> Products
+                                </Link>
+                                <span></span>
                               </div>
                             </div>
                           </div>
@@ -119,6 +122,7 @@ export const Categories = ({ fetchData }) => {
                             <div className="add-cart">
                               <Link
                                 className="add"
+                                // to={`/single-product/${item.strSEOLink}`}
                                 onClick={() => handelAddToCart(item.intID)}
                               >
                                 <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}

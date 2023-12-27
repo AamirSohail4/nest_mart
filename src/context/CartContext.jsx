@@ -1,105 +1,82 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, createContext } from "react";
 import { cart_url } from "../config/env";
+// import { useNavigate } from "react-router-dom";
 
-export const CartContext = createContext();
-const myUserId = localStorage.getItem("userId");
-// console.log("This My UserId===>", myUserId);
+export const CartContext = createContext({});
+const currentUserId = localStorage.getItem("userId");
+
+// provider
 export const CartProvider = ({ children }) => {
+  // const navigate = useNavigate();
   const [cartItem, setCartItem] = useState();
-  const [cartItems, setCartItems] = useState();
-  const [showPaymentMode, setshowPaymentMode] = useState();
-  const [shipmentAddres, setShipmentAddres] = useState();
-  async function CartItemDisplay() {
-    const response = await fetch(
-      `${cart_url}&tag=get_user_cart&intUserID=${localStorage.getItem(
-        "userId"
-      )}`
-    );
-    const bannerData = await response.json();
-    // console.log("all cart item api respo", bannerData);
-    const cartData = bannerData.data;
-    setCartItem(cartData);
-  }
-  // show Payment modes
-  async function PaymentModeDisplay() {
-    const response = await fetch(
-      `${cart_url}&tag=get_payment_modes&intCompanyID=1`
-    );
-    const paymentMode = await response.json();
-    // console.log("all cart item api respo", bannerData);
-    const responseData = paymentMode.data;
-    setshowPaymentMode(responseData);
-  }
-  // console.log("Payment Modes", showPaymentMode);
-  const DeleteCartSingleItem = async (item) => {
+
+  // use this function for product add into cart
+  const addToCart = async (productId, quantity) => {
+    console.log("ddd", productId);
     let data = new FormData();
-    data.append("intUserID", localStorage.getItem("userId"));
-    data.append("intItemID", item.item.intID);
-    data.append("strItemRemark", item.strItemRemarks);
-    const response = await fetch(`${cart_url}&tag=delete_user_cart_item`, {
+    data.append("intUserID", currentUserId);
+    data.append("intItemID", productId);
+    data.append("dblItemQty", quantity);
+    data.append("strItemRemarks", "");
+    const response = await fetch(`${cart_url}&tag=add_user_cart_item`, {
+      method: "POST",
+      body: data,
+    });
+    if (response.ok) {
+      cartItemDisplay();
+    }
+  };
+
+  // fetch all cart items from db
+  const cartItemDisplay = async () => {
+    const response = await fetch(
+      `${cart_url}&tag=get_user_cart&intUserID=${currentUserId}`
+    );
+    const cartItems = await response.json();
+    setCartItem(cartItems.data);
+  };
+
+  const deleteAllCartItems = async () => {
+    let data = new FormData();
+    data.append("intUserID", currentUserId);
+    const response = await fetch(`${cart_url}&tag=empty_user_cart`, {
       method: "POST",
       body: data,
     });
 
-    await response.json();
-    CartItemDisplay();
-  };
-
-  const handleDeleteClick = async () => {
-    try {
-      let data = new FormData();
-      data.append("intUserID", localStorage.getItem("userId"));
-
-      const response = await fetch(`${cart_url}&tag=empty_user_cart`, {
-        method: "POST",
-        body: data,
-      });
-
-      if (response.ok) {
-        // Assuming the server response contains the updated cart items
-        const resData = await response.json();
-
-        // Update the local state with the new cart items
-        setCartItems(resData.updatedCartItems);
-        CartItemDisplay();
-
-        console.log("api res", resData);
-      } else {
-        console.error("Failed to delete items from the cart");
-      }
-    } catch (error) {
-      console.error("Error during deletion:", error);
+    if (response.ok) {
+      cartItemDisplay();
     }
   };
-  const fetchShipmentAddres = async () => {
-    try {
-      const response = await fetch(
-        `${cart_url}&tag=get_user_shipment_address&intUserID=${myUserId}`
-      );
-      const data = await response.json();
-      // console.log("This My Shipment Addres===>", data);
-      setShipmentAddres(data.data[0]?.strShipmentAddress);
-    } catch (error) {
-      console.error("Error fetching city data:", error);
+
+  // delete single cart item api
+  const deleteSingleCartItem = async (product) => {
+    let data = new FormData();
+    data.append("intUserID", currentUserId);
+    data.append("intItemID", product?.item?.intID);
+    data.append("strItemRemark", product?.strItemRemarks);
+    const response = await fetch(`${cart_url}&tag=delete_user_cart_item`, {
+      method: "POST",
+      body: data,
+    });
+    if (response.ok) {
+      cartItemDisplay();
     }
   };
-  // console.log("This My Shipment Addres===>", shipmentAddres);
+
   useEffect(() => {
-    fetchShipmentAddres();
-    CartItemDisplay();
-    PaymentModeDisplay();
-  }, [cartItems]);
-  // console.log("This is Context Api Respons", contactNo);
+    cartItemDisplay();
+  }, []);
+
   return (
     <CartContext.Provider
       value={{
         cartItem,
-        CartItemDisplay,
-        handleDeleteClick,
-        DeleteCartSingleItem,
-        shipmentAddres,
-        fetchShipmentAddres,
+        addToCart,
+        cartItemDisplay,
+        deleteAllCartItems,
+        deleteSingleCartItem,
       }}
     >
       {children}

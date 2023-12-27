@@ -4,19 +4,15 @@ import Zoom from "react-img-zoom-gdn";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api_url } from "../../../config/env";
-import { cart_url } from "../../../config/env";
 import { CartContext } from "../../../context/CartContext";
 
 export const ProductDetail = () => {
   const { seoLink } = useParams();
-  const { CartItemDisplay } = useContext(CartContext);
+  const { addToCart } = useContext(CartContext);
 
   const [singleproduct, setSingleProduct] = useState();
   const [strSpec, setStrSpec] = useState("");
   const [teacherProfileData, setTeacherProfile] = useState("");
-  const [myItemid, setMyItemId] = useState();
-  // const [additemtoCart, setAddItemToCart] = useState();
-
   const [quantity, setQuantity] = useState(1);
   const handleDec = () => {
     if (quantity > 1) {
@@ -27,44 +23,15 @@ export const ProductDetail = () => {
     setQuantity(quantity + 1);
   };
 
-  // Function for Posting Cart Data
-  const handelAddToCart = async () => {
-    let data = new FormData();
-    // TODO: Change the intUserID to dynamic value.
-    data.append("intUserID", localStorage.getItem("userId"));
-    data.append("intItemID", myItemid);
-    data.append("dblItemQty", quantity);
-    data.append("strItemRemarks", "");
-
-    // console.log("Form Data:", data);
-    const response = await fetch(`${cart_url}&tag=add_user_cart_item`, {
-      method: "POST",
-      body: data,
-    });
-    if (response.ok) {
-      const resData = await response.json();
-      // setAddItemToCart(resData);
-      // navigate("/", { state: { userId } });
-      // alert("item added in cart successfully");
-      CartItemDisplay();
-      console.log("Item added in  Cart api res", resData);
-    }
-  };
-  console.log("This my Itemid throug state ", myItemid, quantity);
-
   useEffect(() => {
     async function SingleProductShow() {
       const response = await fetch(
         `${api_url}&tag=get_items_web&strSEOLink=${seoLink}`
       );
       const productData = await response.json();
-      // console.log(productData);
       setSingleProduct(productData.data[0]);
-      const myid = productData.data[0].intID;
-      setMyItemId(myid);
       setStrSpec(productData.data[0]?.strSpecifications);
-      setTeacherProfile(productData.data[0]?.supplier[0].strProfile);
-      // console.log("Check it", singleproduct);
+      setTeacherProfile(productData.data[0]?.supplier[0]?.strProfile);
     }
     SingleProductShow();
   }, [seoLink]);
@@ -72,7 +39,6 @@ export const ProductDetail = () => {
   let profileValue = teacherProfileData;
   const htmlContent = he.decode(strSpec);
   const htmlContent1 = he.decode(profileValue);
-  // console.log(htmlContent1);
 
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -122,8 +88,7 @@ export const ProductDetail = () => {
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
   };
-  // console.log("Teacher Data", singleproduct);
-  
+
   return (
     <div className="product-detail accordion-detail">
       <div className="row mb-50 mt-30">
@@ -193,14 +158,14 @@ export const ProductDetail = () => {
                 <button
                   type="submit"
                   className="button button-add-to-cart"
-                  onClick={handelAddToCart}
+                  onClick={() => addToCart(singleproduct?.intID, quantity)}
                 >
                   <i className="fi-rs-shopping-cart"></i>Add to cart
                 </button>
                 <Link
+                  to="/shop-wishlist"
                   aria-label="Add To Wishlist"
                   className="action-btn hover-up"
-                  to="shop-wishlist.html"
                 >
                   <i className="fi-rs-heart"></i>
                 </Link>
@@ -261,7 +226,13 @@ export const ProductDetail = () => {
                       className="section-title style-2 wow animate__ animate__fadeIn animated"
                       style={{ visibility: "visible", animationName: "fadeIn" }}
                     >
-                      <h4>Teacher Profile</h4>
+                      <div>
+                        {singleproduct?.supplier[0]?.strDesc ? (
+                          <div>
+                            <h4>Teacher Profile</h4>
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
 
                     {singleproduct?.supplier[0]?.strDesc &&
@@ -309,9 +280,10 @@ export const ProductDetail = () => {
         </div>
       </div>
       <div className="row mt-60">
-        <div className="col-12">
+        {singleproduct?.related_items &&
+        singleproduct.related_items.length > 0 ? (
           <h2 className="section-title style-1 mb-30">Related products</h2>
-        </div>
+        ) : null}
         <div className="col-12">
           <div className="row related-products">
             {singleproduct?.related_items.map((item, index) => {
@@ -343,7 +315,7 @@ export const ProductDetail = () => {
                           data-bs-toggle="modal"
                           data-bs-target="#quickViewModal"
                         >
-                          <i className="fi-rs-search"></i>
+                          <i className="fi-rs-eye"></i>
                         </Link>
                         <Link
                           aria-label="Add To Wishlist"
@@ -375,10 +347,9 @@ export const ProductDetail = () => {
                         </div>
                         <div className="add-cart">
                           <button
-                            id="feature-prod-btn1484"
                             type="button"
                             className="btn btn-heading add_in_cart"
-                            data-value="1484"
+                            onClick={() => addToCart(item?.intID, 1)}
                           >
                             <i className="fi-rs-shopping-cart mr-5"></i>
                             Add To Cart

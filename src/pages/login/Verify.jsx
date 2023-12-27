@@ -7,8 +7,6 @@ export const Verify = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const userPhone = state && state.userPhone;
-  console.log("userPhone", userPhone);
-  //   console.log(state);
 
   const handlePinChange = (index, value) => {
     // Check if the value is numeric and not empty
@@ -24,7 +22,6 @@ export const Verify = () => {
 
   const handleVerifyCode = async () => {
     const enteredPin = pinValues.join("");
-    // Create a new FormData object
     const formData = new FormData();
     formData.append("strUserName", userPhone);
     formData.append("strValidCode", enteredPin);
@@ -35,7 +32,7 @@ export const Verify = () => {
         method: "POST",
         body: formData,
       });
-      console.log("verify res", response);
+
       setPinValues(["", "", "", "", "", ""]);
 
       document.getElementById("pinInput0").focus();
@@ -43,13 +40,14 @@ export const Verify = () => {
       if (enteredPin.length === pinValues.length) {
         if (response.ok) {
           const responseData = await response.json();
+          // console.log("ddd", responseData.data.intUserID);
           const userRollId = responseData["data"]["intRoleID"];
           const UserId = responseData["data"]["intUserID"];
           localStorage.setItem("userId", UserId);
           localStorage.setItem("roleId", userRollId);
 
-          console.log("This is userRollId", userRollId);
-          console.log("This is veriable data of UserId", UserId);
+          // console.log("This is userRollId", userRollId);
+          // console.log("This is veriable data of UserId", UserId);
 
           navigate("/signUp");
 

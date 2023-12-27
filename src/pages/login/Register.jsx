@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { api_url } from "../../config/env";
 import { singUp_url } from "../../config/env";
 
 export const Register = () => {
-  const myUserId = localStorage.getItem("userId");
-  const [locatCities, setCities] = useState([]);
-  const { state } = useLocation();
-  const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
+  const roleId = localStorage.getItem("roleId");
 
-  const userRollId = state && state.userRollId;
-  const userId = state && state.UserId;
-  console.log("SingUp Page Response Data=>", userRollId);
-  console.log("SingUp Page Response Data=>", userId);
+  const [locatCities, setCities] = useState([]);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -33,23 +29,19 @@ export const Register = () => {
 
   const handleButtonClick = async () => {
     let data = new FormData();
-    data.append("intUserID", myUserId);
+    data.append("intUserID", userId);
     data.append("strFullName", formData.firstName + " " + formData.lastName);
-    data.append("intRoleID", localStorage.getItem("roleId"));
+    data.append("intRoleID", roleId);
     data.append("strEmail", formData.email);
     data.append("strAddress", formData.address);
     data.append("intCityID", formData.city);
     data.append("strAlternateContactNo", formData.altPhone);
-    // console.log("Form Data:", data);
     const response = await fetch(`${singUp_url}&tag=update_user_profile`, {
       method: "POST",
       body: data,
     });
     if (response.ok) {
-      const resData = await response.json();
-
       navigate("/");
-      console.log("api res", resData);
       resetForm();
     }
   };
