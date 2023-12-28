@@ -14,12 +14,13 @@ export const CartProvider = ({ children }) => {
   // use this function for product add into cart
   const addToCart = async (productId, quantity) => {
     console.log("ddd", productId);
+    console.log("quantity", quantity);
     let data = new FormData();
     data.append("intUserID", currentUserId);
     data.append("intItemID", productId);
     data.append("dblItemQty", quantity);
     data.append("strItemRemarks", "");
-    const response = await fetch(`${cart_url}&tag=add_user_cart_item`, {
+    const response = await fetch(`${cart_url}&tag=update_user_cart_item`, {
       method: "POST",
       body: data,
     });
