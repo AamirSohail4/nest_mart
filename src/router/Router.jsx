@@ -52,7 +52,7 @@ export const Router = () => {
           path="teacher-detail/:strSEOLink/:id"
           element={<TeacherDetail />}
         />
-        <Route path="book-shop" element={<BookShop />} />
+        <Route path="bookshop" element={<BookShop />} />
         <Route path="page-404" element={<PageNotFound />} />
         <Route
           path="Categories/:page?"

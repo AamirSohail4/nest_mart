@@ -13,7 +13,7 @@ export const ShopCart = () => {
     useContext(PaymentContext);
 
   const [open, setOpen] = useState(false);
-  const [quantities, setQuantities] = useState({});
+  // const [quantities, setQuantities] = useState({});
 
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [paymentDetails, setPaymentDetails] = useState(null);
@@ -64,13 +64,15 @@ export const ShopCart = () => {
       return 0; // Return 0 if cartItem is not defined or empty
     }
 
-    return cartItem.reduce(
-      (total, item) =>
-        total +
-        parseFloat(item?.item?.dblSalePrice) *
-          (quantities[item?.item?.intID] || 1),
+    // Calculate the subtotal for each item and sum them up
+    const total = cartItem.reduce(
+      (acc, item) =>
+        acc +
+        parseFloat(item?.item?.dblSalePrice) * parseFloat(item?.dblItemQty),
       0
     );
+
+    return total;
   };
 
   const [formData, setFormData] = useState({
@@ -225,7 +227,7 @@ export const ShopCart = () => {
                         </td>
                         <td className="price" data-title="Price">
                           <h4 className="text-body">
-                            {item?.item?.strUOM}{" "}
+                            {item?.item?.strUOM}
                             {parseFloat(item?.item?.dblSalePrice)}
                           </h4>
                         </td>
@@ -271,7 +273,7 @@ export const ShopCart = () => {
                           <h4 className="text-brand">
                             {item?.item?.strUOM}
                             {parseFloat(item?.item?.dblSalePrice) *
-                              quantities[productID] || 1}
+                              parseFloat(item?.dblItemQty)}
                           </h4>
                         </td>
                         <td className="action text-center" data-title="Remove">

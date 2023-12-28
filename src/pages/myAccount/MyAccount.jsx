@@ -1,24 +1,45 @@
 export const MyAccount = () => {
   return (
     <>
-      <main className="main pages">
+      <main className="main">
         <div className="page-header breadcrumb-wrap">
           <div className="container">
             <div className="breadcrumb">
-              <a href="index.html" rel="nofollow">
+              <a href="https://www.msbooks.pk" rel="nofollow">
                 <i className="fi-rs-home mr-5"></i>Home
               </a>
-              <span></span> Pages <span></span> My Account
+              <span></span> Profile
             </div>
           </div>
         </div>
-        <div className="page-content pt-150 pb-150">
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-10 m-auto">
-                <div className="row">
-                  <div className="col-md-3">
-                    <div className="dashboard-menu">
+        <div
+          className="page-content pt-150 pb-150"
+          style={{ backgroundColor: "rgb(255, 255, 255)" }}
+        >
+          <div
+            className="container"
+            style={{ backgroundColor: "rgb(255, 255, 255)" }}
+          >
+            <div
+              className="row"
+              style={{ backgroundColor: "rgb(255, 255, 255)" }}
+            >
+              <div
+                className="col-lg-10 m-auto"
+                style={{ backgroundColor: "rgb(255, 255, 255)" }}
+              >
+                <div
+                  className="row"
+                  style={{ backgroundColor: "rgb(255, 255, 255)" }}
+                >
+                  <div
+                    className="col-md-3"
+                    style={{ backgroundColor: "rgb(255, 255, 255)" }}
+                  >
+                    <div
+                      className="dashboard-menu"
+                      style={{ backgroundColor: "rgb(255, 255, 255)" }}
+                    >
                       <ul className="nav flex-column" role="tablist">
                         <li className="nav-item">
                           <a
@@ -37,6 +58,19 @@ export const MyAccount = () => {
                         <li className="nav-item">
                           <a
                             className="nav-link"
+                            id="wishlist-tab"
+                            data-bs-toggle="tab"
+                            href="#wishlist"
+                            role="tab"
+                            aria-controls="wishlist"
+                            aria-selected="false"
+                          >
+                            <i className="fi-rs-heart mr-10"></i>Wishlist
+                          </a>
+                        </li>
+                        <li className="nav-item">
+                          <a
+                            className="nav-link"
                             id="orders-tab"
                             data-bs-toggle="tab"
                             href="#orders"
@@ -50,26 +84,12 @@ export const MyAccount = () => {
                         <li className="nav-item">
                           <a
                             className="nav-link"
-                            id="track-orders-tab"
-                            data-bs-toggle="tab"
-                            href="#track-orders"
-                            role="tab"
-                            aria-controls="track-orders"
-                            aria-selected="false"
-                          >
-                            <i className="fi-rs-shopping-cart-check mr-10"></i>
-                            Track Your Order
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a
-                            className="nav-link"
                             id="address-tab"
                             data-bs-toggle="tab"
                             href="#address"
                             role="tab"
                             aria-controls="address"
-                            aria-selected="true"
+                            aria-selected="false"
                           >
                             <i className="fi-rs-marker mr-10"></i>My Address
                           </a>
@@ -82,13 +102,16 @@ export const MyAccount = () => {
                             href="#account-detail"
                             role="tab"
                             aria-controls="account-detail"
-                            aria-selected="true"
+                            aria-selected="false"
                           >
                             <i className="fi-rs-user mr-10"></i>Account details
                           </a>
                         </li>
                         <li className="nav-item">
-                          <a className="nav-link" href="/login">
+                          <a
+                            className="nav-link btnLogout"
+                            href="https://www.msbooks.pk/logout"
+                          >
                             <i className="fi-rs-sign-out mr-10"></i>Logout
                           </a>
                         </li>
@@ -105,21 +128,157 @@ export const MyAccount = () => {
                       >
                         <div className="card">
                           <div className="card-header">
-                            <h3 className="mb-0">Hello Rosie!</h3>
+                            <h3 className="mb-0">Hello 03014786408!</h3>
                           </div>
                           <div className="card-body">
                             <p>
                               From your account dashboard. you can easily check
-                              &amp; view your <a href="#">recent orders</a>,
+                              &amp; view your
+                              <a>recent orders</a>
+                              {/* <a onClick="recent_order()"> recent orders</a>, */}
                               <br></br>
-                              manage your{" "}
-                              <a href="#">
-                                shipping and billing addresses
-                              </a> and{" "}
-                              <a href="#">
-                                edit your password and account details.
-                              </a>
+                              manage your
+                              <a>shipping and billing addresses</a>
+                              and
+                              <a>edit your account details.</a>
+                              {/* <a onClick="account_detail()">
+                                edit your account details.
+                              </a> */}
                             </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className="tab-pane fade"
+                        id="wishlist"
+                        role="tabpanel"
+                        aria-labelledby="wishlist-tab"
+                      >
+                        <div className="card">
+                          <div className="card-header">
+                            <h3 className="mb-0">Your Wishlist</h3>
+                          </div>
+                          <div className="card-body">
+                            <div className="table-responsive">
+                              <table className="table">
+                                <thead>
+                                  <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td className="image product-thumbnail">
+                                      <img
+                                        src="https://www.weberp.pk/app/msbooks/images/item/268/MATHS_P3.png"
+                                        alt="#"
+                                      />
+                                    </td>
+                                    <td>
+                                      AL Unsolved Topical Maths P3 (S15-W22)
+                                    </td>
+                                    <td>Rs. 2850</td>
+                                    <td>
+                                      <button
+                                        style={{ border: "none" }}
+                                        type="button"
+                                        id="wish-list-cart1511"
+                                        href="#"
+                                        className="add add_in_cart"
+                                        data-value="1511"
+                                      >
+                                        Add to Cart
+                                      </button>
+                                      <button
+                                        id="wish-list-del-btn1511"
+                                        style={{
+                                          border: "none",
+                                          backgroundColor: "white",
+                                        }}
+                                        className="btn-small d-block text-danger btnWishlistDel"
+                                        data-pid="1511"
+                                      >
+                                        Delete
+                                      </button>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td className="image product-thumbnail">
+                                      <img
+                                        src="https://weberp.pk/app/msbooks/images/item/1866/as-level-notes-by-sir-ali_thumb.jpg"
+                                        alt="#"
+                                      />
+                                    </td>
+                                    <td>
+                                      AS Level Chemistry Notes By Muhammad Ali
+                                    </td>
+                                    <td>Rs. 1650</td>
+                                    <td>
+                                      <button
+                                        style={{ border: "none" }}
+                                        type="button"
+                                        id="wish-list-cart1866"
+                                        href="#"
+                                        className="add add_in_cart"
+                                        data-value="1866"
+                                      >
+                                        Add to Cart
+                                      </button>
+                                      <button
+                                        id="wish-list-del-btn1866"
+                                        style={{
+                                          border: "none",
+                                          backgroundColor: "white",
+                                        }}
+                                        className="btn-small d-block text-danger btnWishlistDel"
+                                        data-pid="1866"
+                                      >
+                                        Delete
+                                      </button>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td className="image product-thumbnail">
+                                      <img
+                                        src="https://www.weberp.pk/app/msbooks/images/item/151/OL_Geo_Usman_Hameed_Notes.png"
+                                        alt="#"
+                                      />
+                                    </td>
+                                    <td>
+                                      O Level Geography Notes by Dr. Usman
+                                      Hameed
+                                    </td>
+                                    <td>Rs. 900</td>
+                                    <td>
+                                      <button
+                                        style={{ border: "none" }}
+                                        type="button"
+                                        id="wish-list-cart151"
+                                        href="#"
+                                        className="add add_in_cart"
+                                        data-value="151"
+                                      >
+                                        Add to Cart
+                                      </button>
+                                      <button
+                                        id="wish-list-del-btn151"
+                                        style={{
+                                          border: "none",
+                                          backgroundColor: "white",
+                                        }}
+                                        className="btn-small d-block text-danger btnWishlistDel"
+                                        data-pid="151"
+                                      >
+                                        Delete
+                                      </button>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -140,99 +299,12 @@ export const MyAccount = () => {
                                   <tr>
                                     <th>Order</th>
                                     <th>Date</th>
+                                    <th>Customer Name</th>
                                     <th>Status</th>
-                                    <th>Total</th>
-                                    <th>Actions</th>
                                   </tr>
                                 </thead>
-                                <tbody>
-                                  <tr>
-                                    <td>#1357</td>
-                                    <td>March 45, 2020</td>
-                                    <td>Processing</td>
-                                    <td>$125.00 for 2 item</td>
-                                    <td>
-                                      <a href="#" className="btn-small d-block">
-                                        View
-                                      </a>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>#2468</td>
-                                    <td>June 29, 2020</td>
-                                    <td>Completed</td>
-                                    <td>$364.00 for 5 item</td>
-                                    <td>
-                                      <a href="#" className="btn-small d-block">
-                                        View
-                                      </a>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>#2366</td>
-                                    <td>August 02, 2020</td>
-                                    <td>Completed</td>
-                                    <td>$280.00 for 3 item</td>
-                                    <td>
-                                      <a href="#" className="btn-small d-block">
-                                        View
-                                      </a>
-                                    </td>
-                                  </tr>
-                                </tbody>
+                                <tbody></tbody>
                               </table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className="tab-pane fade"
-                        id="track-orders"
-                        role="tabpanel"
-                        aria-labelledby="track-orders-tab"
-                      >
-                        <div className="card">
-                          <div className="card-header">
-                            <h3 className="mb-0">Orders tracking</h3>
-                          </div>
-                          <div className="card-body contact-from-area">
-                            <p>
-                              To track your order please enter your OrderID in
-                              the box below and press &quot Track &quot button.
-                              This was given to you on your receipt and in the
-                              confirmation email you should have received.
-                            </p>
-                            <div className="row">
-                              <div className="col-lg-8">
-                                <form
-                                  className="contact-form-style mt-30 mb-50"
-                                  action="#"
-                                  method="post"
-                                >
-                                  <div className="input-style mb-20">
-                                    <label>Order ID</label>
-                                    <input
-                                      name="order-id"
-                                      placeholder="Found in your order confirmation email"
-                                      type="text"
-                                    />
-                                  </div>
-                                  <div className="input-style mb-20">
-                                    <label>Billing email</label>
-                                    <input
-                                      name="billing-email"
-                                      placeholder="Email you used during checkout"
-                                      type="email"
-                                    />
-                                  </div>
-                                  <button
-                                    className="submit submit-auto-width"
-                                    type="submit"
-                                  >
-                                    Track
-                                  </button>
-                                </form>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -243,41 +315,39 @@ export const MyAccount = () => {
                         role="tabpanel"
                         aria-labelledby="address-tab"
                       >
-                        <div className="row">
-                          <div className="col-lg-6">
-                            <div className="card mb-3 mb-lg-0">
-                              <div className="card-header">
-                                <h3 className="mb-0">Billing Address</h3>
-                              </div>
-                              <div className="card-body">
-                                <address>
-                                  3522 Interstate<br></br>
-                                  75 Business Spur,<br></br>
-                                  Sault Ste. <br></br>Marie, MI 49783
-                                </address>
-                                <p>New York</p>
-                                <a href="#" className="btn-small">
-                                  Edit
-                                </a>
-                              </div>
-                            </div>
+                        <div className="card">
+                          <div className="card-header">
+                            <h3 className="mb-0">Your Addresses</h3>
                           </div>
-                          <div className="col-lg-6">
-                            <div className="card">
-                              <div className="card-header">
-                                <h5 className="mb-0">Shipping Address</h5>
-                              </div>
-                              <div className="card-body">
-                                <address>
-                                  4299 Express Lane<br></br>
-                                  Sarasota, <br></br>FL 34249 USA <br></br>
-                                  Phone: 1.941.227.4444
-                                </address>
-                                <p>Sarasota</p>
-                                <a href="#" className="btn-small">
-                                  Edit
-                                </a>
-                              </div>
+                          <div className="card-body">
+                            <div className="table-responsive">
+                              <table className="table">
+                                <thead>
+                                  <tr>
+                                    <th>No.</th>
+                                    <th>Contact Person</th>
+                                    <th>Address</th>
+                                    <th>Zipcode</th>
+                                    <th>Phone</th>
+                                    <th>City</th>
+                                    <th>Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>#1</td>
+                                    <td>Aamir Sohail</td>
+                                    <td>
+                                      Mouza Depay wala Basti murshid waha Po
+                                      Jallal Abad Tehsil and District Bahawalpur{" "}
+                                    </td>
+                                    <td></td>
+                                    <td>03014786408</td>
+                                    <td>Bahawalpur </td>
+                                    <td>&nbsp;</td>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div>
                           </div>
                         </div>
@@ -293,107 +363,275 @@ export const MyAccount = () => {
                             <h5>Account Details</h5>
                           </div>
                           <div className="card-body">
-                            <p>
-                              Already have an account?{" "}
-                              <a href="page-login.html">Log in instead!</a>
-                            </p>
-                            <form method="post" name="enq">
-                              <div className="row">
-                                <div className="form-group col-md-6">
-                                  <label>
-                                    First Name{" "}
-                                    <span className="required">*</span>
-                                  </label>
-                                  <input
-                                    required=""
-                                    className="form-control"
-                                    name="name"
-                                    type="text"
-                                  />
-                                </div>
-                                <div className="form-group col-md-6">
-                                  <label>
-                                    Last Name{" "}
-                                    <span className="required">*</span>
-                                  </label>
-                                  <input
-                                    required=""
-                                    className="form-control"
-                                    name="phone"
-                                  />
-                                </div>
-                                <div className="form-group col-md-12">
-                                  <label>
-                                    Display Name{" "}
-                                    <span className="required">*</span>
-                                  </label>
-                                  <input
-                                    required=""
-                                    className="form-control"
-                                    name="dname"
-                                    type="text"
-                                  />
-                                </div>
-                                <div className="form-group col-md-12">
-                                  <label>
-                                    Email Address{" "}
-                                    <span className="required">*</span>
-                                  </label>
-                                  <input
-                                    required=""
-                                    className="form-control"
-                                    name="email"
-                                    type="email"
-                                  />
-                                </div>
-                                <div className="form-group col-md-12">
-                                  <label>
-                                    Current Password{" "}
-                                    <span className="required">*</span>
-                                  </label>
-                                  <input
-                                    required=""
-                                    className="form-control"
-                                    name="password"
-                                    type="password"
-                                  />
-                                </div>
-                                <div className="form-group col-md-12">
-                                  <label>
-                                    New Password{" "}
-                                    <span className="required">*</span>
-                                  </label>
-                                  <input
-                                    required=""
-                                    className="form-control"
-                                    name="npassword"
-                                    type="password"
-                                  />
-                                </div>
-                                <div className="form-group col-md-12">
-                                  <label>
-                                    Confirm Password{" "}
-                                    <span className="required">*</span>
-                                  </label>
-                                  <input
-                                    required=""
-                                    className="form-control"
-                                    name="cpassword"
-                                    type="password"
-                                  />
-                                </div>
-                                <div className="col-md-12">
-                                  <button
-                                    type="submit"
-                                    className="btn btn-fill-out submit font-weight-bold"
-                                    name="submit"
-                                    value="Submit"
-                                  >
-                                    Save Change
-                                  </button>
-                                </div>
+                            <div className="row">
+                              <div className="form-group col-md-6">
+                                <label>
+                                  Full Name <span className="required">*</span>
+                                </label>
+                                <input
+                                  required=""
+                                  className="form-control"
+                                  name="full_name"
+                                  id="full_name"
+                                  type="text"
+                                />
                               </div>
-                            </form>
+                              <div className="form-group col-md-6">
+                                <label>
+                                  Email Address{" "}
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  required=""
+                                  className="form-control"
+                                  name="email"
+                                  id="email"
+                                  type="email"
+                                  value=""
+                                />
+                              </div>
+                              <div className="form-group col-md-12">
+                                <label>
+                                  Address <span className="required">*</span>
+                                </label>
+                                <input
+                                  required=""
+                                  className="form-control"
+                                  name="address"
+                                  id="user_address"
+                                  type="text"
+                                  value="Mouza Depay wala Basti murshid waha Po Jallal Abad Tehsil and District Bahawalpur "
+                                />
+                              </div>
+                              <div className="form-group col-md-12">
+                                <label>
+                                  City<span className="required">*</span>
+                                </label>
+                                <select
+                                  className="form-control"
+                                  name="city"
+                                  id="city"
+                                >
+                                  <option value="68">Mian Channu</option>
+                                </select>
+                              </div>
+                              <div className="form-group col-md-6">
+                                <label>
+                                  Alter Contact No/
+                                  <span className="required">*</span>
+                                </label>
+                                <input
+                                  required=""
+                                  className="form-control"
+                                  name="alter_phone"
+                                  id="alter_phone"
+                                  type="text"
+                                  value="03014786408"
+                                />
+                              </div>
+                              <div className="col-md-12">
+                                <button
+                                  id="update-profile-btn"
+                                  type="button"
+                                  className="btn btn-fill-out submit font-weight-bold btnUpdateProfile"
+                                  name="submit"
+                                  value="Submit"
+                                >
+                                  Save Change
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="modal fade custom-modal"
+          id="show-order-detail"
+          tabIndex="-1"
+          aria-labelledby="onloadModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+              <div className="modal-body">
+                <div className="row">
+                  <div className="col">
+                    <h4 style={{ backgroundColor: "#F0F0F0" }}>
+                      Order Number#
+                      <div
+                        style={{ color: "red", display: "inline" }}
+                        id="order-code-show"
+                      ></div>
+                    </h4>
+                    <div className="row">
+                      <div className="col">
+                        <h6>Date</h6>
+                      </div>
+                      <div className="col">
+                        <p id="order-date-show"></p>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col">
+                        <h6>Name</h6>
+                      </div>
+                      <div className="col">
+                        <p id="order-name-show"></p>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col">
+                        <h6>Phone</h6>
+                      </div>
+                      <div className="col">
+                        <p
+                          style={{ display: "inline" }}
+                          id="order-phone-show"
+                        ></p>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col">
+                        <h6>Order Total</h6>
+                      </div>
+                      <div className="col">
+                        <p style={{ display: "inline" }} id="order-total"></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <h4 style={{ backgroundColor: "#F0F0F0" }}>
+                      Shipment Address
+                    </h4>
+
+                    <div className="row">
+                      <div className="col">
+                        <h6>Contact Person</h6>
+                      </div>
+                      <div className="col">
+                        <p id="contact-per"></p>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col">
+                        <h6>Shipment Address</h6>
+                      </div>
+                      <div className="col">
+                        <p id="shipment-address"></p>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col">
+                        <h6>Shipment City</h6>
+                      </div>
+                      <div className="col">
+                        <p id="shipment-city"></p>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col">
+                        <h6>Shipment Phone</h6>
+                      </div>
+                      <div className="col">
+                        <p id="shipment-phone"></p>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col">
+                        <h6>Shipment Country</h6>
+                      </div>
+                      <div className="col">
+                        <p id="shipment-country"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br></br>
+                <div className="row">
+                  <table className="table">
+                    <thead>
+                      <tr
+                        style={{ backgroundColor: "#F0F0F0", border: "none" }}
+                      >
+                        <th style={{ width: "10%" }}></th>
+                        <th style={{ width: "45%" }}>Product Name</th>
+                        <th style={{ width: "15%" }}>Item Category</th>
+                        <th style={{ width: "10%", textAlign: "right" }}>
+                          Unit Price
+                        </th>
+                        <th style={{ width: "10%", textAlign: "right" }}>
+                          QTY
+                        </th>
+                        <th style={{ width: "10%", textAlign: "right" }}>
+                          Total
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="order-detail-show"></tbody>
+                  </table>
+                </div>
+                <div className="row">
+                  <div className="col-3"></div>
+                  <div className="col-9">
+                    <div id="sub-total-row" className="row">
+                      <div className="col"></div>
+                      <div className="col">
+                        <div className="row" id="sub-total-row">
+                          <div className="col">
+                            <h6>Sub Total</h6>
+                          </div>
+                          <div className="col" style={{ textAlign: "right" }}>
+                            <p id="subtotal-amount"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="discount-row" className="row">
+                      <div className="col"></div>
+                      <div className="col">
+                        <div className="row" id="disc-amount-row">
+                          <div className="col">
+                            <h6>Discount</h6>
+                          </div>
+                          <div className="col" style={{ textAlign: "right" }}>
+                            <p id="disc-amount"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col"></div>
+                      <div className="col">
+                        <div
+                          className="row"
+                          style={{ backgroundColor: "#4FA0CF" }}
+                        >
+                          <div className="col">
+                            <h5 style={{ color: "white" }}>Grand Total</h5>
+                          </div>
+                          <div className="col">
+                            <h5
+                              id="total-amount"
+                              style={{ textAlign: "right", color: "white" }}
+                            ></h5>
                           </div>
                         </div>
                       </div>
