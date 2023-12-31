@@ -2,24 +2,26 @@ import { useContext, useEffect } from "react";
 import { CartContext } from "../../context/CartContext";
 import { useState } from "react";
 import { api_url, cart_url } from "../../config/env";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PaymentContext } from "../../context/PaymentMethod";
+
 
 export const ShopCart = () => {
   const currentUserId = localStorage.getItem("userId");
+  const navigatie = useNavigate();
   const { cartItem, deleteAllCartItems, deleteSingleCartItem, addToCart } =
     useContext(CartContext);
   const { shipmentAddress, fetchShipmentAddress, showPaymentMode } =
     useContext(PaymentContext);
 
   const [open, setOpen] = useState(false);
-  // const [quantities, setQuantities] = useState({});
-
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [locatCities, setCities] = useState([]);
 
-  console.log(cartItem);
+  const handleCheckout = () => {
+    navigatie("/checkout", { state: { selectedPayment } });
+  };
 
   const handleAddModalClick = () => {
     setOpen(!open);
@@ -37,7 +39,7 @@ export const ShopCart = () => {
         );
 
         const data = await response.json();
-        console.log("My Api Response Data", data.data.strDetails);
+
         setPaymentDetails(data?.data?.strDetails);
       } catch (error) {
         console.error("Error fetching payment details:", error);
@@ -95,10 +97,10 @@ export const ShopCart = () => {
     let data = new FormData();
     data.append("intUserID", currentUserId);
     data.append("strShipmentContactPerson", formData.name);
-    data.append("strShipmentAddress", formData.address);
+    data.append("strShipmentPhone", formData.phone);
     data.append("strShipmentEmail", formData.email);
-    data.append("intCityID", formData.city);
-    data.append("strAlternateContactNo", formData.phone);
+    data.append("intShipmentCityID", formData.city);
+    data.append("strShipmentAddress", formData.address);
 
     // console.log("Form Data:", data);
     const response = await fetch(`${cart_url}&tag=add_user_shipment_address`, {
@@ -163,10 +165,7 @@ export const ShopCart = () => {
           <div className="col-lg-8 mb-40">
             <h1 className="heading-2 mb-10">Your Cart</h1>
             <div className="d-flex justify-content-between">
-              <h6 className="text-body">
-                {/* There are <span className="text-brand">{cartItem}</span>{" "} */}
-                products in your cart
-              </h6>
+              <h6 className="text-body">products in your cart</h6>
               <h6 className="text-body">
                 <button
                   id="clr-cart"
@@ -347,7 +346,6 @@ export const ShopCart = () => {
                                   name="payment_option"
                                   id={`paymentRadios${index}`}
                                   value={item.intID}
-                                  data-name={item.strDesc}
                                   onChange={() =>
                                     handlePaymentSelection(item.intID)
                                   }
@@ -417,7 +415,7 @@ export const ShopCart = () => {
                                 data-target="#bankTranfer"
                                 aria-controls="bankTranfer"
                               >
-                                {shipmentAddress && shipmentAddress}
+                                {shipmentAddress?.strShipmentAddress}
                               </label>
                             </div>
                           </div>
@@ -476,12 +474,14 @@ export const ShopCart = () => {
                   </tbody>
                 </table>
               </div>
-              <a
-                href="/checkout"
+              <button
+                // to="/checkout"
+                type="button"
+                onClick={handleCheckout}
                 className="btn mb-20 w-100 btnValidateCheckout"
               >
                 Proceed To CheckOut<i className="fi-rs-sign-out ml-15"></i>
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -522,26 +522,12 @@ export const ShopCart = () => {
                           required=""
                           className="form-control"
                           name="name"
-                          id="address"
                           type="text"
                           value={formData.name}
                           onChange={handleInputChange}
                         />
                       </div>
-                      <div className="form-group col-md-6">
-                        <label>
-                          Contact Person <span className="required">*</span>
-                        </label>
-                        <input
-                          required=""
-                          className="form-control"
-                          name="contact_person"
-                          id="contact_person"
-                          type="text"
-                          value={formData.contactname}
-                          onChange={handleInputChange}
-                        />
-                      </div>
+
                       <div className="form-group col-md-6">
                         <label>
                           Contact No <span className="required">*</span>

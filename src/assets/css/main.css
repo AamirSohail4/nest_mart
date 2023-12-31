@@ -1690,6 +1690,17 @@ label {
 .hero-slider-1 .single-hero-slider.rectangle {
   border-radius: 0;
 } */
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto; /* Adjust the height as needed */
+}
+
+.loading-indicator img {
+  width: auto; /* Adjust the width as needed */
+}
+
 .hero-slider-1 .title {
   width: 60%;
 }

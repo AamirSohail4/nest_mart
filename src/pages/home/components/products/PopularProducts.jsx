@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import { api_url } from "../../../../config/env";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../../../context/CartContext";
+import { WishListContext } from "../../../../context/WishListContext";
 
 export const PopularProducts = () => {
   const { addToCart } = useContext(CartContext);
+  const { addToWishList } = useContext(WishListContext);
   const [myproduct, setMyProduct] = useState([]);
 
   useEffect(() => {
@@ -68,13 +70,14 @@ export const PopularProducts = () => {
                           <Link
                             aria-label="Add To Wishlist"
                             className="action-btn"
-                            to="/shop-wishlist"
                           >
-                            <i className="fi-rs-heart"></i>
+                            <i
+                              className="fi-rs-heart"
+                              onClick={() => addToWishList(item.intID)}
+                            ></i>
                           </Link>
 
                           <Link
-                            to={`single-product/${item.strSEOLink}`}
                             aria-label="Quick view"
                             className="action-btn"
                             data-bs-toggle="modal"

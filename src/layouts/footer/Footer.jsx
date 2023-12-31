@@ -83,15 +83,6 @@ export const Footer = () => {
                       }}
                     />
                   </li>
-
-                  <li>
-                    <strong>Email:</strong>
-                    <span>info@msbooks.pk</span>
-                  </li>
-                  <li>
-                    <strong>Hours:</strong>
-                    <span>10:00 - 18:00, Mon - Sat</span>
-                  </li>
                 </ul>
               </div>
             </div>

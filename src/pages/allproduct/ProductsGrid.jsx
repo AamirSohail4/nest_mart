@@ -1,12 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { allProduct_url } from "../../config/env";
 import dumy from "../../assets/imgs/banner/dumypng.png";
+import loadingGif from "../../assets/imgs/banner/loading.gif";
+import { CartContext } from "../../context/CartContext";
 
 export const ProductsGrid = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const { addToCart } = useContext(CartContext);
+
   const productsPerPage = 20;
   const location = useLocation();
 
@@ -27,6 +31,7 @@ export const ProductsGrid = () => {
   }, []);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const searchParams = new URLSearchParams(location.search);
     const pageParam = parseInt(searchParams.get("page"), 10);
 
@@ -38,11 +43,15 @@ export const ProductsGrid = () => {
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
   const displayedProducts = allProducts.slice(startIndex, endIndex);
-
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   return (
     <>
       {loading ? (
-        <div className="loading-indicator">Loading...</div>
+        <div className="loading-indicator">
+          <img src={loadingGif} alt="Loading..." />
+        </div>
       ) : (
         <main className="main" style={{ transform: "none" }}>
           <div className="container mb-30" style={{ transform: "none" }}>
@@ -145,7 +154,7 @@ export const ProductsGrid = () => {
                             <div className="add-cart">
                               <Link
                                 className="add"
-                                to={`/single-product/${item.strSEOLink}`}
+                                onClick={() => addToCart(item.intID, 1)}
                               >
                                 <i className="fi-rs-shopping-cart mr-5"></i>
                                 Add{" "}
@@ -161,6 +170,48 @@ export const ProductsGrid = () => {
             </div>
             {/* Pagination links */}
             <div className="pagination-area mt-20 mb-20">
+              <nav aria-label="Page navigation example">
+                <ul className="pagination justify-content-start">
+                  <li className="page-item">
+                    <Link
+                      to={`/allProducts/${1}`}
+                      className="page-link"
+                      onClick={() => setCurrentPage(1)}
+                    >
+                      <i className="fi-rs-arrow-small-left"></i>
+                    </Link>
+                  </li>
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <li
+                      key={index + 1}
+                      className={`page-item ${
+                        currentPage === index + 1 ? "active" : ""
+                      }`}
+                    >
+                      <Link
+                        to={`/allProducts/${index + 1}`}
+                        className={`page-link ${
+                          currentPage === index + 1 ? "active" : ""
+                        }`}
+                        onClick={() => handlePageClick(index + 1)}
+                      >
+                        {index + 1}
+                      </Link>
+                    </li>
+                  ))}
+                  <li className="page-item">
+                    <Link
+                      to={`/allProducts/${totalPages}`}
+                      className="page-link"
+                      onClick={() => setCurrentPage(totalPages)}
+                    >
+                      <i className="fi-rs-arrow-small-right"></i>
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            {/* <div className="pagination-area mt-20 mb-20">
               <nav aria-label="Page navigation example">
                 <ul className="pagination justify-content-start">
                   {Array.from({ length: totalPages }, (_, index) => (
@@ -183,7 +234,7 @@ export const ProductsGrid = () => {
                   ))}
                 </ul>
               </nav>
-            </div>
+            </div> */}
             {/* End of pagination links */}
           </div>
         </main>

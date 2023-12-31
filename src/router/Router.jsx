@@ -20,10 +20,10 @@ import { ProductsGrid } from "../pages/allproduct/ProductsGrid";
 import { QuickView } from "../pages/cart/QuickView";
 import { Teacher } from "../pages/teacher/Teacher";
 import { TeacherDetail } from "../pages/teacher/TeacherDetail";
-import { BookShop } from "../pages/shop/BookShop";
 import { Categories } from "../pages/allproduct/Category/Categories";
 import { Verify } from "../pages/login/Verify";
 import { ManuCategory } from "../pages/allproduct/Category/ManuCategory";
+import { Shop } from "../pages/shop/Shop";
 
 export const Router = () => {
   const [mydata, setMydata] = useState([]);
@@ -52,7 +52,8 @@ export const Router = () => {
           path="teacher-detail/:strSEOLink/:id"
           element={<TeacherDetail />}
         />
-        <Route path="bookshop" element={<BookShop />} />
+
+        <Route path="shop" element={<Shop />} />
         <Route path="page-404" element={<PageNotFound />} />
         <Route
           path="Categories/:page?"

@@ -1,19 +1,15 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, createContext } from "react";
 import { cart_url } from "../config/env";
-// import { useNavigate } from "react-router-dom";
 
 export const CartContext = createContext({});
 const currentUserId = localStorage.getItem("userId");
 
 // provider
 export const CartProvider = ({ children }) => {
-  // const navigate = useNavigate();
   const [cartItem, setCartItem] = useState();
 
-  // use this function for product add into cart
   const addToCart = async (productId, quantity) => {
-    console.log("ddd", productId);
     console.log("quantity", quantity);
     let data = new FormData();
     data.append("intUserID", currentUserId);

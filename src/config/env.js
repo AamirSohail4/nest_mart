@@ -7,3 +7,4 @@ export const verify_url = import.meta.env.VITE_APP_API_VERIFY;
 export const singUp_url = import.meta.env.VITE_APP_API_SINGUP;
 export const cart_url = import.meta.env.VITE_APP_API_CART;
 export const allProduct_url = import.meta.env.VITE_APP_API_ALLPRODUCT;
+export const shipAddres_url = import.meta.env.VITE_APP_API_SHIPADRES;

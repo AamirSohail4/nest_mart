@@ -3,9 +3,10 @@
 import { Link, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../../context/CartContext";
+import loadingGif from "../../../assets/imgs/banner/loading.gif";
 
 export const Categories = ({ fetchData }) => {
-  const { handelAddToCart } = useContext(CartContext);
+  const { addToCart } = useContext(CartContext);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -15,7 +16,7 @@ export const Categories = ({ fetchData }) => {
 
   useEffect(() => {
     setLoading(true);
-
+    window.scrollTo(0, 0);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -30,7 +31,10 @@ export const Categories = ({ fetchData }) => {
   return (
     <>
       {loading ? (
-        <div className="loading-indicator">Loading...</div>
+        <div className="loading-indicator">
+          {" "}
+          <img src={loadingGif} alt="Loading..." />
+        </div>
       ) : (
         <main className="main" style={{ transform: "none" }}>
           <div className="container mb-30" style={{ transform: "none" }}>
@@ -41,7 +45,7 @@ export const Categories = ({ fetchData }) => {
                     <div className="archive-header">
                       <div className="row align-items-center">
                         <div className="row">
-                          <h1 className="mb-15">Productsdffffffff</h1>
+                          <h1 className="mb-15">Products</h1>
                         </div>
                         <div className="row">
                           <div className="col-4">
@@ -119,7 +123,7 @@ export const Categories = ({ fetchData }) => {
                             <div className="add-cart">
                               <Link
                                 className="add"
-                                onClick={() => handelAddToCart(item.intID)}
+                                onClick={() => addToCart(item.intID, 1)}
                               >
                                 <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                               </Link>
@@ -135,6 +139,7 @@ export const Categories = ({ fetchData }) => {
             <div className="pagination-area mt-20 mb-20">
               <nav aria-label="Page navigation example">
                 <ul className="pagination justify-content-start">
+                  <li className="page-item"></li>
                   {Array.from({ length: totalPages }, (_, index) => (
                     <li
                       key={index + 1}

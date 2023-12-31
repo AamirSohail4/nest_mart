@@ -1,11 +1,43 @@
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { MyAccountContext } from "../../context/AccountContext";
+import { shipAddres_url } from "../../config/env";
+import { WishListContext } from "../../context/WishListContext";
+import { CartContext } from "../../context/CartContext";
+const currentUserId = localStorage.getItem("userId");
+
 export const MyAccount = () => {
+  const { userAddress } = useContext(MyAccountContext);
+  const { addToCart } = useContext(CartContext);
+  const { wishListItem, deleteWishlist } = useContext(WishListContext);
+  const [orderDetails, setOrderDetails] = useState();
+  const userData = userAddress;
+  // console.log("mmmmmmmmmm", userData);
+  const [activeSection, setActiveSection] = useState("dashboard");
+
+  const handleSectionClick = (section) => {
+    setActiveSection(section);
+  };
+  // fetch all cart items from db
+  const OrderDetails = async () => {
+    const response = await fetch(
+      `${shipAddres_url}&intCompanyID=1&tag=get_user_orders_list&intUserID=${currentUserId}`
+    );
+    const OrderData = await response.json();
+
+    setOrderDetails(OrderData.data.orders_list);
+  };
+  // console.log("WishList Details", wishListItem);
+  useEffect(() => {
+    OrderDetails();
+  }, []);
   return (
     <>
       <main className="main">
         <div className="page-header breadcrumb-wrap">
           <div className="container">
             <div className="breadcrumb">
-              <a href="https://www.msbooks.pk" rel="nofollow">
+              <a href="/" rel="nofollow">
                 <i className="fi-rs-home mr-5"></i>Home
               </a>
               <span></span> Profile
@@ -42,70 +74,60 @@ export const MyAccount = () => {
                     >
                       <ul className="nav flex-column" role="tablist">
                         <li className="nav-item">
-                          <a
-                            className="nav-link active"
-                            id="dashboard-tab"
-                            data-bs-toggle="tab"
-                            href="#dashboard"
-                            role="tab"
-                            aria-controls="dashboard"
-                            aria-selected="true"
+                          <Link
+                            to=""
+                            className={`nav-link ${
+                              activeSection === "dashboard" ? "active" : ""
+                            }`}
+                            onClick={() => handleSectionClick("dashboard")}
                           >
                             <i className="fi-rs-settings-sliders mr-10"></i>
                             Dashboard
-                          </a>
+                          </Link>
                         </li>
                         <li className="nav-item">
-                          <a
-                            className="nav-link"
-                            id="wishlist-tab"
-                            data-bs-toggle="tab"
-                            href="#wishlist"
-                            role="tab"
-                            aria-controls="wishlist"
-                            aria-selected="false"
+                          <Link
+                            to=""
+                            className={`nav-link ${
+                              activeSection === "wishlist" ? "active" : ""
+                            }`}
+                            onClick={() => handleSectionClick("wishlist")}
                           >
                             <i className="fi-rs-heart mr-10"></i>Wishlist
-                          </a>
+                          </Link>
                         </li>
                         <li className="nav-item">
-                          <a
-                            className="nav-link"
-                            id="orders-tab"
-                            data-bs-toggle="tab"
-                            href="#orders"
-                            role="tab"
-                            aria-controls="orders"
-                            aria-selected="false"
+                          <Link
+                            to=""
+                            className={`nav-link ${
+                              activeSection === "orders" ? "active" : ""
+                            }`}
+                            onClick={() => handleSectionClick("orders")}
                           >
-                            <i className="fi-rs-shopping-bag mr-10"></i>Orders
-                          </a>
+                            <i className="fi-rs-heart mr-10"></i>Orders
+                          </Link>
                         </li>
                         <li className="nav-item">
-                          <a
-                            className="nav-link"
-                            id="address-tab"
-                            data-bs-toggle="tab"
-                            href="#address"
-                            role="tab"
-                            aria-controls="address"
-                            aria-selected="false"
+                          <Link
+                            to=""
+                            className={`nav-link ${
+                              activeSection === "address" ? "active" : ""
+                            }`}
+                            onClick={() => handleSectionClick("address")}
                           >
-                            <i className="fi-rs-marker mr-10"></i>My Address
-                          </a>
+                            <i className="fi-rs-heart mr-10"></i>My Adress
+                          </Link>
                         </li>
                         <li className="nav-item">
-                          <a
-                            className="nav-link"
-                            id="account-detail-tab"
-                            data-bs-toggle="tab"
-                            href="#account-detail"
-                            role="tab"
-                            aria-controls="account-detail"
-                            aria-selected="false"
+                          <Link
+                            to=""
+                            className={`nav-link ${
+                              activeSection === "account" ? "active" : ""
+                            }`}
+                            onClick={() => handleSectionClick("account")}
                           >
-                            <i className="fi-rs-user mr-10"></i>Account details
-                          </a>
+                            <i className="fi-rs-heart mr-10"></i>My Account
+                          </Link>
                         </li>
                         <li className="nav-item">
                           <a
@@ -121,38 +143,40 @@ export const MyAccount = () => {
                   <div className="col-md-9">
                     <div className="tab-content account dashboard-content pl-50">
                       <div
-                        className="tab-pane fade active show"
-                        id="dashboard"
-                        role="tabpanel"
-                        aria-labelledby="dashboard-tab"
+                        style={{
+                          display: `${
+                            activeSection === "dashboard" ? "block" : "none"
+                          }`,
+                        }}
                       >
                         <div className="card">
                           <div className="card-header">
-                            <h3 className="mb-0">Hello 03014786408!</h3>
+                            <h3 className="mb-0">
+                              Hello {userData?.strUserName}
+                            </h3>
                           </div>
                           <div className="card-body">
                             <p>
                               From your account dashboard. you can easily check
                               &amp; view your
                               <a>recent orders</a>
-                              {/* <a onClick="recent_order()"> recent orders</a>, */}
                               <br></br>
                               manage your
                               <a>shipping and billing addresses</a>
                               and
                               <a>edit your account details.</a>
-                              {/* <a onClick="account_detail()">
-                                edit your account details.
-                              </a> */}
                             </p>
                           </div>
                         </div>
                       </div>
+
+                      {/* WishList*/}
                       <div
-                        className="tab-pane fade"
-                        id="wishlist"
-                        role="tabpanel"
-                        aria-labelledby="wishlist-tab"
+                        style={{
+                          display: `${
+                            activeSection === "wishlist" ? "block" : "none"
+                          }`,
+                        }}
                       >
                         <div className="card">
                           <div className="card-header">
@@ -170,123 +194,54 @@ export const MyAccount = () => {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr>
-                                    <td className="image product-thumbnail">
-                                      <img
-                                        src="https://www.weberp.pk/app/msbooks/images/item/268/MATHS_P3.png"
-                                        alt="#"
-                                      />
-                                    </td>
-                                    <td>
-                                      AL Unsolved Topical Maths P3 (S15-W22)
-                                    </td>
-                                    <td>Rs. 2850</td>
-                                    <td>
-                                      <button
-                                        style={{ border: "none" }}
-                                        type="button"
-                                        id="wish-list-cart1511"
-                                        href="#"
-                                        className="add add_in_cart"
-                                        data-value="1511"
-                                      >
-                                        Add to Cart
-                                      </button>
-                                      <button
-                                        id="wish-list-del-btn1511"
-                                        style={{
-                                          border: "none",
-                                          backgroundColor: "white",
-                                        }}
-                                        className="btn-small d-block text-danger btnWishlistDel"
-                                        data-pid="1511"
-                                      >
-                                        Delete
-                                      </button>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="image product-thumbnail">
-                                      <img
-                                        src="https://weberp.pk/app/msbooks/images/item/1866/as-level-notes-by-sir-ali_thumb.jpg"
-                                        alt="#"
-                                      />
-                                    </td>
-                                    <td>
-                                      AS Level Chemistry Notes By Muhammad Ali
-                                    </td>
-                                    <td>Rs. 1650</td>
-                                    <td>
-                                      <button
-                                        style={{ border: "none" }}
-                                        type="button"
-                                        id="wish-list-cart1866"
-                                        href="#"
-                                        className="add add_in_cart"
-                                        data-value="1866"
-                                      >
-                                        Add to Cart
-                                      </button>
-                                      <button
-                                        id="wish-list-del-btn1866"
-                                        style={{
-                                          border: "none",
-                                          backgroundColor: "white",
-                                        }}
-                                        className="btn-small d-block text-danger btnWishlistDel"
-                                        data-pid="1866"
-                                      >
-                                        Delete
-                                      </button>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="image product-thumbnail">
-                                      <img
-                                        src="https://www.weberp.pk/app/msbooks/images/item/151/OL_Geo_Usman_Hameed_Notes.png"
-                                        alt="#"
-                                      />
-                                    </td>
-                                    <td>
-                                      O Level Geography Notes by Dr. Usman
-                                      Hameed
-                                    </td>
-                                    <td>Rs. 900</td>
-                                    <td>
-                                      <button
-                                        style={{ border: "none" }}
-                                        type="button"
-                                        id="wish-list-cart151"
-                                        href="#"
-                                        className="add add_in_cart"
-                                        data-value="151"
-                                      >
-                                        Add to Cart
-                                      </button>
-                                      <button
-                                        id="wish-list-del-btn151"
-                                        style={{
-                                          border: "none",
-                                          backgroundColor: "white",
-                                        }}
-                                        className="btn-small d-block text-danger btnWishlistDel"
-                                        data-pid="151"
-                                      >
-                                        Delete
-                                      </button>
-                                    </td>
-                                  </tr>
+                                  {wishListItem?.map((item, index) => {
+                                    return (
+                                      <tr key={index}>
+                                        <td className="image product-thumbnail">
+                                          <img src={item.strImage} alt="#" />
+                                        </td>
+                                        <td>{item.strDesc}</td>
+                                        <td>{item.dblSalePrice}</td>
+                                        <td>
+                                          <button
+                                            style={{ border: "none" }}
+                                            type="button"
+                                            className="add add_in_cart"
+                                            onClick={() =>
+                                              addToCart(item.intID, 1)
+                                            }
+                                          >
+                                            Add to Cart
+                                          </button>
+                                          <button
+                                            onClick={() => deleteWishlist(item)}
+                                            style={{
+                                              border: "none",
+                                              backgroundColor: "white",
+                                            }}
+                                            className="btn-small d-block text-danger btnWishlistDel"
+                                          >
+                                            Delete
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
                                 </tbody>
                               </table>
                             </div>
                           </div>
                         </div>
                       </div>
+                      {/* WishList*/}
+                      {/* Order*/}
+
                       <div
-                        className="tab-pane fade"
-                        id="orders"
-                        role="tabpanel"
-                        aria-labelledby="orders-tab"
+                        style={{
+                          display: `${
+                            activeSection === "orders" ? "block" : "none"
+                          }`,
+                        }}
                       >
                         <div className="card">
                           <div className="card-header">
@@ -303,17 +258,31 @@ export const MyAccount = () => {
                                     <th>Status</th>
                                   </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                  {orderDetails?.map((item, index) => {
+                                    return (
+                                      <tr key={index}>
+                                        <th>{item.strCode}</th>
+                                        <th>{item.dtDate}</th>
+                                        <th>{item.strCustomerDesc}</th>
+                                        <th>{item.strOrderStatus}</th>
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
                               </table>
                             </div>
                           </div>
                         </div>
                       </div>
+
+                      {/* Address */}
                       <div
-                        className="tab-pane fade"
-                        id="address"
-                        role="tabpanel"
-                        aria-labelledby="address-tab"
+                        style={{
+                          display: `${
+                            activeSection === "address" ? "block" : "none"
+                          }`,
+                        }}
                       >
                         <div className="card">
                           <div className="card-header">
@@ -335,15 +304,14 @@ export const MyAccount = () => {
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td>#1</td>
-                                    <td>Aamir Sohail</td>
+                                    <td>#{userData?.intID}</td>
                                     <td>
-                                      Mouza Depay wala Basti murshid waha Po
-                                      Jallal Abad Tehsil and District Bahawalpur{" "}
+                                      {userData?.strShipmentContactPerson}
                                     </td>
+                                    <td>{userData?.strShipmentAddress}</td>
                                     <td></td>
-                                    <td>03014786408</td>
-                                    <td>Bahawalpur </td>
+                                    <td>{userData?.strShipmentPhone}</td>
+                                    <td>{userData?.strShipmentCity} </td>
                                     <td>&nbsp;</td>
                                   </tr>
                                 </tbody>
@@ -352,11 +320,14 @@ export const MyAccount = () => {
                           </div>
                         </div>
                       </div>
+
+                      {/* Accounts */}
                       <div
-                        className="tab-pane fade"
-                        id="account-detail"
-                        role="tabpanel"
-                        aria-labelledby="account-detail-tab"
+                        style={{
+                          display: `${
+                            activeSection === "account" ? "block" : "none"
+                          }`,
+                        }}
                       >
                         <div className="card">
                           <div className="card-header">

@@ -14,7 +14,7 @@ export const Register = () => {
     firstName: "",
     lastName: "",
     email: "",
-    altPhone: "",
+    phone: "",
     address: "",
     city: "",
   });
@@ -35,7 +35,7 @@ export const Register = () => {
     data.append("strEmail", formData.email);
     data.append("strAddress", formData.address);
     data.append("intCityID", formData.city);
-    data.append("strAlternateContactNo", formData.altPhone);
+    data.append("strAlternateContactNo", formData.phone);
     const response = await fetch(`${singUp_url}&tag=update_user_profile`, {
       method: "POST",
       body: data,
@@ -66,7 +66,7 @@ export const Register = () => {
       firstName: "",
       lastName: "",
       email: "",
-      altPhone: "",
+      phone: "",
       address: "",
       city: "",
     });
@@ -153,12 +153,12 @@ export const Register = () => {
                           Phone Number <span className="required">*</span>
                         </label>
                         <input
-                          name="altPhone"
+                          name="phone"
                           required=""
                           className="form-control"
                           placeholder="Enter Phone Number"
                           type="number"
-                          value={formData.altPhone}
+                          value={formData.phone}
                           onChange={handleInputChange}
                         />
                       </div>
@@ -170,8 +170,8 @@ export const Register = () => {
                           name="address"
                           required=""
                           className="form-control"
-                          placeholder="Enter First Name"
-                          type="text"
+                          placeholder="Enter address"
+                          type="address"
                           value={formData.address}
                           onChange={handleInputChange}
                         />

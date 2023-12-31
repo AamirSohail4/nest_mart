@@ -45,7 +45,7 @@ export const ShopMenuBar = () => {
                 </div>
                 <div className="product-content-wrap" id="productContent">
                   <h2>
-                    <Link to="/bookshop" tabIndex="0">
+                    <Link to="/shop" tabIndex="0">
                       Authorized Book Shops
                     </Link>
                   </h2>

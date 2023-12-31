@@ -15,6 +15,7 @@ export const PaymentProvider = ({ children }) => {
       `${cart_url}&tag=get_payment_modes&intCompanyID=1`
     );
     const paymentMode = await response.json();
+    // console.log(paymentMode);
     const responseData = paymentMode.data;
     setshowPaymentMode(responseData);
   };
@@ -25,12 +26,13 @@ export const PaymentProvider = ({ children }) => {
         `${cart_url}&tag=get_user_shipment_address&intUserID=${currentUserId}`
       );
       const data = await response.json();
-      setShipmentAddress(data.data[0]?.strShipmentAddress);
+
+      setShipmentAddress(data?.data[0]);
     } catch (error) {
       console.error("Error fetching city data:", error);
     }
   };
-
+  // console.log(shipmentAddress?.strShipmentAddress);
   useEffect(() => {
     fetchShipmentAddress();
     PaymentModeDisplay();
@@ -43,6 +45,7 @@ export const PaymentProvider = ({ children }) => {
         shipmentAddress,
         fetchShipmentAddress,
         showPaymentMode,
+        setShipmentAddress,
       }}
     >
       {children}

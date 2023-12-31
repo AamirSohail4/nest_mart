@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { CartContext } from "../../../context/CartContext";
+import loadingGif from "../../../assets/imgs/banner/loading.gif";
 
 export const ManuCategory = () => {
-  const { handelAddToCart } = useContext(CartContext);
+  const { addToCart } = useContext(CartContext);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const location = useLocation();
@@ -19,7 +20,7 @@ export const ManuCategory = () => {
 
   useEffect(() => {
     setLoading(true);
-
+    window.scrollTo(0, 0);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -33,7 +34,10 @@ export const ManuCategory = () => {
   return (
     <>
       {loading ? (
-        <div className="loading-indicator">Loading...</div>
+        <div className="loading-indicator">
+          {" "}
+          <img src={loadingGif} alt="Loading..." />
+        </div>
       ) : (
         <main className="main" style={{ transform: "none" }}>
           <div className="container mb-30" style={{ transform: "none" }}>
@@ -123,7 +127,7 @@ export const ManuCategory = () => {
                               <Link
                                 className="add"
                                 // to={`/single-product/${item.strSEOLink}`}
-                                onClick={() => handelAddToCart(item.intID)}
+                                onClick={() => addToCart(item.intID, 1)}
                               >
                                 <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                               </Link>
@@ -139,6 +143,7 @@ export const ManuCategory = () => {
             <div className="pagination-area mt-20 mb-20">
               <nav aria-label="Page navigation example">
                 <ul className="pagination justify-content-start">
+                  <li className="page-item"></li>
                   {Array.from({ length: totalPages }, (_, index) => (
                     <li
                       key={index + 1}

@@ -13,11 +13,13 @@ import { Icon } from "@iconify/react";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { cart_url } from "../config/env";
+import { WishListContext } from "../context/WishListContext";
 
 export const Navbar = ({ setMydata }) => {
   const navigate = useNavigate();
 
-  const { cartItem, DeleteCartSingleItem } = useContext(CartContext);
+  const { cartItem, deleteSingleCartItem } = useContext(CartContext);
+  const { wishListItem } = useContext(WishListContext);
 
   const [scrolled, setScrolled] = useState(false);
   // console.log(address);
@@ -146,7 +148,7 @@ export const Navbar = ({ setMydata }) => {
                     <Link to="/myacount">My Account</Link>
                   </li>
                   <li>
-                    <Link to="/shop-wishlist">Wishlist</Link>
+                    <Link to="/myacount">Wishlist</Link>
                   </li>
                   <li>
                     <Link to="#">Order Tracking</Link>
@@ -213,11 +215,13 @@ export const Navbar = ({ setMydata }) => {
                 <div className="header-action-2">
                   <div className="header-action-icon-2"></div>
                   <div className="header-action-icon-2">
-                    <Link to="/shop-wishlist">
+                    <Link to="/myacount">
                       <img className="svgInject" alt="Nest" src={img5} />
-                      <span className="pro-count blue">6</span>
+                      <span className="pro-count blue">
+                        {wishListItem?.length}
+                      </span>
                     </Link>
-                    <Link to="/shop-wishlist">
+                    <Link to="/myacount">
                       <span className="lable">Wishlist</span>
                     </Link>
                   </div>
@@ -253,7 +257,7 @@ export const Navbar = ({ setMydata }) => {
                               </div>
                               <div
                                 className="shopping-cart-delete"
-                                onClick={() => DeleteCartSingleItem()}
+                                onClick={() => deleteSingleCartItem(item)}
                               >
                                 <Link to="#">
                                   <i className="fi-rs-cross-small"></i>
@@ -292,28 +296,13 @@ export const Navbar = ({ setMydata }) => {
                             <i className="fi fi-rs-user mr-10"></i>My Account
                           </Link>
                         </li>
+
                         <li>
-                          <Link to="/myacount">
-                            <i className="fi fi-rs-location-alt mr-10"></i>Order
-                            Tracking
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/myacount">
-                            <i className="fi fi-rs-label mr-10"></i>My Voucher
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/shop-wishlist">
+                          <Link to="/account">
                             <i className="fi fi-rs-heart mr-10"></i>My Wishlist
                           </Link>
                         </li>
-                        <li>
-                          <Link to="/myacount">
-                            <i className="fi fi-rs-settings-sliders mr-10"></i>
-                            Setting
-                          </Link>
-                        </li>
+
                         <li>
                           <Link to="/login">
                             <i className="fi fi-rs-sign-out mr-10"></i>Sign out
@@ -450,7 +439,7 @@ export const Navbar = ({ setMydata }) => {
                       <Link to="/teacher ">Teacher</Link>
                     </li>
                     <li>
-                      <Link to="bookshop ">Book Shops</Link>
+                      <Link to="/shop ">Book Shops</Link>
                     </li>
                     <li>
                       <Link to="about">About</Link>
