@@ -1,12 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { createContext, useEffect, useState } from "react";
-import { cart_url } from "../config/env";
+import { createContext, useEffect, useState, useContext } from 'react';
+import { cart_url } from '../config/env';
+import { MyAccountContext } from './AccountContext';
 
 export const PaymentContext = createContext({});
 
 // provider
 export const PaymentProvider = ({ children }) => {
-  const currentUserId = localStorage.getItem("userId");
+  const { userId } = useContext(MyAccountContext);
   const [showPaymentMode, setshowPaymentMode] = useState();
   const [shipmentAddress, setShipmentAddress] = useState();
 
@@ -23,13 +25,13 @@ export const PaymentProvider = ({ children }) => {
   const fetchShipmentAddress = async () => {
     try {
       const response = await fetch(
-        `${cart_url}&tag=get_user_shipment_address&intUserID=${currentUserId}`
+        `${cart_url}&tag=get_user_shipment_address&intUserID=${userId}`
       );
       const data = await response.json();
 
       setShipmentAddress(data.data);
     } catch (error) {
-      console.error("Error fetching city data:", error);
+      console.error('Error fetching city data:', error);
     }
   };
 

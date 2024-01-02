@@ -1,28 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useEffect, createContext, useState } from "react";
-import { relateProd_url, shipAddres_url } from "../config/env";
-import { useNavigate } from "react-router-dom";
+import { useEffect, createContext, useState, useContext } from 'react';
+import { relateProd_url, shipAddres_url } from '../config/env';
+import { useNavigate } from 'react-router-dom';
+import { MyAccountContext } from './AccountContext';
 
 export const WishListContext = createContext({});
-const currentUserId = localStorage.getItem("userId");
 
 // provider
 export const WishListProvider = ({ children }) => {
+  const { userId } = useContext(MyAccountContext);
   const navigate = useNavigate();
   const [wishListItem, setWishListItem] = useState();
   const [searchCategory, setSearchCategory] = useState();
 
   // use this function for product add into cart
   const addToWishList = async (productId) => {
-    console.log("ddd", productId);
+    console.log('ddd', productId);
     let data = new FormData();
-    data.append("intUserID", currentUserId);
-    data.append("intItemID", productId);
+    data.append('intUserID', userId);
+    data.append('intItemID', productId);
 
     const response = await fetch(
       `${shipAddres_url}&tag=add_user_wishlist_item`,
       {
-        method: "POST",
+        method: 'POST',
         body: data,
       }
     );
@@ -34,7 +36,7 @@ export const WishListProvider = ({ children }) => {
   // fetch all Wish List  items from db
   const WishListDisplay = async () => {
     const response = await fetch(
-      `${shipAddres_url}&tag=get_user_wishlist&intUserID=${currentUserId}`
+      `${shipAddres_url}&tag=get_user_wishlist&intUserID=${userId}`
     );
     const wishListItem = await response.json();
 
@@ -48,30 +50,30 @@ export const WishListProvider = ({ children }) => {
       );
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
 
       const myQueryData = await response.json();
 
-      if (myQueryData.status === "1") {
+      if (myQueryData.status === '1') {
         setSearchCategory(myQueryData.data);
-        navigate("/Categories");
+        navigate('/Categories');
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
 
   const deleteWishlist = async (productId) => {
-    console.log("product Id", productId);
+    console.log('product Id', productId);
     let data = new FormData();
-    data.append("intUserID", currentUserId);
-    data.append("intItemID", productId?.intID);
+    data.append('intUserID', userId);
+    data.append('intItemID', productId?.intID);
 
     const response = await fetch(
       `${shipAddres_url}&tag=delete_user_wishlist_item`,
       {
-        method: "POST",
+        method: 'POST',
         body: data,
       }
     );
