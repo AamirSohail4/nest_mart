@@ -32,10 +32,10 @@ export const PaymentProvider = ({ children }) => {
       console.error("Error fetching city data:", error);
     }
   };
-  fetchShipmentAddress();
+
   useEffect(() => {
     PaymentModeDisplay();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchShipmentAddress();
   }, []);
 
   return (

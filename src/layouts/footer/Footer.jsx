@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import img1 from "../../assets/imgs/theme/msbooks_logo.png";
 import img6 from "../../assets/imgs/theme/app-store.jpg";
 import img7 from "../../assets/imgs/theme/google-play.jpg";
@@ -6,12 +6,13 @@ import { ScrollButton } from "./scrollbutton/ScrollButton";
 import "./footer.css";
 import { useContext, useEffect, useState } from "react";
 import { AddressContext } from "../../context/AddresContext";
-import { api_url, cart_url } from "../../config/env";
+import { cart_url } from "../../config/env";
+import { MyAccountContext } from "../../context/AccountContext";
 
 export const Footer = () => {
+  const { handleManuClick } = useContext(MyAccountContext);
   const { address } = useContext(AddressContext);
   const [footerCategory, setFooterCategory] = useState();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const DisplayCategory = async () => {
@@ -31,25 +32,25 @@ export const Footer = () => {
     DisplayCategory();
   }, []);
 
-  const handleClick = async (categoryId, seolink) => {
-    const searchLink = seolink;
-    console.log(searchLink);
-    try {
-      const response = await fetch(
-        `${api_url}&tag=get_items_web&strCategorySEOLink=${seolink}`
-      );
-      const manudata = await response.json();
+  // const handleClick = async (categoryId, seolink) => {
+  //   const searchLink = seolink;
+  //   console.log(searchLink);
+  //   try {
+  //     const response = await fetch(
+  //       `${api_url}&tag=get_items_web&strCategorySEOLink=${seolink}`
+  //     );
+  //     const manudata = await response.json();
 
-      if (manudata.status === "1") {
-        // setManuCategory(manudata.data);
-        navigate("/manuCategory", { state: { manudata } });
-      }
+  //     if (manudata.status === "1") {
+  //       // setManuCategory(manudata.data);
+  //       navigate("/manuCategory", { state: { manudata } });
+  //     }
 
-      // console.log("API response of Manue:", manudata);
-    } catch (error) {
-      console.error("Error calling API:", error);
-    }
-  };
+  //     // console.log("API response of Manue:", manudata);
+  //   } catch (error) {
+  //     console.error("Error calling API:", error);
+  //   }
+  // };
 
   return (
     <>
@@ -105,7 +106,9 @@ export const Footer = () => {
                     <li key={index}>
                       <Link
                         to="#"
-                        onClick={() => handleClick(item.intID, item.strSEOLink)}
+                        onClick={() =>
+                          handleManuClick(item.intID, item.strSEOLink)
+                        }
                       >
                         {item.strDesc}
                       </Link>

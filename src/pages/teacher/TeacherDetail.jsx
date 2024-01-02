@@ -149,7 +149,7 @@ export const TeacherDetail = () => {
                         >
                           <div className="product-img-action-wrap">
                             <div className="product-img product-img-zoom">
-                              <Link to={`/single-product/${item?.strSEOLink}`}>
+                              <Link to={`/product/${item?.strSEOLink}`}>
                                 <img
                                   className="default-img"
                                   src={item?.strImageThumbnail}
@@ -163,22 +163,19 @@ export const TeacherDetail = () => {
                               </Link>
                             </div>
                             <div className="product-action-1">
-                              <button
-                                id="wishlist-btn137"
+                              <Link
+                                to="/admin/myacount"
                                 style={{
                                   border: "none",
                                   backgroundColor: "white",
                                 }}
-                                data-pid="137"
-                                aria-label="Add To Wishlist"
-                                className="action-btn btnAdd2Wishlist"
                               >
                                 <i className="fi-rs-heart"></i>
-                              </button>
+                              </Link>
                               <Link
+                                to={`/product/${item.strSEOLink}`}
                                 aria-label="Quick view"
                                 className="action-btn"
-                                to=""
                               >
                                 <i className="fi-rs-eye"></i>
                               </Link>

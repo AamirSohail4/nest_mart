@@ -1,18 +1,18 @@
-import Slider from 'react-slick';
-import he from 'he';
-import Zoom from 'react-img-zoom-gdn';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { api_url } from '../../../config/env';
-import { CartContext } from '../../../context/CartContext';
+import Slider from "react-slick";
+import he from "he";
+import Zoom from "react-img-zoom-gdn";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { api_url } from "../../../config/env";
+import { CartContext } from "../../../context/CartContext";
 
 export const ProductDetail = () => {
   const { seoLink } = useParams();
   const { addToCart } = useContext(CartContext);
 
   const [singleproduct, setSingleProduct] = useState();
-  const [strSpec, setStrSpec] = useState('');
-  const [teacherProfileData, setTeacherProfile] = useState('');
+  const [strSpec, setStrSpec] = useState("");
+  const [teacherProfileData, setTeacherProfile] = useState("");
   const [quantity, setQuantity] = useState(1);
   const handleDec = () => {
     if (quantity > 1) {
@@ -39,7 +39,7 @@ export const ProductDetail = () => {
 
   let profileValue = teacherProfileData;
   const htmlContent = he.decode(strSpec);
-  const htmlContent1 = he.decode(profileValue ? profileValue : '');
+  const htmlContent1 = he.decode(profileValue ? profileValue : "");
 
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -57,18 +57,18 @@ export const ProductDetail = () => {
   const PrevArrow = () => {
     return (
       <button
-        type='button'
-        className='slick-prev slick-arrow'
+        type="button"
+        className="slick-prev slick-arrow"
         onClick={previous}
       >
-        <i className='fi-rs-arrow-small-left'></i>
+        <i className="fi-rs-arrow-small-left"></i>
       </button>
     );
   };
   const NextArrow = () => {
     return (
-      <button type='button' className='slick-next slick-arrow' onClick={next}>
-        <i className='fi-rs-arrow-small-right'></i>
+      <button type="button" className="slick-next slick-arrow" onClick={next}>
+        <i className="fi-rs-arrow-small-right"></i>
       </button>
     );
   };
@@ -91,24 +91,24 @@ export const ProductDetail = () => {
   };
 
   return (
-    <div className='product-detail accordion-detail'>
-      <div className='row mb-50 mt-30'>
-        <div className='col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5'>
-          <div className='detail-gallery'>
-            <span className='zoom-icon'>
-              <i className='fi-rs-search'></i>
+    <div className="product-detail accordion-detail">
+      <div className="row mb-50 mt-30">
+        <div className="col-md-6 col-sm-12 col-xs-12 mb-md-0 mb-sm-5">
+          <div className="detail-gallery">
+            <span className="zoom-icon">
+              <i className="fi-rs-search"></i>
             </span>
 
             <Slider
               asNavFor={nav2}
               ref={slider1}
-              className='product-image-slider'
+              className="product-image-slider"
               slidesToShow={1}
               slidesToScroll={1}
               arrows={false}
               fade={false}
             >
-              <figure className='border-radius-10'>
+              <figure className="border-radius-10">
                 {singleproduct?.strImageThumbnail && (
                   <Zoom
                     img={singleproduct?.strImageThumbnail}
@@ -123,95 +123,95 @@ export const ProductDetail = () => {
             <Slider
               ref={slider2}
               {...thumSetting}
-              className='slider-nav-thumbnails'
+              className="slider-nav-thumbnails"
             >
               <div>
                 <img
                   src={singleproduct?.strImageThumbnail}
-                  alt='product image'
+                  alt="product image"
                 />
               </div>
             </Slider>
           </div>
         </div>
-        <div className='col-md-6 col-sm-12 col-xs-12'>
-          <div className='detail-info pr-30 pl-30'>
-            <h2 className='title-detail'>{singleproduct?.strDesc}</h2>
-            <div className='clearfix product-price-cover'>
-              <div className='product-price primary-color float-left'>
-                <span className='current-price text-brand'>
+        <div className="col-md-6 col-sm-12 col-xs-12">
+          <div className="detail-info pr-30 pl-30">
+            <h2 className="title-detail">{singleproduct?.strDesc}</h2>
+            <div className="clearfix product-price-cover">
+              <div className="product-price primary-color float-left">
+                <span className="current-price text-brand">
                   {singleproduct?.strUOM}
                   {singleproduct?.dblSalePrice}
                 </span>
               </div>
             </div>
-            <div className='detail-extralink mb-50'>
-              <div className='detail-qty border radius'>
-                <Link to='#' className='qty-down'>
-                  <i className='fi-rs-angle-small-down' onClick={handleDec}></i>
+            <div className="detail-extralink mb-50">
+              <div className="detail-qty border radius">
+                <Link to="#" className="qty-down">
+                  <i className="fi-rs-angle-small-down" onClick={handleDec}></i>
                 </Link>
-                <span className='qty-val'>{quantity}</span>
-                <Link to='#' className='qty-up' onClick={handleInc}>
-                  <i className='fi-rs-angle-small-up'></i>
+                <span className="qty-val">{quantity}</span>
+                <Link to="#" className="qty-up" onClick={handleInc}>
+                  <i className="fi-rs-angle-small-up"></i>
                 </Link>
               </div>
-              <div className='product-extra-link2'>
+              <div className="product-extra-link2">
                 <button
-                  type='submit'
-                  className='button button-add-to-cart'
+                  type="submit"
+                  className="button button-add-to-cart"
                   onClick={() => addToCart(singleproduct?.intID, quantity)}
                 >
-                  <i className='fi-rs-shopping-cart'></i>Add to cart
+                  <i className="fi-rs-shopping-cart"></i>Add to cart
                 </button>
                 <Link
-                  to='/shop-wishlist'
-                  aria-label='Add To Wishlist'
-                  className='action-btn hover-up'
+                  to="/shop-wishlist"
+                  aria-label="Add To Wishlist"
+                  className="action-btn hover-up"
                 >
-                  <i className='fi-rs-heart'></i>
+                  <i className="fi-rs-heart"></i>
                 </Link>
               </div>
             </div>
 
-            <div className='row'>
-              <div className='font-xs'>
-                <ul className='mr-50 float-start'>
-                  <li className='mb-5'>
+            <div className="row">
+              <div className="font-xs">
+                <ul className="mr-50 float-start">
+                  <li className="mb-5">
                     Grade:
-                    <span className='text-brand'>{singleproduct?.Grade}</span>
+                    <span className="text-brand">{singleproduct?.Grade}</span>
                   </li>
-                  <li className='mb-5'>
+                  <li className="mb-5">
                     Type:
-                    <span className='text-brand'>{singleproduct?.Type}</span>
+                    <span className="text-brand">{singleproduct?.Type}</span>
                   </li>
                   <li>
                     Author:
-                    <span className='text-brand'>{singleproduct?.Author}</span>
+                    <span className="text-brand">{singleproduct?.Author}</span>
                   </li>
                 </ul>
-                <ul className='float-start'>
-                  <li className='mb-5'>
+                <ul className="float-start">
+                  <li className="mb-5">
                     Syllabus:
-                    <Link to='#'>
+                    <Link to="#">
                       {singleproduct?.attributes[4].strAttributeValue}
                     </Link>
                   </li>
-                  <li className='mb-5'>
+                  <li className="mb-5">
                     Binding:
-                    <Link to='#' rel='tag'>
+                    <Link to="#" rel="tag">
                       Ring Binding
                     </Link>
                   </li>
                   <li>
                     Edition:
-                    <span className='in-stock text-brand ml-5'>S15-W22</span>
+                    <span className="in-stock text-brand ml-5">S15-W22</span>
                   </li>
                 </ul>
               </div>
             </div>
             <br></br>
-            <div className='row'>
-              <div className='short-desc mb-30'>
+            <div className="row">
+              <div className="short-desc mb-30">
                 <div
                   dangerouslySetInnerHTML={{
                     __html: htmlContent,
@@ -219,13 +219,13 @@ export const ProductDetail = () => {
                 />
               </div>
             </div>
-            <div className='row'>
-              <div className='short-desc mb-30'>
-                <section className='product-tabs section-padding position-relative'>
-                  <div className='container'>
+            <div className="row">
+              <div className="short-desc mb-30">
+                <section className="product-tabs section-padding position-relative">
+                  <div className="container">
                     <div
-                      className='section-title style-2 wow animate__ animate__fadeIn animated'
-                      style={{ visibility: 'visible', animationName: 'fadeIn' }}
+                      className="section-title style-2 wow animate__ animate__fadeIn animated"
+                      style={{ visibility: "visible", animationName: "fadeIn" }}
                     >
                       <div>
                         {singleproduct?.supplier[0]?.strDesc ? (
@@ -238,28 +238,28 @@ export const ProductDetail = () => {
 
                     {singleproduct?.supplier[0]?.strDesc &&
                       singleproduct?.supplier[0]?.strProfilePicture && (
-                        <div className='col-sm-6'>
-                          <div className='product-cart-wrap'>
-                            <div className='product-img-action-wrap'>
-                              <div className='product-img product-img-zoom'>
+                        <div className="col-sm-6">
+                          <div className="product-cart-wrap">
+                            <div className="product-img-action-wrap">
+                              <div className="product-img product-img-zoom">
                                 <Link
                                   to={`/teacher-detail/${singleproduct?.supplier[0].strSEOLink}/${singleproduct?.supplier[0].intID}`}
                                 >
                                   <img
-                                    className='default-img'
+                                    className="default-img"
                                     src={
                                       singleproduct.supplier[0]
                                         .strProfilePicture
                                     }
-                                    alt=''
+                                    alt=""
                                   />
                                   <img
-                                    className='hover-img'
+                                    className="hover-img"
                                     src={
                                       singleproduct.supplier[0]
                                         .strProfilePicture
                                     }
-                                    alt=''
+                                    alt=""
                                   />
                                 </Link>
                               </div>
@@ -280,82 +280,78 @@ export const ProductDetail = () => {
           </div>
         </div>
       </div>
-      <div className='row mt-60'>
+      <div className="row mt-60">
         {singleproduct?.related_items &&
         singleproduct.related_items.length > 0 ? (
-          <h2 className='section-title style-1 mb-30'>Related products</h2>
+          <h2 className="section-title style-1 mb-30">Related products</h2>
         ) : null}
-        <div className='col-12'>
-          <div className='row related-products'>
+        <div className="col-12">
+          <div className="row related-products">
             {singleproduct?.related_items.map((item, index) => {
               return (
-                <div key={index} className='col-lg-3 col-md-4 col-12 col-sm-6'>
-                  <div className='product-cart-wrap hover-up'>
-                    <div className='product-img-action-wrap'>
-                      <div className='product-img product-img-zoom'>
-                        <Link
-                          to={`/single-product/${item.strSEOLink}`}
-                          tabIndex='0'
-                        >
+                <div key={index} className="col-lg-3 col-md-4 col-12 col-sm-6">
+                  <div className="product-cart-wrap hover-up">
+                    <div className="product-img-action-wrap">
+                      <div className="product-img product-img-zoom">
+                        <Link to={`/product/${item.strSEOLink}`} tabIndex="0">
                           <img
-                            className='default-img'
+                            className="default-img"
                             src={item.strImage}
-                            alt=''
+                            alt=""
                           />
                           <img
-                            className='hover-img'
+                            className="hover-img"
                             src={item.strImage}
-                            alt=''
+                            alt=""
                           />
                         </Link>
                       </div>
-                      <div className='product-action-1'>
+                      <div className="product-action-1">
                         <Link
-                          aria-label='Quick view'
-                          className='action-btn small hover-up'
-                          data-bs-toggle='modal'
-                          data-bs-target='#quickViewModal'
+                          aria-label="Quick view"
+                          className="action-btn small hover-up"
+                          to={`/product/${item.strSEOLink}`}
                         >
-                          <i className='fi-rs-eye'></i>
+                          <i className="fi-rs-eye"></i>
                         </Link>
                         <Link
-                          aria-label='Add To Wishlist'
-                          className='action-btn small hover-up'
-                          to='/shop-wishlist'
-                          tabIndex='0'
+                          aria-label="Add To Wishlist"
+                          className="action-btn small hover-up"
+                          to="/admin/myacount"
+                          tabIndex="0"
                         >
-                          <i className='fi-rs-heart'></i>
+                          <i className="fi-rs-heart"></i>
                         </Link>
                       </div>
-                      <div className='product-badges product-badges-position product-badges-mrg'></div>
+                      <div className="product-badges product-badges-position product-badges-mrg"></div>
                     </div>
-                    <div className='product-content-wrap'>
-                      <div className='product-category'>
-                        <Link to={`/single-product/${item.strSEOLink}`}>
+                    <div className="product-content-wrap">
+                      <div className="product-category">
+                        <Link to={`/product/${item.strSEOLink}`}>
                           {item.strItemCategory}
                         </Link>
                       </div>
                       <h2>
-                        <Link to={`/single-product/${item.strSEOLink}`}>
+                        <Link to={`/product/${item.strSEOLink}`}>
                           {item.strDesc}
                         </Link>
                       </h2>
-                      <div className='product-card-bottom'>
-                        <div className='product-price'>
+                      <div className="product-card-bottom">
+                        <div className="product-price">
                           <span>
                             {item.strUOM} {item.dblSalePrice}
                           </span>
                         </div>
-                        <div className='add-cart'>
+                        <div className="add-cart">
                           <button
-                            type='button'
-                            className='btn btn-heading add_in_cart'
+                            type="button"
+                            className="btn btn-heading add_in_cart"
                             onClick={() => addToCart(item?.intID, 1)}
                           >
-                            <i className='fi-rs-shopping-cart mr-5'></i>
+                            <i className="fi-rs-shopping-cart mr-5"></i>
                             Add To Cart
                           </button>
-                          <div className='overlay'></div>
+                          <div className="overlay"></div>
                         </div>
                       </div>
                     </div>

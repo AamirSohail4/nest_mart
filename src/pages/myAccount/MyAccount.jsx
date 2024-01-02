@@ -37,41 +37,6 @@ export const MyAccount = () => {
     setOrderDetails(OrderData.data.orders_list);
   };
 
-  // const [formData, setFormData] = useState({
-  //   full_name: userinfo?.strFullName || "",
-  //   email: userinfo?.strEmail || "",
-  //   address: userinfo?.strAddress || "",
-  //   city: locatCities.length > 0 ? locatCities[0]?.intID : "", // Use some default value
-  //   alter_phone: userinfo?.strContactNo || "",
-  // });
-
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     [name]: value,
-  //   }));
-  // };
-
-  // const handleUpdateClick = async () => {
-  //   let data = new FormData();
-  //   data.append("intUserID", userId);
-  //   data.append("strFullName", formData.full_name);
-  //   data.append("intRoleID", roleId);
-  //   data.append("strEmail", formData.email);
-  //   data.append("strAddress", formData.address);
-  //   data.append("intCityID", formData.city);
-  //   data.append("strAlternateContactNo", formData.alter_phone);
-
-  //   const response = await fetch(`${userUpdate_url}&tag=update_user_profile`, {
-  //     method: "POST",
-  //     body: data,
-  //   });
-
-  //   if (response.ok) {
-  //     alert("Changes Saved");
-  //   }
-  // };
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",

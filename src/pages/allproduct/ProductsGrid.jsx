@@ -89,7 +89,7 @@ export const ProductsGrid = () => {
                       <div className="product-cart-wrap mb-30">
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
-                            <Link to={`/single-product/${item.strSEOLink}`}>
+                            <Link to={`/product/${item.strSEOLink}`}>
                               {item.strImageThumbnail ? (
                                 <>
                                   <img src={item.strImageThumbnail} alt="" />
@@ -109,13 +109,13 @@ export const ProductsGrid = () => {
                             <Link
                               aria-label="Add To Wishlist"
                               className="action-btn"
-                              to="/shop-wishlist"
+                              to="/admin/acount"
                             >
                               <i className="fi-rs-heart"></i>
                             </Link>
 
                             <Link
-                              to={`single-product/${item.strSEOLink}`}
+                              to={`product/${item.strSEOLink}`}
                               aria-label="Quick view"
                               className="action-btn"
                               data-bs-toggle="modal"
@@ -127,23 +127,16 @@ export const ProductsGrid = () => {
                         </div>
                         <div className="product-content-wrap">
                           <div className="product-category">
-                            <Link to={`/single-product/${item.strSEOLink}`}>
+                            <Link to={`/product/${item.strSEOLink}`}>
                               {item.strItemCategory}
                             </Link>
                           </div>
                           <h2>
-                            <Link to={`/single-product/${item.strSEOLink}`}>
+                            <Link to={`/product/${item.strSEOLink}`}>
                               {item.strDesc}
                             </Link>
                           </h2>
-                          {/* <div className="product-rate-cover">
-                            <div className="product-rate d-inline-block">
-                              <div
-                                className="product-rating"
-                                style={{ width: "90%" }}
-                              ></div>
-                            </div>
-                          </div> */}
+
                           <div>
                             <span className="font-small text-muted"></span>
                           </div>

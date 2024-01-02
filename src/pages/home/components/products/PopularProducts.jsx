@@ -61,7 +61,7 @@ export const PopularProducts = () => {
                     >
                       <div className="product-img-action-wrap">
                         <div className="product-img product-img-zoom">
-                          <Link to={`/single-product/${item.strSEOLink}`}>
+                          <Link to={`/product/${item.strSEOLink}`}>
                             <img
                               className="default-img"
                               src={item.strImageThumbnail}
@@ -76,6 +76,7 @@ export const PopularProducts = () => {
                         </div>
                         <div className="product-action-1">
                           <Link
+                            to="/admin/myacount"
                             aria-label="Add To Wishlist"
                             className="action-btn"
                           >
@@ -86,10 +87,9 @@ export const PopularProducts = () => {
                           </Link>
 
                           <Link
+                            to={`product/${item.strSEOLink}`}
                             aria-label="Quick view"
                             className="action-btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#quickViewModal"
                           >
                             <i className="fi-rs-eye"></i>
                           </Link>
@@ -97,12 +97,12 @@ export const PopularProducts = () => {
                       </div>
                       <div className="product-content-wrap">
                         <div className="product-category">
-                          <Link to={`single-product/${item.strSEOLink}`}>
+                          <Link to={`product/${item.strSEOLink}`}>
                             {item.strItemCategory}
                           </Link>
                         </div>
                         <h2>
-                          <Link to={`single-product/${item.strSEOLink}`}>
+                          <Link to={`product/${item.strSEOLink}`}>
                             {item.strDesc}
                           </Link>
                         </h2>

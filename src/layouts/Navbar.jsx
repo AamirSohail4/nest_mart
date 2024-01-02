@@ -8,7 +8,7 @@ import img9 from "../assets/imgs/theme/icons/icon-user.svg";
 import img10 from "../assets/imgs/theme/msbooks_logo.png";
 import img27 from "../assets/imgs/theme/icons/icon-headphone.svg";
 
-import { api_url, relateProd_url } from "../config/env";
+import { api_url } from "../config/env";
 import { Icon } from "@iconify/react";
 import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
@@ -16,11 +16,11 @@ import { cart_url } from "../config/env";
 import { WishListContext } from "../context/WishListContext";
 import { MyAccountContext } from "../context/AccountContext";
 
-export const Navbar = ({ setMydata }) => {
+export const Navbar = () => {
   const navigate = useNavigate();
 
   const { cartItem, deleteSingleCartItem } = useContext(CartContext);
-  const { wishListItem } = useContext(WishListContext);
+  const { wishListItem, SerchCategoryClick } = useContext(WishListContext);
   const { handleManuClick } = useContext(MyAccountContext);
 
   const [scrolled, setScrolled] = useState(false);
@@ -28,8 +28,8 @@ export const Navbar = ({ setMydata }) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchBarCategory, setSearchBarCategory] = useState([]);
-
   const [showManu, setShowManau] = useState();
+
   const handleLogout = () => {
     localStorage.removeItem("userId");
     navigate("/");
@@ -43,6 +43,7 @@ export const Navbar = ({ setMydata }) => {
     const paymentMode = await response.json();
 
     const responseData = paymentMode.data;
+
     setShowManau(responseData);
   }
 
@@ -64,25 +65,25 @@ export const Navbar = ({ setMydata }) => {
     return subtotal.toFixed(2);
   };
 
-  const handleSearchButtonClick = async () => {
-    try {
-      const response = await fetch(
-        `${relateProd_url}&tag=get_items_web&intCategoryID=${selectedCategoryId}&strSearch=${searchQuery}`
-      );
+  // const handleSearchButtonClick = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `${relateProd_url}&tag=get_items_web&intCategoryID=${selectedCategoryId}&strSearch=${searchQuery}`
+  //     );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+  //     if (!response.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
 
-      const myQueryData = await response.json();
-      if (myQueryData.status === "1") {
-        setMydata(myQueryData.data);
-        navigate("/Categories");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  //     const myQueryData = await response.json();
+  //     if (myQueryData.status === "1") {
+  //       setMydata(myQueryData.data);
+  //       navigate("/Categories");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
@@ -90,6 +91,7 @@ export const Navbar = ({ setMydata }) => {
 
   const handleCategoryChange = (event) => {
     const selectedId = event.target.value;
+    console.log("Thsi is my catigory id", selectedId);
     setSelectedCategoryId(selectedId === "all" ? "" : parseInt(selectedId, 10));
   };
 
@@ -189,12 +191,15 @@ export const Navbar = ({ setMydata }) => {
                     value={searchQuery}
                     onChange={handleInputChange}
                   />
-                  <button type="button">
-                    <Icon
-                      icon="ic:sharp-search"
-                      onClick={handleSearchButtonClick}
-                    />
-                  </button>
+                  <a
+                    className="mysearchbtn"
+                    href="#"
+                    onClick={() =>
+                      SerchCategoryClick(selectedCategoryId, searchQuery)
+                    }
+                  >
+                    <Icon icon="ic:sharp-search" />
+                  </a>
                 </div>
               </div>
               <div className="header-action-right">

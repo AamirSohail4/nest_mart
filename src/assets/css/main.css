@@ -125,6 +125,24 @@ video {
   font: inherit;
   vertical-align: baseline;
 }
+.search-style-2_my .input_wrap button {
+  background-color: transparent;
+  padding: 0 5px 0 0;
+  border: none;
+  width: 79px !important;
+}
+a.mysearchbtn {
+  position: relative;
+  font-size: 29px;
+  top: 0px;
+  /* background-color: #4ea1d0; */
+  width: 49px;
+  padding: 10px;
+  /* color: white; */
+}
+a.mysearchbtn :hover {
+  color: rgb(107, 103, 103);
+}
 thead {
   font-weight: 600;
 }

@@ -34,7 +34,7 @@ export const Router = () => {
       <Route path="/" element={<FrontendLayout setMydata={setMydata} />}>
         <Route index element={<Home />} />
         <Route path="allProducts/:page?" element={<ProductsGrid />} />
-        <Route path="single-product/:seoLink" element={<SingleProduct />} />
+        <Route path="product/:seoLink" element={<SingleProduct />} />
         <Route path="shop-wishlist" element={<ShopWishlist />} />
         <Route path="shop-compare" element={<ShopCompare />} />
         <Route path="signUp" element={<Register />} />

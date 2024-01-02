@@ -77,7 +77,7 @@ export const ManuCategory = () => {
                       <div className="product-cart-wrap mb-30">
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
-                            <Link to={`/single-product/${item.strSEOLink}`}>
+                            <Link to={`/product/${item.strSEOLink}`}>
                               <img src={item?.strImageThumbnail} />
                               <img
                                 className="hover-img"
@@ -90,17 +90,15 @@ export const ManuCategory = () => {
                             <Link
                               aria-label="Add To Wishlist"
                               className="action-btn"
-                              to="/shop-wishlist"
+                              to="/admin/myacount"
                             >
                               <i className="fi-rs-heart"></i>
                             </Link>
 
                             <Link
-                              to={`single-product/${item.strSEOLink}`}
+                              to={`/product/${item.strSEOLink}`}
                               aria-label="Quick view"
                               className="action-btn"
-                              data-bs-toggle="modal"
-                              data-bs-target="#quickViewModal"
                             >
                               <i className="fi-rs-eye"></i>
                             </Link>
@@ -108,12 +106,12 @@ export const ManuCategory = () => {
                         </div>
                         <div className="product-content-wrap">
                           <div className="product-category">
-                            <Link to={`/single-product/${item.strSEOLink}`}>
+                            <Link to={`/product/${item.strSEOLink}`}>
                               {item.strItemCategory}
                             </Link>
                           </div>
                           <h2>
-                            <Link to={`/single-product/${item.strSEOLink}`}>
+                            <Link to={`/product/${item.strSEOLink}`}>
                               {item.strDesc}
                             </Link>
                           </h2>
@@ -121,20 +119,7 @@ export const ManuCategory = () => {
                           <div>
                             <span className="font-small text-muted"></span>
                           </div>
-                          {/* <div className="product-card-bottom">
-                            <div className="product-price">
-                              <span>Rs: {item.dblSalePrice}</span>
-                            </div>
-                            <div className="add-cart">
-                              <Link
-                                className="add"
-                                // to={`/single-product/${item.strSEOLink}`}
-                                onClick={() => addToCart(item.intID, 1)}
-                              >
-                                <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
-                              </Link>
-                            </div>
-                          </div> */}
+
                           <div className="product-card-bottom">
                             <div className="product-price">
                               <span>Rs: {item.dblSalePrice}</span>
