@@ -8,7 +8,15 @@ export const PopularProducts = () => {
   const { addToCart } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
   const [myproduct, setMyProduct] = useState([]);
+  const [selectedProductDesc, setSelectedProductDesc] = useState("");
 
+  const handleAddToCart = (productId, quantity, productDesc) => {
+    addToCart(productId, quantity);
+    setSelectedProductDesc(productDesc);
+    setTimeout(() => {
+      setSelectedProductDesc("");
+    }, 4000);
+  };
   useEffect(() => {
     async function AllProductShow() {
       const response = await fetch(
@@ -102,10 +110,17 @@ export const PopularProducts = () => {
                           <div className="product-price">
                             <span>Rs: {item.dblSalePrice}</span>
                           </div>
+                          <div className="contact-info">
+                            <div className="social-info">
+                              <h4>{selectedProductDesc}</h4>
+                            </div>
+                          </div>
                           <div className="add-cart">
                             <Link
                               className="add"
-                              onClick={() => addToCart(item.intID, 1)}
+                              onClick={() =>
+                                handleAddToCart(item.intID, 1, item.strDesc)
+                              }
                             >
                               <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                             </Link>

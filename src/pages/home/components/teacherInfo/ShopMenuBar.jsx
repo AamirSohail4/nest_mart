@@ -35,7 +35,7 @@ export const ShopMenuBar = () => {
               <div className="product-cart-wrap hover-up">
                 <div className="product-img-action-wrap">
                   <div className="product-img product-img-zoom">
-                    <Link to="/bookshop" tabIndex="0">
+                    <Link to="/shop" tabIndex="0">
                       <img className="default-img" src={img2} alt="" />
                       <img className="hover-img" src={img2} alt="" />
                     </Link>

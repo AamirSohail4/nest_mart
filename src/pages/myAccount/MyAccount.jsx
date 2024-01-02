@@ -1,22 +1,31 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MyAccountContext } from "../../context/AccountContext";
-import { shipAddres_url } from "../../config/env";
+import { shipAddres_url, api_url, userUpdate_url } from "../../config/env";
 import { WishListContext } from "../../context/WishListContext";
 import { CartContext } from "../../context/CartContext";
 const currentUserId = localStorage.getItem("userId");
 
 export const MyAccount = () => {
-  const { userAddress } = useContext(MyAccountContext);
+  const userId = localStorage.getItem("userId");
+  const roleId = localStorage.getItem("roleId");
+  const { userAddress, userinfo } = useContext(MyAccountContext);
   const { addToCart } = useContext(CartContext);
   const { wishListItem, deleteWishlist } = useContext(WishListContext);
   const [orderDetails, setOrderDetails] = useState();
+  const [locatCities, setCities] = useState([]);
   const userData = userAddress;
-  // console.log("mmmmmmmmmm", userData);
-  const [activeSection, setActiveSection] = useState("dashboard");
 
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const navigate = useNavigate();
   const handleSectionClick = (section) => {
     setActiveSection(section);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    navigate("/");
+
+    return;
   };
   // fetch all cart items from db
   const OrderDetails = async () => {
@@ -24,13 +33,103 @@ export const MyAccount = () => {
       `${shipAddres_url}&intCompanyID=1&tag=get_user_orders_list&intUserID=${currentUserId}`
     );
     const OrderData = await response.json();
-
+    // console.log("Helooo", OrderData);
     setOrderDetails(OrderData.data.orders_list);
   };
-  // console.log("WishList Details", wishListItem);
+
+  // const [formData, setFormData] = useState({
+  //   full_name: userinfo?.strFullName || "",
+  //   email: userinfo?.strEmail || "",
+  //   address: userinfo?.strAddress || "",
+  //   city: locatCities.length > 0 ? locatCities[0]?.intID : "", // Use some default value
+  //   alter_phone: userinfo?.strContactNo || "",
+  // });
+
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
+
+  // const handleUpdateClick = async () => {
+  //   let data = new FormData();
+  //   data.append("intUserID", userId);
+  //   data.append("strFullName", formData.full_name);
+  //   data.append("intRoleID", roleId);
+  //   data.append("strEmail", formData.email);
+  //   data.append("strAddress", formData.address);
+  //   data.append("intCityID", formData.city);
+  //   data.append("strAlternateContactNo", formData.alter_phone);
+
+  //   const response = await fetch(`${userUpdate_url}&tag=update_user_profile`, {
+  //     method: "POST",
+  //     body: data,
+  //   });
+
+  //   if (response.ok) {
+  //     alert("Changes Saved");
+  //   }
+  // };
+  const [formData, setFormData] = useState({
+    full_name: "",
+    email: "",
+    address: "",
+    city: "", // Initialize with the default city or an empty string
+    alter_phone: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateClick = async () => {
+    let data = new FormData();
+    data.append("intUserID", userId);
+    data.append("strFullName", formData.full_name);
+    data.append("intRoleID", roleId);
+    data.append("strEmail", formData.email);
+    data.append("strAddress", formData.address);
+    data.append("intCityID", formData.city);
+    data.append("strAlternateContactNo", formData.alter_phone);
+
+    const response = await fetch(`${userUpdate_url}&tag=update_user_profile`, {
+      method: "POST",
+      body: data,
+    });
+
+    if (response.ok) {
+      alert("Changes Saved");
+    }
+  };
+
   useEffect(() => {
+    setFormData({
+      full_name: userinfo?.strFullName || "",
+      email: userinfo?.strEmail || "",
+      address: userinfo?.strAddress || "",
+      city: userinfo?.city || "", // Update this based on your data structure
+      alter_phone: userinfo?.strContactNo || "",
+    });
+    const fetchCities = async () => {
+      try {
+        const response = await fetch(`${api_url}&tag=get_city&intCountryID=1`);
+        const data = await response.json();
+
+        setCities(data.data);
+      } catch (error) {
+        console.error("Error fetching city data:", error);
+      }
+    };
     OrderDetails();
-  }, []);
+    fetchCities();
+  }, [userinfo]);
+
   return (
     <>
       <main className="main">
@@ -132,10 +231,21 @@ export const MyAccount = () => {
                         <li className="nav-item">
                           <a
                             className="nav-link btnLogout"
-                            href="https://www.msbooks.pk/logout"
+                            href="#"
+                            onClick={handleLogout}
                           >
                             <i className="fi-rs-sign-out mr-10"></i>Logout
                           </a>
+                          {/* <li>
+                            <button
+                              type="button"
+                              className="btn mb-20 w-100 btnValidateCheckout "
+                              onClick={handleLogout}
+                            >
+                              <i className="fi fi-rs-sign-out mr-10"></i>Sign
+                              out
+                            </button>
+                          </li> */}
                         </li>
                       </ul>
                     </div>
@@ -152,7 +262,7 @@ export const MyAccount = () => {
                         <div className="card">
                           <div className="card-header">
                             <h3 className="mb-0">
-                              Hello {userData?.strUserName}
+                              Hello {userinfo?.strUserName}
                             </h3>
                           </div>
                           <div className="card-body">
@@ -345,11 +455,13 @@ export const MyAccount = () => {
                                   name="full_name"
                                   id="full_name"
                                   type="text"
+                                  value={formData.full_name}
+                                  onChange={handleInputChange}
                                 />
                               </div>
                               <div className="form-group col-md-6">
                                 <label>
-                                  Email Address{" "}
+                                  Email Address
                                   <span className="required">*</span>
                                 </label>
                                 <input
@@ -358,7 +470,8 @@ export const MyAccount = () => {
                                   name="email"
                                   id="email"
                                   type="email"
-                                  value=""
+                                  value={formData.email}
+                                  onChange={handleInputChange}
                                 />
                               </div>
                               <div className="form-group col-md-12">
@@ -371,7 +484,8 @@ export const MyAccount = () => {
                                   name="address"
                                   id="user_address"
                                   type="text"
-                                  value="Mouza Depay wala Basti murshid waha Po Jallal Abad Tehsil and District Bahawalpur "
+                                  value={formData.address}
+                                  onChange={handleInputChange}
                                 />
                               </div>
                               <div className="form-group col-md-12">
@@ -382,11 +496,28 @@ export const MyAccount = () => {
                                   className="form-control"
                                   name="city"
                                   id="city"
+                                  value={formData.city}
+                                  onChange={handleInputChange}
                                 >
-                                  <option value="68">Mian Channu</option>
+                                  {/* Placeholder option */}
+                                  <option value="" disabled>
+                                    Select a city
+                                  </option>
+                                  {/* Map through cities to create options */}
+                                  {locatCities.map((pakCity, index) => (
+                                    <option key={index} value={pakCity.intID}>
+                                      {pakCity.strDesc}
+                                    </option>
+                                  ))}
                                 </select>
                               </div>
-                              <div className="form-group col-md-6">
+
+                              <div
+                                className="form-group col-md-6"
+                                style={{
+                                  backgroundColor: "rgb(255, 255, 255)",
+                                }}
+                              >
                                 <label>
                                   Alter Contact No/
                                   <span className="required">*</span>
@@ -397,7 +528,8 @@ export const MyAccount = () => {
                                   name="alter_phone"
                                   id="alter_phone"
                                   type="text"
-                                  value="03014786408"
+                                  value={formData.alter_phone}
+                                  onChange={handleInputChange}
                                 />
                               </div>
                               <div className="col-md-12">
@@ -407,6 +539,7 @@ export const MyAccount = () => {
                                   className="btn btn-fill-out submit font-weight-bold btnUpdateProfile"
                                   name="submit"
                                   value="Submit"
+                                  onClick={handleUpdateClick}
                                 >
                                   Save Change
                                 </button>

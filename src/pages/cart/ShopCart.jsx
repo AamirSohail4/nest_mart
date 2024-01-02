@@ -5,7 +5,6 @@ import { api_url, cart_url } from "../../config/env";
 import { Link, useNavigate } from "react-router-dom";
 import { PaymentContext } from "../../context/PaymentMethod";
 
-
 export const ShopCart = () => {
   const currentUserId = localStorage.getItem("userId");
   const navigatie = useNavigate();
@@ -13,14 +12,25 @@ export const ShopCart = () => {
     useContext(CartContext);
   const { shipmentAddress, fetchShipmentAddress, showPaymentMode } =
     useContext(PaymentContext);
+  // console.log("myShipment Address", shipmentAddress);
 
   const [open, setOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [locatCities, setCities] = useState([]);
+  const [shipmentaddresValue, setShipmentaddresValue] = useState(null);
+
+  const handelShipmentValue = async (itemValue) => {
+    setShipmentaddresValue(itemValue);
+  };
+
+  // console.log("shipment addres select value=>", shipmentaddresValue);
 
   const handleCheckout = () => {
-    navigatie("/checkout", { state: { selectedPayment } });
+    navigatie("/admin/checkout", {
+      state: { selectedPayment, shipmentaddresValue },
+    });
+    // navigatie("/admin/checkout", { state: { shipmentaddresValue } });
   };
 
   const handleAddModalClick = () => {
@@ -29,6 +39,7 @@ export const ShopCart = () => {
 
   const handlePaymentSelection = async (value) => {
     const modeValue = value;
+    // console.log("mode value", modeValue);
 
     setSelectedPayment(value);
 
@@ -108,9 +119,9 @@ export const ShopCart = () => {
       body: data,
     });
     if (response.ok) {
-      const resData = await response.json();
+      // const resData = await response.json();
+      alert("shipmentAddress is update");
 
-      console.log("Shipment api res", resData);
       fetchShipmentAddress();
       resetForm();
     }
@@ -397,27 +408,35 @@ export const ShopCart = () => {
                               </button>
                             </div>
                           </div>
+
                           <div className="payment_option">
-                            <div className="custome-radio">
-                              <input
-                                className="form-check-input"
-                                required=""
-                                type="radio"
-                                name="shipment_option"
-                                id="exampleRadios0"
-                                value="1"
-                                data-name=" "
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor="exampleRadios0"
-                                data-bs-toggle="collapse"
-                                data-target="#bankTranfer"
-                                aria-controls="bankTranfer"
-                              >
-                                {shipmentAddress?.strShipmentAddress}
-                              </label>
-                            </div>
+                            {shipmentAddress?.map((item, index) => {
+                              return (
+                                <div key={index} className="custome-radio">
+                                  <input
+                                    className="form-check-input"
+                                    required=""
+                                    type="radio"
+                                    name="shipment_option"
+                                    data-name=" "
+                                    id={`exampleRadios0${index}`}
+                                    value={item.intID}
+                                    onChange={() =>
+                                      handelShipmentValue(item.intID)
+                                    }
+                                  />
+                                  <label
+                                    className="form-check-label"
+                                    htmlFor={`exampleRadios0${index}`}
+                                    data-bs-toggle="collapse"
+                                    data-target="#bankTranfer"
+                                    aria-controls="bankTranfer"
+                                  >
+                                    {item.strShipmentAddress}
+                                  </label>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       </td>

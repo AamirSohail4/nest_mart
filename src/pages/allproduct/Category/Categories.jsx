@@ -10,6 +10,16 @@ export const Categories = ({ fetchData }) => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [selectedProductDesc, setSelectedProductDesc] = useState("");
+
+  const handleAddToCart = (productId, quantity, productDesc) => {
+    addToCart(productId, quantity);
+    setSelectedProductDesc(productDesc);
+    setTimeout(() => {
+      setSelectedProductDesc("");
+    }, 4000);
+  };
+
   const productsPerPage = 20;
 
   const { page } = useParams();
@@ -116,7 +126,7 @@ export const Categories = ({ fetchData }) => {
                           <div>
                             <span className="font-small text-muted"></span>
                           </div>
-                          <div className="product-card-bottom">
+                          {/* <div className="product-card-bottom">
                             <div className="product-price">
                               <span>Rs: {item.dblSalePrice}</span>
                             </div>
@@ -124,6 +134,26 @@ export const Categories = ({ fetchData }) => {
                               <Link
                                 className="add"
                                 onClick={() => addToCart(item.intID, 1)}
+                              >
+                                <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
+                              </Link>
+                            </div>
+                          </div> */}
+                          <div className="product-card-bottom">
+                            <div className="product-price">
+                              <span>Rs: {item.dblSalePrice}</span>
+                            </div>
+                            <div className="contact-info">
+                              <div className="social-info">
+                                <h4>{selectedProductDesc}</h4>
+                              </div>
+                            </div>
+                            <div className="add-cart">
+                              <Link
+                                className="add"
+                                onClick={() =>
+                                  handleAddToCart(item.intID, 1, item.strDesc)
+                                }
                               >
                                 <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                               </Link>

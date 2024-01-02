@@ -1,26 +1,29 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { CartContext } from "../../../context/CartContext";
 import loadingGif from "../../../assets/imgs/banner/loading.gif";
+import { MyAccountContext } from "../../../context/AccountContext";
 
 export const ManuCategory = () => {
+  const { categoryData } = useContext(MyAccountContext);
   const { addToCart } = useContext(CartContext);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const location = useLocation();
-  const { manudata } = location.state || {};
-  const mydata = manudata?.data;
-  console.log("Aamir====>", mydata);
+  const [selectedProductDesc, setSelectedProductDesc] = useState("");
 
-  const currentData = mydata || mydata;
-
+  const handleAddToCart = (productId, quantity, productDesc) => {
+    addToCart(productId, quantity);
+    setSelectedProductDesc(productDesc);
+    setTimeout(() => {
+      setSelectedProductDesc("");
+    }, 4000);
+  };
+  const currentData = categoryData || categoryData;
   const productsPerPage = 20;
-
   const { page } = useParams();
 
   useEffect(() => {
     setLoading(true);
-    window.scrollTo(0, 0);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -35,7 +38,6 @@ export const ManuCategory = () => {
     <>
       {loading ? (
         <div className="loading-indicator">
-          {" "}
           <img src={loadingGif} alt="Loading..." />
         </div>
       ) : (
@@ -119,7 +121,7 @@ export const ManuCategory = () => {
                           <div>
                             <span className="font-small text-muted"></span>
                           </div>
-                          <div className="product-card-bottom">
+                          {/* <div className="product-card-bottom">
                             <div className="product-price">
                               <span>Rs: {item.dblSalePrice}</span>
                             </div>
@@ -128,6 +130,26 @@ export const ManuCategory = () => {
                                 className="add"
                                 // to={`/single-product/${item.strSEOLink}`}
                                 onClick={() => addToCart(item.intID, 1)}
+                              >
+                                <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
+                              </Link>
+                            </div>
+                          </div> */}
+                          <div className="product-card-bottom">
+                            <div className="product-price">
+                              <span>Rs: {item.dblSalePrice}</span>
+                            </div>
+                            <div className="contact-info">
+                              <div className="social-info">
+                                <h4>{selectedProductDesc}</h4>
+                              </div>
+                            </div>
+                            <div className="add-cart">
+                              <Link
+                                className="add"
+                                onClick={() =>
+                                  handleAddToCart(item.intID, 1, item.strDesc)
+                                }
                               >
                                 <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                               </Link>

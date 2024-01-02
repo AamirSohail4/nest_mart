@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { verify_url } from "../../config/env";
+import { verify_url, api_url } from "../../config/env";
 
 export const Verify = () => {
   const [pinValues, setPinValues] = useState(["", "", "", "", "", ""]); // State to store pin values
@@ -40,18 +40,28 @@ export const Verify = () => {
       if (enteredPin.length === pinValues.length) {
         if (response.ok) {
           const responseData = await response.json();
-          // console.log("ddd", responseData.data.intUserID);
           const userRollId = responseData["data"]["intRoleID"];
           const UserId = responseData["data"]["intUserID"];
           localStorage.setItem("userId", UserId);
           localStorage.setItem("roleId", userRollId);
 
-          // console.log("This is userRollId", userRollId);
-          // console.log("This is veriable data of UserId", UserId);
-
-          navigate("/signUp");
-
-          // Set responseData in the local state if needed
+          const response1 = await fetch(
+            `${api_url}&tag=get_users&intID=${UserId}`
+          );
+          if (response1.ok) {
+            const res = await response1.json();
+            console.log("dddddd", res);
+            if (
+              res.data[0]?.strFullName === "" ||
+              res.data[0]?.strFullName === null ||
+              res.data[0]?.strFullName === undefined
+            ) {
+              navigate("/signUp");
+            } else {
+              navigate("/");
+            }
+            console.log("user data", res.data[0]?.strFullName);
+          }
         } else {
           console.error("API Error:", response.status, response.statusText);
 

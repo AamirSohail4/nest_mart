@@ -14,39 +14,45 @@ import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { cart_url } from "../config/env";
 import { WishListContext } from "../context/WishListContext";
+import { MyAccountContext } from "../context/AccountContext";
 
 export const Navbar = ({ setMydata }) => {
   const navigate = useNavigate();
 
   const { cartItem, deleteSingleCartItem } = useContext(CartContext);
   const { wishListItem } = useContext(WishListContext);
+  const { handleManuClick } = useContext(MyAccountContext);
 
   const [scrolled, setScrolled] = useState(false);
-  // console.log(address);
+
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchBarCategory, setSearchBarCategory] = useState([]);
 
   const [showManu, setShowManau] = useState();
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    navigate("/");
+    // return
+  };
 
-  // function for  ManauDisplay
   async function ManuDisplay() {
     const response = await fetch(
       `${cart_url}&tag=get_all_category&intCompanyID=1`
     );
     const paymentMode = await response.json();
-    // console.log("all cart item api respo", bannerData);
+
     const responseData = paymentMode.data;
     setShowManau(responseData);
   }
-  // console.log("show Manu Categories===", showManu);
+
   useEffect(() => {
     ManuDisplay();
   }, []);
 
   const calculateSubtotal = () => {
     if (!cartItem || cartItem.length === 0) {
-      return 0; // or any default value you prefer
+      return 0;
     }
 
     let subtotal = 0;
@@ -57,7 +63,7 @@ export const Navbar = ({ setMydata }) => {
 
     return subtotal.toFixed(2);
   };
-  // Function Perform on Click and Fetch data.
+
   const handleSearchButtonClick = async () => {
     try {
       const response = await fetch(
@@ -106,26 +112,6 @@ export const Navbar = ({ setMydata }) => {
     window.addEventListener("scroll", handleScroll);
     SearchBarCategory();
   }, []);
-  // console.log("This is Cart item ", cartItem);
-  const handleClick = async (categoryId, seolink) => {
-    const searchLink = seolink;
-    console.log(searchLink);
-    try {
-      const response = await fetch(
-        `${api_url}&tag=get_items_web&strCategorySEOLink=${seolink}`
-      );
-      const manudata = await response.json();
-
-      if (manudata.status === "1") {
-        // setManuCategory(manudata.data);
-        navigate("/manuCategory", { state: { manudata } });
-      }
-
-      // console.log("API response of Manue:", manuCategory);
-    } catch (error) {
-      console.error("Error calling API:", error);
-    }
-  };
 
   return (
     <header className="header-area header-style-1 header-height-2">
@@ -145,10 +131,10 @@ export const Navbar = ({ setMydata }) => {
                     <Link to="/about">About Us</Link>
                   </li>
                   <li>
-                    <Link to="/myacount">My Account</Link>
+                    <Link to="admin/myacount">My Account</Link>
                   </li>
                   <li>
-                    <Link to="/myacount">Wishlist</Link>
+                    <Link to="admin/myacount">Wishlist</Link>
                   </li>
                   <li>
                     <Link to="#">Order Tracking</Link>
@@ -215,22 +201,22 @@ export const Navbar = ({ setMydata }) => {
                 <div className="header-action-2">
                   <div className="header-action-icon-2"></div>
                   <div className="header-action-icon-2">
-                    <Link to="/myacount">
+                    <Link to="/admin/myacount">
                       <img className="svgInject" alt="Nest" src={img5} />
                       <span className="pro-count blue">
                         {wishListItem?.length}
                       </span>
                     </Link>
-                    <Link to="/myacount">
+                    <Link to="/admin/myacount">
                       <span className="lable">Wishlist</span>
                     </Link>
                   </div>
                   <div className="header-action-icon-2">
-                    <Link className="mini-cart-icon" href="/shop-cart">
+                    <Link className="mini-cart-icon" href="/admin/shop-cart">
                       <img alt="Nest" src={img6} />
                       <span className="pro-count blue">{cartItem?.length}</span>
                     </Link>
-                    <Link to="/shop-cart">
+                    <Link to="/admin/shop-cart">
                       <span className="lable">Cart</span>
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2">
@@ -239,7 +225,7 @@ export const Navbar = ({ setMydata }) => {
                           return (
                             <li key={index}>
                               <div className="shopping-cart-img">
-                                <Link to="/shop-cart">
+                                <Link to="/admin/shop-cart">
                                   <img
                                     alt="Nest"
                                     src={item.item?.strImageThumbnail}
@@ -274,39 +260,43 @@ export const Navbar = ({ setMydata }) => {
                           </h4>
                         </div>
                         <div className="shopping-cart-button">
-                          <Link to="/shop-cart" className="outline">
+                          <Link to="/admin/shop-cart" className="outline">
                             View cart
                           </Link>
-                          <Link to="/shop-checkout">Checkout</Link>
+                          <Link to="/admin/checkout">Checkout</Link>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="header-action-icon-2">
-                    <Link to="/myacount">
+                    <Link to="/admin/myacount">
                       <img className="svgInject" alt="Nest" src={img9} />
                     </Link>
-                    <Link to="/myacount">
+                    <Link to="/admin/myacount">
                       <span className="lable ml-0">Account</span>
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                       <ul>
                         <li>
-                          <Link to="/myacount">
+                          <Link to="/admin/myacount">
                             <i className="fi fi-rs-user mr-10"></i>My Account
                           </Link>
                         </li>
 
                         <li>
-                          <Link to="/account">
+                          <Link to="/admin/myacount">
                             <i className="fi fi-rs-heart mr-10"></i>My Wishlist
                           </Link>
                         </li>
 
                         <li>
-                          <Link to="/login">
-                            <i className="fi fi-rs-sign-out mr-10"></i>Sign out
-                          </Link>
+                          <a
+                            className="nav-link btnLogout"
+                            href="#"
+                            onClick={handleLogout}
+                          >
+                            <i className="fi-rs-sign-out mr-10"></i>Logout
+                          </a>
                         </li>
                       </ul>
                     </div>
@@ -346,7 +336,7 @@ export const Navbar = ({ setMydata }) => {
                         <li key={index}>
                           <Link
                             onClick={() =>
-                              handleClick(item.intID, item.strSEOLink)
+                              handleManuClick(item.intID, item.strSEOLink)
                             }
                           >
                             {item.strDesc}{" "}
@@ -378,7 +368,7 @@ export const Navbar = ({ setMydata }) => {
                                     <Link
                                       to="#"
                                       onClick={() =>
-                                        handleClick(
+                                        handleManuClick(
                                           subItem.intID,
                                           subItem.strSEOLink
                                         )
@@ -416,7 +406,7 @@ export const Navbar = ({ setMydata }) => {
                                               <Link
                                                 to="#"
                                                 onClick={() =>
-                                                  handleClick(
+                                                  handleManuClick(
                                                     thirdItem.intID,
                                                     thirdItem.strSEOLink
                                                   )

@@ -27,14 +27,13 @@ export const PaymentProvider = ({ children }) => {
       );
       const data = await response.json();
 
-      setShipmentAddress(data?.data[0]);
+      setShipmentAddress(data.data);
     } catch (error) {
       console.error("Error fetching city data:", error);
     }
   };
-  // console.log(shipmentAddress?.strShipmentAddress);
+  fetchShipmentAddress();
   useEffect(() => {
-    fetchShipmentAddress();
     PaymentModeDisplay();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

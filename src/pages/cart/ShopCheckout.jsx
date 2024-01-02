@@ -10,9 +10,14 @@ export const ShopCheckout = () => {
   const { cartItem } = useContext(CartContext);
   const { state } = useLocation();
 
+  const addresId = state && state.shipmentaddresValue;
+
+  const shipingAddres = shipmentAddress?.find(
+    (item) => item.intID === addresId
+  );
+
   const selectedPaymentId = state && state.selectedPayment;
-  const shipmentID = shipmentAddress?.intID;
-  console.log("shipment id =>", shipmentID);
+  const shipmentID = shipmentAddress?.shipmentaddresValue;
 
   const paymentMethod = showPaymentMode?.find(
     (item) => item.intID === selectedPaymentId
@@ -90,7 +95,7 @@ export const ShopCheckout = () => {
               <div className="d-flex align-items-end justify-content-between mb-10">
                 <h5>Shipment</h5>
                 <h6 className="text-muted">
-                  {shipmentAddress?.strShipmentAddress}
+                  {shipingAddres?.strShipmentAddress}
                 </h6>
               </div>
               <div className="divider-2 mb-30"></div>
@@ -98,7 +103,6 @@ export const ShopCheckout = () => {
                 <table className="table no-border">
                   <tbody id="cartTable">
                     {cartItem?.map((item, index) => {
-                      const productID = item?.item?.intID;
                       return (
                         <tr key={index} className="">
                           <td className="custome-checkbox pl-30"></td>

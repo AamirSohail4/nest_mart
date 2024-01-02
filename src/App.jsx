@@ -8,7 +8,7 @@ import { CartProvider } from "./context/CartContext";
 import { PaymentProvider } from "./context/PaymentMethod";
 import { UserDetailProvider } from "./context/AccountContext";
 import { WishListProvider } from "./context/WishListContext";
-
+import { ScrollToTop } from "./component/ScrollToTop";
 export const App = () => {
   return (
     <WishListProvider>
@@ -16,6 +16,7 @@ export const App = () => {
         <UserDetailProvider>
           <PaymentProvider>
             <AppProvider>
+              <ScrollToTop />
               <Router />
             </AppProvider>
           </PaymentProvider>

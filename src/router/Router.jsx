@@ -24,6 +24,7 @@ import { Categories } from "../pages/allproduct/Category/Categories";
 import { Verify } from "../pages/login/Verify";
 import { ManuCategory } from "../pages/allproduct/Category/ManuCategory";
 import { Shop } from "../pages/shop/Shop";
+import { DashboardLayout } from "../layouts/DashboardLayout";
 
 export const Router = () => {
   const [mydata, setMydata] = useState([]);
@@ -34,14 +35,11 @@ export const Router = () => {
         <Route index element={<Home />} />
         <Route path="allProducts/:page?" element={<ProductsGrid />} />
         <Route path="single-product/:seoLink" element={<SingleProduct />} />
-        <Route path="shop-cart" element={<ShopCart />} />
         <Route path="shop-wishlist" element={<ShopWishlist />} />
         <Route path="shop-compare" element={<ShopCompare />} />
-        <Route path="checkout" element={<ShopCheckout />} />
         <Route path="signUp" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="about" element={<About />} />
-        <Route path="myacount" element={<MyAccount />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
         <Route path="contact" element={<Contact />} />
         <Route path="purchase-guide" element={<PurchaseGuide />} />
@@ -64,6 +62,11 @@ export const Router = () => {
           element={<ManuCategory component={ManuCategory} />}
         />
         <Route path="verify" element={<Verify />} />
+      </Route>
+      <Route path="/admin" element={<DashboardLayout />}>
+        <Route path="myacount" element={<MyAccount />} />
+        <Route path="checkout" element={<ShopCheckout />} />
+        <Route path="shop-cart" element={<ShopCart />} />
       </Route>
     </Routes>
   );

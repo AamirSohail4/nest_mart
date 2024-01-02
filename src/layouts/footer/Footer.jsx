@@ -129,16 +129,16 @@ export const Footer = () => {
                   <Link to="/sigin">Sign In</Link>
                 </li>
                 <li>
-                  <Link to="/shop-cart">View Cart</Link>
+                  <Link to="/admin/shop-cart">View Cart</Link>
                 </li>
                 <li>
                   <Link to="/shop-wishlist">My Wishlist</Link>
                 </li>
                 <li>
-                  <Link to="/account">Track My Order</Link>
+                  <Link to="/admin/myacount">Track My Order</Link>
                 </li>
                 <li>
-                  <Link to="/account">Shipping Details</Link>
+                  <Link to="/admin/myacount">Shipping Details</Link>
                 </li>
               </ul>
             </div>

@@ -11303,3 +11303,32 @@ div#productContent {
 p.Detail_dta {
   padding: 5px 162px 0px 8px;
 }
+.contact-info {
+  position: fixed;
+  top: 250px;
+  right: 0px;
+  z-index: 99999;
+}
+
+.social-info {
+  background-color: rgb(39, 38, 38);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 7px;
+  border-radius: 3px;
+  /* transform: translateX(73%); */
+  transition: transform 1s;
+  height: 39px;
+  width: 100%;
+  /* min-width: 84px; */
+}
+/* .social-info:hover {
+  transform: translateX(-5%);
+} */
+.social-info h4 {
+  font-size: 24px;
+  color: white;
+}
