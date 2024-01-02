@@ -1,12 +1,14 @@
-import { useContext, useEffect } from "react";
-import { CartContext } from "../../context/CartContext";
-import { useState } from "react";
-import { api_url, cart_url } from "../../config/env";
-import { Link, useNavigate } from "react-router-dom";
-import { PaymentContext } from "../../context/PaymentMethod";
+import { useContext, useEffect } from 'react';
+import { CartContext } from '../../context/CartContext';
+import { useState } from 'react';
+import { api_url, cart_url } from '../../config/env';
+import { Link, useNavigate } from 'react-router-dom';
+import { PaymentContext } from '../../context/PaymentMethod';
+import { MyAccountContext } from '../../context/AccountContext';
 
 export const ShopCart = () => {
-  const currentUserId = localStorage.getItem("userId");
+  // const currentUserId = localStorage.getItem("userId");
+  const { userId } = useContext(MyAccountContext);
   const navigatie = useNavigate();
   const { cartItem, deleteAllCartItems, deleteSingleCartItem, addToCart } =
     useContext(CartContext);
@@ -27,7 +29,7 @@ export const ShopCart = () => {
   // console.log("shipment addres select value=>", shipmentaddresValue);
 
   const handleCheckout = () => {
-    navigatie("/admin/checkout", {
+    navigatie('/admin/checkout', {
       state: { selectedPayment, shipmentaddresValue },
     });
     // navigatie("/admin/checkout", { state: { shipmentaddresValue } });
@@ -43,7 +45,7 @@ export const ShopCart = () => {
 
     setSelectedPayment(value);
 
-    if (modeValue === "3") {
+    if (modeValue === '3') {
       try {
         const response = await fetch(
           `${cart_url}&tag=get_payment_mode_detail&intCompanyID=1&intPaymentModeID=${modeValue}`
@@ -53,7 +55,7 @@ export const ShopCart = () => {
 
         setPaymentDetails(data?.data?.strDetails);
       } catch (error) {
-        console.error("Error fetching payment details:", error);
+        console.error('Error fetching payment details:', error);
       }
     }
   };
@@ -89,11 +91,11 @@ export const ShopCart = () => {
   };
 
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
   });
 
   const handleInputChange = (e) => {
@@ -106,21 +108,21 @@ export const ShopCart = () => {
 
   const handleButtonClick = async () => {
     let data = new FormData();
-    data.append("intUserID", currentUserId);
-    data.append("strShipmentContactPerson", formData.name);
-    data.append("strShipmentPhone", formData.phone);
-    data.append("strShipmentEmail", formData.email);
-    data.append("intShipmentCityID", formData.city);
-    data.append("strShipmentAddress", formData.address);
+    data.append('intUserID', userId);
+    data.append('strShipmentContactPerson', formData.name);
+    data.append('strShipmentPhone', formData.phone);
+    data.append('strShipmentEmail', formData.email);
+    data.append('intShipmentCityID', formData.city);
+    data.append('strShipmentAddress', formData.address);
 
     // console.log("Form Data:", data);
     const response = await fetch(`${cart_url}&tag=add_user_shipment_address`, {
-      method: "POST",
+      method: 'POST',
       body: data,
     });
     if (response.ok) {
       // const resData = await response.json();
-      alert("shipmentAddress is update");
+      alert('shipmentAddress is update');
 
       fetchShipmentAddress();
       resetForm();
@@ -135,7 +137,7 @@ export const ShopCart = () => {
 
         setCities(data.data);
       } catch (error) {
-        console.error("Error fetching city data:", error);
+        console.error('Error fetching city data:', error);
       }
     };
 
@@ -144,23 +146,23 @@ export const ShopCart = () => {
 
   const resetForm = () => {
     setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-      city: "",
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+      city: '',
     });
   };
 
   return (
     <>
-      <div className="page-header breadcrumb-wrap">
-        <div className="container">
-          <div className="breadcrumb">
-            <Link to="/" rel="nofollow">
-              <i className="fi-rs-home mr-5"></i>Home
+      <div className='page-header breadcrumb-wrap'>
+        <div className='container'>
+          <div className='breadcrumb'>
+            <Link to='/' rel='nofollow'>
+              <i className='fi-rs-home mr-5'></i>Home
             </Link>
-            <Link to="/allproducts">
+            <Link to='/allproducts'>
               <span>Shop</span>
             </Link>
             <span></span> Cart
@@ -169,108 +171,108 @@ export const ShopCart = () => {
       </div>
 
       <div
-        className="container mb-80 mt-50"
-        style={{ backgroundColor: "rgb(255, 255, 255)" }}
+        className='container mb-80 mt-50'
+        style={{ backgroundColor: 'rgb(255, 255, 255)' }}
       >
-        <div className="row">
-          <div className="col-lg-8 mb-40">
-            <h1 className="heading-2 mb-10">Your Cart</h1>
-            <div className="d-flex justify-content-between">
-              <h6 className="text-body">products in your cart</h6>
-              <h6 className="text-body">
+        <div className='row'>
+          <div className='col-lg-8 mb-40'>
+            <h1 className='heading-2 mb-10'>Your Cart</h1>
+            <div className='d-flex justify-content-between'>
+              <h6 className='text-body'>products in your cart</h6>
+              <h6 className='text-body'>
                 <button
-                  id="clr-cart"
-                  style={{ border: "none", backgroundColor: "white" }}
-                  className="text-muted clear-cart btnCartEmpty"
+                  id='clr-cart'
+                  style={{ border: 'none', backgroundColor: 'white' }}
+                  className='text-muted clear-cart btnCartEmpty'
                   onClick={deleteAllCartItems}
                 >
-                  <i className="fi-rs-trash mr-5"></i>
+                  <i className='fi-rs-trash mr-5'></i>
                   Clear Cart
                 </button>
               </h6>
             </div>
           </div>
         </div>
-        <div className="row" style={{ backgroundColor: "rgb(255, 255, 255" }}>
+        <div className='row' style={{ backgroundColor: 'rgb(255, 255, 255' }}>
           <div
-            className="col-lg-8"
-            style={{ backgroundColor: "rgb(255, 255, 255)" }}
+            className='col-lg-8'
+            style={{ backgroundColor: 'rgb(255, 255, 255)' }}
           >
             <div
-              className="table-responsive shopping-summery"
-              style={{ backgroundColor: "rgb(255, 255, 255)" }}
+              className='table-responsive shopping-summery'
+              style={{ backgroundColor: 'rgb(255, 255, 255)' }}
             >
-              <table className="table table-wishlist">
+              <table className='table table-wishlist'>
                 <thead>
-                  <tr className="main-heading">
-                    <th className="custome-checkbox start pl-30"></th>
-                    <th scope="col" colSpan="2">
+                  <tr className='main-heading'>
+                    <th className='custome-checkbox start pl-30'></th>
+                    <th scope='col' colSpan='2'>
                       Product
                     </th>
-                    <th scope="col">Unit Price</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Subtotal</th>
-                    <th scope="col" className="end">
+                    <th scope='col'>Unit Price</th>
+                    <th scope='col'>Quantity</th>
+                    <th scope='col'>Subtotal</th>
+                    <th scope='col' className='end'>
                       Remove
                     </th>
                   </tr>
                 </thead>
 
-                <tbody id="cartTable">
+                <tbody id='cartTable'>
                   {cartItem?.map((item, index) => {
                     const productID = item?.item?.intID;
                     return (
-                      <tr key={index} className="">
-                        <td className="custome-checkbox pl-30"></td>
-                        <td className="image product-thumbnail pt-40">
-                          <img src={item?.item?.strImage} alt="#" />
+                      <tr key={index} className=''>
+                        <td className='custome-checkbox pl-30'></td>
+                        <td className='image product-thumbnail pt-40'>
+                          <img src={item?.item?.strImage} alt='#' />
                         </td>
-                        <td className="product-des product-name">
-                          <h6 className="mb-5">
+                        <td className='product-des product-name'>
+                          <h6 className='mb-5'>
                             <a
-                              className="product-name mb-10 text-heading"
-                              href=""
+                              className='product-name mb-10 text-heading'
+                              href=''
                             >
                               {item?.item?.strDesc}
                             </a>
                           </h6>
                         </td>
-                        <td className="price" data-title="Price">
-                          <h4 className="text-body">
+                        <td className='price' data-title='Price'>
+                          <h4 className='text-body'>
                             {item?.item?.strUOM}
                             {parseFloat(item?.item?.dblSalePrice)}
                           </h4>
                         </td>
                         <td
-                          className="text-center detail-info"
-                          data-title="Stock"
+                          className='text-center detail-info'
+                          data-title='Stock'
                         >
-                          <div className="detail-extralink mr-15">
-                            <div className="detail-qty border radius">
+                          <div className='detail-extralink mr-15'>
+                            <div className='detail-qty border radius'>
                               <a
-                                href="#"
-                                className="qty-down cartQtyUpdate"
-                                data-pid="1866"
-                                data-type="down"
+                                href='#'
+                                className='qty-down cartQtyUpdate'
+                                data-pid='1866'
+                                data-type='down'
                               >
                                 <i
-                                  className="fi-rs-angle-small-down"
+                                  className='fi-rs-angle-small-down'
                                   onClick={() =>
                                     handleDec(item?.dblItemQty, productID)
                                   }
                                 ></i>
                               </a>
-                              <span className="qty-val item-qty">
+                              <span className='qty-val item-qty'>
                                 {item?.dblItemQty}
                               </span>
                               <a
-                                href="#"
-                                className="qty-up cartQtyUpdate"
-                                data-pid="1866"
-                                data-type="up"
+                                href='#'
+                                className='qty-up cartQtyUpdate'
+                                data-pid='1866'
+                                data-type='up'
                               >
                                 <i
-                                  className="fi-rs-angle-small-up"
+                                  className='fi-rs-angle-small-up'
                                   onClick={() =>
                                     handleInc(item?.dblItemQty, productID)
                                   }
@@ -279,22 +281,22 @@ export const ShopCart = () => {
                             </div>
                           </div>
                         </td>
-                        <td className="price" data-title="Price">
-                          <h4 className="text-brand">
+                        <td className='price' data-title='Price'>
+                          <h4 className='text-brand'>
                             {item?.item?.strUOM}
                             {parseFloat(item?.item?.dblSalePrice) *
                               parseFloat(item?.dblItemQty)}
                           </h4>
                         </td>
-                        <td className="action text-center" data-title="Remove">
+                        <td className='action text-center' data-title='Remove'>
                           <button
-                            style={{ border: "none", backgroundColor: "white" }}
-                            id="del-btn1866"
-                            className="text-body cartTableDel"
-                            data-pid="1866"
+                            style={{ border: 'none', backgroundColor: 'white' }}
+                            id='del-btn1866'
+                            className='text-body cartTableDel'
+                            data-pid='1866'
                             onClick={() => deleteSingleCartItem(item)}
                           >
-                            <i className="fi-rs-trash"></i>
+                            <i className='fi-rs-trash'></i>
                           </button>
                         </td>
                       </tr>
@@ -303,29 +305,29 @@ export const ShopCart = () => {
                 </tbody>
               </table>
             </div>
-            <div className="divider-2 mb-30"></div>
+            <div className='divider-2 mb-30'></div>
 
-            <div id="snackbar123"></div>
+            <div id='snackbar123'></div>
 
-            <div className="row mt-50">
-              <div className="col-lg-12">
-                <div className="p-40">
-                  <h4 className="mb-10">Apply Coupon</h4>
-                  <p className="mb-30">
-                    <span className="font-lg text-muted">
+            <div className='row mt-50'>
+              <div className='col-lg-12'>
+                <div className='p-40'>
+                  <h4 className='mb-10'>Apply Coupon</h4>
+                  <p className='mb-30'>
+                    <span className='font-lg text-muted'>
                       Using A Promo Code?
                     </span>
                   </p>
-                  <form action="#">
-                    <div className="d-flex justify-content-between">
+                  <form action='#'>
+                    <div className='d-flex justify-content-between'>
                       <input
-                        id="get-coupon-value"
-                        className="font-medium mr-15 coupon"
-                        name="Coupon"
-                        placeholder="Enter Your Coupon"
+                        id='get-coupon-value'
+                        className='font-medium mr-15 coupon'
+                        name='Coupon'
+                        placeholder='Enter Your Coupon'
                       />
-                      <button className="btn" id="apply-coupon">
-                        <i className="fi-rs-label mr-10"></i>Apply
+                      <button className='btn' id='apply-coupon'>
+                        <i className='fi-rs-label mr-10'></i>Apply
                       </button>
                     </div>
                   </form>
@@ -333,28 +335,28 @@ export const ShopCart = () => {
               </div>
             </div>
           </div>
-          <div className="col-lg-4">
-            <div className="border p-md-4 cart-totals ml-30">
-              <div className="table-responsive">
-                <table className="table no-border">
+          <div className='col-lg-4'>
+            <div className='border p-md-4 cart-totals ml-30'>
+              <div className='table-responsive'>
+                <table className='table no-border'>
                   <tbody>
                     <tr>
-                      <td colSpan="2">
-                        <div className="payment">
-                          <div className="d-flex justify-content-between mb-15 align-items-center">
+                      <td colSpan='2'>
+                        <div className='payment'>
+                          <div className='d-flex justify-content-between mb-15 align-items-center'>
                             <div>
-                              <h5 className="text-muted">Payment Method</h5>
+                              <h5 className='text-muted'>Payment Method</h5>
                             </div>
                           </div>
 
-                          <div className="payment_option">
+                          <div className='payment_option'>
                             {showPaymentMode?.map((item, index) => (
-                              <div key={index} className="custome-radio">
+                              <div key={index} className='custome-radio'>
                                 <input
-                                  className="form-check-input"
-                                  required=""
-                                  type="radio"
-                                  name="payment_option"
+                                  className='form-check-input'
+                                  required=''
+                                  type='radio'
+                                  name='payment_option'
                                   id={`paymentRadios${index}`}
                                   value={item.intID}
                                   onChange={() =>
@@ -362,26 +364,26 @@ export const ShopCart = () => {
                                   }
                                 />
                                 <label
-                                  className="form-check-label"
+                                  className='form-check-label'
                                   htmlFor={`paymentRadios${index}`}
-                                  data-bs-toggle="collapse"
-                                  data-target="#bankTranfer"
-                                  aria-controls="bankTranfer"
+                                  data-bs-toggle='collapse'
+                                  data-target='#bankTranfer'
+                                  aria-controls='bankTranfer'
                                 >
                                   {item.strDesc}
                                 </label>
                               </div>
                             ))}
-                            <div id="bankTranfer">
+                            <div id='bankTranfer'>
                               {paymentDetails && (
-                                <div id="bank detail" className="Detail_dta">
-                                  {selectedPayment === "3" ? (
+                                <div id='bank detail' className='Detail_dta'>
+                                  {selectedPayment === '3' ? (
                                     <>
-                                      <p className="Detail_dta">
+                                      <p className='Detail_dta'>
                                         {paymentDetails.toUpperCase()}
                                       </p>
                                     </>
-                                  ) : selectedPayment === "1" ? (
+                                  ) : selectedPayment === '1' ? (
                                     <p>Cash on Delivery</p>
                                   ) : null}
                                 </div>
@@ -392,16 +394,16 @@ export const ShopCart = () => {
                       </td>
                     </tr>
                     <tr>
-                      <td colSpan="2">
-                        <div className="payment">
-                          <div className="d-flex justify-content-between mb-15 align-items-center">
+                      <td colSpan='2'>
+                        <div className='payment'>
+                          <div className='d-flex justify-content-between mb-15 align-items-center'>
                             <div>
-                              <h5 className="text-muted">Shipping Address</h5>
+                              <h5 className='text-muted'>Shipping Address</h5>
                             </div>
                             <div>
                               <button
-                                type="button"
-                                className="btn btn-outline-info waves-effect px-3 btnAddShipment"
+                                type='button'
+                                className='btn btn-outline-info waves-effect px-3 btnAddShipment'
                                 onClick={handleAddModalClick}
                               >
                                 Add
@@ -409,16 +411,16 @@ export const ShopCart = () => {
                             </div>
                           </div>
 
-                          <div className="payment_option">
+                          <div className='payment_option'>
                             {shipmentAddress?.map((item, index) => {
                               return (
-                                <div key={index} className="custome-radio">
+                                <div key={index} className='custome-radio'>
                                   <input
-                                    className="form-check-input"
-                                    required=""
-                                    type="radio"
-                                    name="shipment_option"
-                                    data-name=" "
+                                    className='form-check-input'
+                                    required=''
+                                    type='radio'
+                                    name='shipment_option'
+                                    data-name=' '
                                     id={`exampleRadios0${index}`}
                                     value={item.intID}
                                     onChange={() =>
@@ -426,11 +428,11 @@ export const ShopCart = () => {
                                     }
                                   />
                                   <label
-                                    className="form-check-label"
+                                    className='form-check-label'
                                     htmlFor={`exampleRadios0${index}`}
-                                    data-bs-toggle="collapse"
-                                    data-target="#bankTranfer"
-                                    aria-controls="bankTranfer"
+                                    data-bs-toggle='collapse'
+                                    data-target='#bankTranfer'
+                                    aria-controls='bankTranfer'
                                   >
                                     {item.strShipmentAddress}
                                   </label>
@@ -442,37 +444,37 @@ export const ShopCart = () => {
                       </td>
                     </tr>
                     <tr>
-                      <td className="cart_total_label">
-                        <h6 className="text-muted">Subtotal</h6>
+                      <td className='cart_total_label'>
+                        <h6 className='text-muted'>Subtotal</h6>
                       </td>
-                      <td className="cart_total_amount">
-                        <input id="get-subtotal" type="hidden" value="11950" />
+                      <td className='cart_total_amount'>
+                        <input id='get-subtotal' type='hidden' value='11950' />
 
-                        <h4 id="set-subtotal" className="text-brand text-end">
+                        <h4 id='set-subtotal' className='text-brand text-end'>
                           {calculateTotal()}
                         </h4>
                       </td>
                     </tr>
 
-                    <tr id="discount-available" hidden="">
-                      <td className="cart_total_label">
-                        <h6 className="text-muted">Discount</h6>
+                    <tr id='discount-available' hidden=''>
+                      <td className='cart_total_label'>
+                        <h6 className='text-muted'>Discount</h6>
                       </td>
-                      <td className="cart_total_amount">
+                      <td className='cart_total_amount'>
                         <input
-                          id="get-discount-price"
-                          type="hidden"
-                          value="0"
+                          id='get-discount-price'
+                          type='hidden'
+                          value='0'
                         />
                         <input
-                          id="get-discount-amount"
-                          type="hidden"
-                          value="0"
+                          id='get-discount-amount'
+                          type='hidden'
+                          value='0'
                         />
-                        <input id="get-discount-per" type="hidden" value="0" />
+                        <input id='get-discount-per' type='hidden' value='0' />
                         <h4
-                          id="set-discount-price"
-                          className="text-brand text-end"
+                          id='set-discount-price'
+                          className='text-brand text-end'
                         >
                           Rs 0
                         </h4>
@@ -480,12 +482,12 @@ export const ShopCart = () => {
                     </tr>
 
                     <tr>
-                      <td className="cart_total_label">
-                        <h6 className="text-muted">Total</h6>
+                      <td className='cart_total_label'>
+                        <h6 className='text-muted'>Total</h6>
                       </td>
-                      <td className="cart_total_amount">
-                        <input id="get-total" type="hidden" value="11950" />
-                        <h4 id="set-total" className="text-brand text-end">
+                      <td className='cart_total_amount'>
+                        <input id='get-total' type='hidden' value='11950' />
+                        <h4 id='set-total' className='text-brand text-end'>
                           Rs {calculateTotal()}
                         </h4>
                       </td>
@@ -495,11 +497,11 @@ export const ShopCart = () => {
               </div>
               <button
                 // to="/checkout"
-                type="button"
+                type='button'
                 onClick={handleCheckout}
-                className="btn mb-20 w-100 btnValidateCheckout"
+                className='btn mb-20 w-100 btnValidateCheckout'
               >
-                Proceed To CheckOut<i className="fi-rs-sign-out ml-15"></i>
+                Proceed To CheckOut<i className='fi-rs-sign-out ml-15'></i>
               </button>
             </div>
           </div>
@@ -507,87 +509,87 @@ export const ShopCart = () => {
       </div>
 
       <div
-        className="modal  custom-modal iqbal"
+        className='modal  custom-modal iqbal'
         style={{
-          display: `${open === true ? "block" : "none"}`,
-          backgroundColor: "rgba(0, 0, 0,0.2)",
+          display: `${open === true ? 'block' : 'none'}`,
+          backgroundColor: 'rgba(0, 0, 0,0.2)',
         }}
       >
-        <div className="modal-dialog">
-          <div className="modal-content">
+        <div className='modal-dialog'>
+          <div className='modal-content'>
             <button
-              type="button"
-              className="btn-close"
+              type='button'
+              className='btn-close'
               onClick={handleAddModalClick}
             ></button>
-            <div className="modal-body">
+            <div className='modal-body'>
               <div
-                className="deal"
+                className='deal'
                 style={{
                   backgroundImage: "url('assets/imgs/banner/popup-1.png')",
                 }}
               >
-                <div className="deal-top">
-                  <h4 className="mb-10 text-brand-2">Add Address</h4>
+                <div className='deal-top'>
+                  <h4 className='mb-10 text-brand-2'>Add Address</h4>
                 </div>
                 <div>
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="form-group col-md-6">
+                  <div className='card-body'>
+                    <div className='row'>
+                      <div className='form-group col-md-6'>
                         <label>
-                          Contact Person <span className="required">*</span>
+                          Contact Person <span className='required'>*</span>
                         </label>
                         <input
-                          required=""
-                          className="form-control"
-                          name="name"
-                          type="text"
+                          required=''
+                          className='form-control'
+                          name='name'
+                          type='text'
                           value={formData.name}
                           onChange={handleInputChange}
                         />
                       </div>
 
-                      <div className="form-group col-md-6">
+                      <div className='form-group col-md-6'>
                         <label>
-                          Contact No <span className="required">*</span>
+                          Contact No <span className='required'>*</span>
                         </label>
                         <input
-                          required=""
-                          className="form-control"
-                          name="phone"
-                          id="phone"
-                          type="text"
+                          required=''
+                          className='form-control'
+                          name='phone'
+                          id='phone'
+                          type='text'
                           value={formData.phone}
                           onChange={handleInputChange}
                         />
                       </div>
-                      <div className="form-group col-md-6">
+                      <div className='form-group col-md-6'>
                         <label>
-                          Email Address <span className="required">*</span>
+                          Email Address <span className='required'>*</span>
                         </label>
                         <input
-                          required=""
-                          className="form-control"
-                          name="email"
-                          id="email"
-                          type="email"
+                          required=''
+                          className='form-control'
+                          name='email'
+                          id='email'
+                          type='email'
                           value={formData.email}
                           onChange={handleInputChange}
                         />
                       </div>
 
-                      <div className="form-group col-md-6">
+                      <div className='form-group col-md-6'>
                         <label>
-                          City<span className="required">*</span>
+                          City<span className='required'>*</span>
                         </label>
                         <select
-                          className="form-control"
-                          name="city"
-                          id="city"
+                          className='form-control'
+                          name='city'
+                          id='city'
                           value={formData.city}
                           onChange={handleInputChange}
                         >
-                          <option value="" disabled>
+                          <option value='' disabled>
                             Select a city
                           </option>
 
@@ -598,27 +600,27 @@ export const ShopCart = () => {
                           ))}
                         </select>
                       </div>
-                      <div className="form-group col-md-12">
+                      <div className='form-group col-md-12'>
                         <label>
-                          Address <span className="required">*</span>
+                          Address <span className='required'>*</span>
                         </label>
                         <input
-                          required=""
-                          className="form-control"
-                          name="address"
-                          id="address"
-                          type="text"
+                          required=''
+                          className='form-control'
+                          name='address'
+                          id='address'
+                          type='text'
                           value={formData.address}
                           onChange={handleInputChange}
                         />
                       </div>
-                      <div className="col-md-12">
+                      <div className='col-md-12'>
                         <button
-                          id="address-btn"
-                          type="button"
-                          className="btn btn-fill-out submit font-weight-bold btnAddAddress"
-                          name="submit"
-                          value="Submit"
+                          id='address-btn'
+                          type='button'
+                          className='btn btn-fill-out submit font-weight-bold btnAddAddress'
+                          name='submit'
+                          value='Submit'
                           onClick={handleButtonClick}
                         >
                           Add Address
