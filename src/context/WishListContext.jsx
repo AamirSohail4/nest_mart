@@ -82,7 +82,7 @@ export const WishListProvider = ({ children }) => {
 
   useEffect(() => {
     WishListDisplay();
-    SerchCategoryClick();
+    // SerchCategoryClick();
   }, []);
 
   return (

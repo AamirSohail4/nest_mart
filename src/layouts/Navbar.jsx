@@ -32,8 +32,8 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("userId");
+    localStorage.removeItem("roleId");
     navigate("/");
-    // return
   };
 
   async function ManuDisplay() {
@@ -297,7 +297,6 @@ export const Navbar = () => {
                         <li>
                           <a
                             className="nav-link btnLogout"
-                            href="#"
                             onClick={handleLogout}
                           >
                             <i className="fi-rs-sign-out mr-10"></i>Logout
