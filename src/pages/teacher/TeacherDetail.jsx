@@ -5,9 +5,11 @@ import { Link, useParams } from "react-router-dom";
 import { teacher_url } from "../../config/env";
 import { api_url } from "../../config/env";
 import { CartContext } from "../../context/CartContext";
+import { WishListContext } from "../../context/WishListContext";
 
 export const TeacherDetail = () => {
   const { addToCart } = useContext(CartContext);
+  const { addToWishList } = useContext(WishListContext);
   const { strSEOLink } = useParams();
   const { id } = useParams();
   const [teacher, setTeacher] = useState({});
@@ -164,7 +166,8 @@ export const TeacherDetail = () => {
                             </div>
                             <div className="product-action-1">
                               <Link
-                                to="/admin/myacount"
+                                to="#"
+                                onClick={() => addToWishList(item.intID)}
                                 style={{
                                   border: "none",
                                   backgroundColor: "white",

@@ -6,22 +6,22 @@ import { Router } from "./router/Router";
 import { AppProvider } from "./context/AddresContext";
 import { CartProvider } from "./context/CartContext";
 import { PaymentProvider } from "./context/PaymentMethod";
-import { UserDetailProvider } from "./context/AccountContext";
+import { MyAccountProvider } from "./context/AccountContext";
 import { WishListProvider } from "./context/WishListContext";
 import { ScrollToTop } from "./component/ScrollToTop";
 export const App = () => {
   return (
-    <WishListProvider>
-      <CartProvider>
-        <UserDetailProvider>
+    <MyAccountProvider>
+      <WishListProvider>
+        <CartProvider>
           <PaymentProvider>
             <AppProvider>
               <ScrollToTop />
               <Router />
             </AppProvider>
           </PaymentProvider>
-        </UserDetailProvider>
-      </CartProvider>
-    </WishListProvider>
+        </CartProvider>
+      </WishListProvider>
+    </MyAccountProvider>
   );
 };

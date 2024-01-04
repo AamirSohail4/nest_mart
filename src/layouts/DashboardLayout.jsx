@@ -5,9 +5,8 @@ import { Footer } from "./footer/Footer";
 import { NewsLetterForm } from "./NewsLetterForm";
 import { CopyRight } from "./footer/CopyRight";
 import { useEffect } from "react";
-// import { MyAccountContext } from '../context/AccountContext';
 
-export const DashboardLayout = ({ setMydata }) => {
+export const DashboardLayout = () => {
   const userId = localStorage.getItem("userId");
   // const { userId } = useContext(MyAccountContext);
   const navigate = useNavigate();
@@ -21,7 +20,7 @@ export const DashboardLayout = ({ setMydata }) => {
 
   return (
     <div className="app_layout">
-      <Navbar setMydata={setMydata} />
+      <Navbar />
       <Outlet />
       <NewsLetterForm />
       <footer className="main">

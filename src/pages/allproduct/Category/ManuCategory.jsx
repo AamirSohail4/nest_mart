@@ -1,14 +1,18 @@
+import { Icon } from "@iconify/react";
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { CartContext } from "../../../context/CartContext";
 import loadingGif from "../../../assets/imgs/banner/loading.gif";
+import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
+import { CartContext } from "../../../context/CartContext";
 import { MyAccountContext } from "../../../context/AccountContext";
 
 export const ManuCategory = () => {
-  const { categoryData } = useContext(MyAccountContext);
   const { addToCart } = useContext(CartContext);
+  const { categoryData } = useContext(MyAccountContext);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
+  const [currentItems, setCurrentItems] = useState([]);
+  const [itemOffset, setItemOffset] = useState(0);
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
 
   const handleAddToCart = (productId, quantity, productDesc) => {
@@ -18,22 +22,25 @@ export const ManuCategory = () => {
       setSelectedProductDesc("");
     }, 4000);
   };
-  const currentData = categoryData || categoryData;
-  const productsPerPage = 20;
-  const { page } = useParams();
+  const itemsPerPage = 20;
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+
+    setCurrentItems(categoryData?.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(categoryData?.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, categoryData]);
+
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % categoryData?.length;
+    setItemOffset(newOffset);
+  };
 
   useEffect(() => {
-    setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
-  }, [page]);
+  }, []);
 
-  const startIndex = (currentPage - 1) * productsPerPage;
-  const endIndex = startIndex + productsPerPage;
-  const displayedProducts = currentData?.slice(startIndex, endIndex);
-
-  const totalPages = Math.ceil(currentData?.length / productsPerPage);
   return (
     <>
       {loading ? (
@@ -56,10 +63,10 @@ export const ManuCategory = () => {
                           <div className="col-4">
                             <div className="col-xl">
                               <div className="breadcrumb">
-                                <Link to="/" rel="nofollow">
+                                <a href="/" rel="nofollow">
                                   <i className="fi-rs-home mr-5"></i>Home
-                                </Link>
-                                <span></span>
+                                </a>
+                                <span></span> Products
                               </div>
                             </div>
                           </div>
@@ -68,8 +75,20 @@ export const ManuCategory = () => {
                     </div>
                   </div>
                 </div>
+                <div className="shop-product-fillter">
+                  <div className="totall-product">
+                    <p>
+                      We found
+                      <strong className="text-brand">
+                        {currentItems?.length}
+                      </strong>
+                      items for you!
+                    </p>
+                  </div>
+                </div>
+
                 <div className="row product-grid">
-                  {displayedProducts?.map((item, index) => (
+                  {currentItems?.map((item, index) => (
                     <div
                       key={index}
                       className="col-lg-1-5 col-md-4 col-12 col-sm-6"
@@ -147,32 +166,25 @@ export const ManuCategory = () => {
                 </div>
               </div>
             </div>
+
             <div className="pagination-area mt-20 mb-20">
               <nav aria-label="Page navigation example">
-                <ul className="pagination justify-content-start">
-                  <li className="page-item"></li>
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <li
-                      key={index + 1}
-                      className={`page-item ${
-                        currentPage === index + 1 ? "active" : ""
-                      }`}
-                    >
-                      <Link
-                        to="#"
-                        className={`page-link ${
-                          currentPage === index + 1 ? "active" : ""
-                        }`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setCurrentPage(index + 1);
-                        }}
-                      >
-                        {index + 1}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                <ReactPaginate
+                  breakLabel="..."
+                  nextLabel={<Icon icon="lets-icons:arrow-top" rotate={1} />}
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={20}
+                  pageCount={pageCount}
+                  previousLabel={
+                    <Icon icon="lets-icons:arrow-top" rotate={3} />
+                  }
+                  renderOnZeroPageCount={null}
+                  containerClassName="pagination"
+                  pageLinkClassName="page-num"
+                  previousLinkClassName="page-num"
+                  nextLinkClassName="page-num"
+                  activeLinkClassName="active"
+                />
               </nav>
             </div>
           </div>

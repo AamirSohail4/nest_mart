@@ -1,51 +1,62 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { allProduct_url } from "../../config/env";
-import dumy from "../../assets/imgs/banner/dumypng.png";
+
 import loadingGif from "../../assets/imgs/banner/loading.gif";
 import { CartContext } from "../../context/CartContext";
+import { Icon } from "@iconify/react";
+import ReactPaginate from "react-paginate";
 
 export const ProductsGrid = () => {
-  const [allProducts, setAllProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
   const { addToCart } = useContext(CartContext);
 
-  const productsPerPage = 20;
-  const location = useLocation();
+  const [loading, setLoading] = useState(true);
+  const [pageCount, setPageCount] = useState(0);
+  const [currentItems, setCurrentItems] = useState([]);
+  const [itemOffset, setItemOffset] = useState(0);
+  const [selectedProductDesc, setSelectedProductDesc] = useState("");
+  const [fetchProduct, setFechProduct] = useState();
+
+  const handleAddToCart = (productId, quantity, productDesc) => {
+    addToCart(productId, quantity);
+    setSelectedProductDesc(productDesc);
+    setTimeout(() => {
+      setSelectedProductDesc("");
+    }, 4000);
+  };
 
   useEffect(() => {
     async function fetchAllProducts() {
       try {
         const response = await fetch(allProduct_url);
         const productData = await response.json();
-        setAllProducts(productData.data);
-        setLoading(false);
+        setFechProduct(productData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setLoading(false);
       }
     }
 
     fetchAllProducts();
   }, []);
 
+  const itemsPerPage = 20;
   useEffect(() => {
-    window.scrollTo(0, 0);
-    const searchParams = new URLSearchParams(location.search);
-    const pageParam = parseInt(searchParams.get("page"), 10);
+    const endOffset = itemOffset + itemsPerPage;
 
-    // Ensure `pageParam` is a valid number before setting `currentPage`
-    setCurrentPage(isNaN(pageParam) ? 1 : pageParam || 1);
-  }, [location.search]);
+    setCurrentItems(fetchProduct?.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(fetchProduct?.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, fetchProduct]);
 
-  const totalPages = Math.ceil(allProducts.length / productsPerPage);
-  const startIndex = (currentPage - 1) * productsPerPage;
-  const endIndex = startIndex + productsPerPage;
-  const displayedProducts = allProducts.slice(startIndex, endIndex);
-  const handlePageClick = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % fetchProduct?.length;
+    setItemOffset(newOffset);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
   return (
     <>
       {loading ? (
@@ -81,7 +92,7 @@ export const ProductsGrid = () => {
                   </div>
                 </div>
                 <div className="row product-grid">
-                  {displayedProducts.map((item, index) => (
+                  {currentItems?.map((item, index) => (
                     <div
                       key={index}
                       className="col-lg-1-5 col-md-4 col-12 col-sm-6"
@@ -90,36 +101,27 @@ export const ProductsGrid = () => {
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
                             <Link to={`/product/${item.strSEOLink}`}>
-                              {item.strImageThumbnail ? (
-                                <>
-                                  <img src={item.strImageThumbnail} alt="" />
-                                  <img
-                                    className="hover-img"
-                                    src={item.strImageThumbnail}
-                                    alt=""
-                                  />
-                                </>
-                              ) : (
-                                // Dummy image if strImageThumbnail is not available
-                                <img src={dumy} alt="Dummy Image" />
-                              )}
+                              <img src={item?.strImageThumbnail} />
+                              <img
+                                className="hover-img"
+                                src={item?.strImageThumbnail}
+                                alt=""
+                              />
                             </Link>
                           </div>
                           <div className="product-action-1">
                             <Link
                               aria-label="Add To Wishlist"
                               className="action-btn"
-                              to="/admin/acount"
+                              to="/admin/myacount"
                             >
                               <i className="fi-rs-heart"></i>
                             </Link>
 
                             <Link
-                              to={`product/${item.strSEOLink}`}
+                              to={`/product/${item.strSEOLink}`}
                               aria-label="Quick view"
                               className="action-btn"
-                              data-bs-toggle="modal"
-                              data-bs-target="#quickViewModal"
                             >
                               <i className="fi-rs-eye"></i>
                             </Link>
@@ -140,17 +142,24 @@ export const ProductsGrid = () => {
                           <div>
                             <span className="font-small text-muted"></span>
                           </div>
+
                           <div className="product-card-bottom">
                             <div className="product-price">
                               <span>Rs: {item.dblSalePrice}</span>
                             </div>
+                            <div className="contact-info">
+                              <div className="social-info">
+                                <h4>{selectedProductDesc}</h4>
+                              </div>
+                            </div>
                             <div className="add-cart">
                               <Link
                                 className="add"
-                                onClick={() => addToCart(item.intID, 1)}
+                                onClick={() =>
+                                  handleAddToCart(item.intID, 1, item.strDesc)
+                                }
                               >
-                                <i className="fi-rs-shopping-cart mr-5"></i>
-                                Add{" "}
+                                <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                               </Link>
                             </div>
                           </div>
@@ -164,71 +173,24 @@ export const ProductsGrid = () => {
             {/* Pagination links */}
             <div className="pagination-area mt-20 mb-20">
               <nav aria-label="Page navigation example">
-                <ul className="pagination justify-content-start">
-                  <li className="page-item">
-                    <Link
-                      to={`/allProducts/${1}`}
-                      className="page-link"
-                      onClick={() => setCurrentPage(1)}
-                    >
-                      <i className="fi-rs-arrow-small-left"></i>
-                    </Link>
-                  </li>
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <li
-                      key={index + 1}
-                      className={`page-item ${
-                        currentPage === index + 1 ? "active" : ""
-                      }`}
-                    >
-                      <Link
-                        to={`/allProducts/${index + 1}`}
-                        className={`page-link ${
-                          currentPage === index + 1 ? "active" : ""
-                        }`}
-                        onClick={() => handlePageClick(index + 1)}
-                      >
-                        {index + 1}
-                      </Link>
-                    </li>
-                  ))}
-                  <li className="page-item">
-                    <Link
-                      to={`/allProducts/${totalPages}`}
-                      className="page-link"
-                      onClick={() => setCurrentPage(totalPages)}
-                    >
-                      <i className="fi-rs-arrow-small-right"></i>
-                    </Link>
-                  </li>
-                </ul>
+                <ReactPaginate
+                  breakLabel="..."
+                  nextLabel={<Icon icon="lets-icons:arrow-top" rotate={1} />}
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={20}
+                  pageCount={pageCount}
+                  previousLabel={
+                    <Icon icon="lets-icons:arrow-top" rotate={3} />
+                  }
+                  renderOnZeroPageCount={null}
+                  containerClassName="pagination"
+                  pageLinkClassName="page-num"
+                  previousLinkClassName="page-num"
+                  nextLinkClassName="page-num"
+                  activeLinkClassName="active"
+                />
               </nav>
             </div>
-            {/* <div className="pagination-area mt-20 mb-20">
-              <nav aria-label="Page navigation example">
-                <ul className="pagination justify-content-start">
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <li
-                      key={index + 1}
-                      className={`page-item ${
-                        currentPage === index + 1 ? "active" : ""
-                      }`}
-                    >
-                      <Link
-                        to={`/allProducts/${index + 1}`}
-                        className={`page-link ${
-                          currentPage === index + 1 ? "active" : ""
-                        }`}
-                        onClick={() => setCurrentPage(index + 1)}
-                      >
-                        {index + 1}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div> */}
-            {/* End of pagination links */}
           </div>
         </main>
       )}

@@ -5,10 +5,12 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api_url } from "../../../config/env";
 import { CartContext } from "../../../context/CartContext";
+import { WishListContext } from "../../../context/WishListContext";
 
 export const ProductDetail = () => {
   const { seoLink } = useParams();
   const { addToCart } = useContext(CartContext);
+  const { addToWishList } = useContext(WishListContext);
 
   const [singleproduct, setSingleProduct] = useState();
   const [strSpec, setStrSpec] = useState("");
@@ -317,8 +319,9 @@ export const ProductDetail = () => {
                         <Link
                           aria-label="Add To Wishlist"
                           className="action-btn small hover-up"
-                          to="/admin/myacount"
+                          to=""
                           tabIndex="0"
+                          onClick={() => addToWishList(item.intID)}
                         >
                           <i className="fi-rs-heart"></i>
                         </Link>

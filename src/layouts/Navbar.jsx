@@ -65,26 +65,6 @@ export const Navbar = () => {
     return subtotal.toFixed(2);
   };
 
-  // const handleSearchButtonClick = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `${relateProd_url}&tag=get_items_web&intCategoryID=${selectedCategoryId}&strSearch=${searchQuery}`
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok");
-  //     }
-
-  //     const myQueryData = await response.json();
-  //     if (myQueryData.status === "1") {
-  //       setMydata(myQueryData.data);
-  //       navigate("/Categories");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
   };

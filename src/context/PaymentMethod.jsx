@@ -21,10 +21,10 @@ export const PaymentProvider = ({ children }) => {
     const responseData = paymentMode.data;
     setshowPaymentMode(responseData);
   };
-  console.log("user id in provider ===>", userId);
+  // console.log("user id in provider ===>", userId);
 
   const fetchShipmentAddress = async () => {
-    console.log("user id fetchShipmentAddress===>", userId);
+    // console.log("user id fetchShipmentAddress===>", userId);
     try {
       const response = await fetch(
         `${cart_url}&tag=get_user_shipment_address&intUserID=${userId}`

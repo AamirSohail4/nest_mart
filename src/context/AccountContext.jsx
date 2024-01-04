@@ -7,16 +7,16 @@ import { useNavigate } from "react-router-dom";
 
 export const MyAccountContext = createContext({});
 
-export const UserDetailProvider = ({ children }) => {
+export const MyAccountProvider = ({ children }) => {
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
-  console.log("user id globel =>>", userId);
+  // console.log("user id globel =>>", userId);
   const navigate = useNavigate();
   const [userAddress, setUserAddress] = useState();
   const [userinfo, setUserInfo] = useState();
   const [categoryData, setCategoryData] = useState();
 
   async function userDetails() {
-    console.log("user id user details funtion===>", userId);
+    // console.log("user id user details funtion===>", userId);
     const response = await fetch(
       `${shipAddres_url}&tag=get_user_shipment_address&intUserID=${userId}`
     );
@@ -25,7 +25,7 @@ export const UserDetailProvider = ({ children }) => {
     setUserAddress(bannerData?.data[0]);
   }
   async function userInfoDisplay() {
-    console.log("user id user info dispaly===>", userId);
+    // console.log("user id user info dispaly vvvvv===>", userId);
     const response = await fetch(
       `${userInfo_url}&tag=get_users&intID=${userId}`
     );
@@ -57,7 +57,7 @@ export const UserDetailProvider = ({ children }) => {
     userDetails();
     userInfoDisplay();
   }, [userId]);
-  console.log("userinfouserinfouserinfouserinfouserinfo", userinfo);
+  // console.log("userinfouserinfouserinfouserinfouserinfo", userinfo);
   return (
     <MyAccountContext.Provider
       value={{
@@ -67,6 +67,7 @@ export const UserDetailProvider = ({ children }) => {
         userinfo,
         handleManuClick,
         categoryData,
+        userInfoDisplay,
       }}
     >
       {children}

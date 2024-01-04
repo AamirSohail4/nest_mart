@@ -8,13 +8,14 @@ import { CartContext } from "../../context/CartContext";
 
 export const MyAccount = () => {
   const roleId = localStorage.getItem("roleId");
-  const { userId, userAddress, userinfo } = useContext(MyAccountContext);
+  const { userId, userAddress, userinfo, userInfoDisplay } =
+    useContext(MyAccountContext);
   const { addToCart } = useContext(CartContext);
   const { wishListItem, deleteWishlist } = useContext(WishListContext);
   const [orderDetails, setOrderDetails] = useState();
   const [locatCities, setCities] = useState([]);
   const userData = userAddress;
-  console.log("user infoo for hellow", userinfo);
+  // console.log("user infoo for hellow", userinfo);
   const [activeSection, setActiveSection] = useState("dashboard");
   const navigate = useNavigate();
   const handleSectionClick = (section) => {
@@ -69,6 +70,7 @@ export const MyAccount = () => {
 
     if (response.ok) {
       alert("Changes Saved");
+      userInfoDisplay();
     }
   };
 
@@ -77,7 +79,7 @@ export const MyAccount = () => {
       full_name: userinfo?.strFullName || "",
       email: userinfo?.strEmail || "",
       address: userinfo?.strAddress || "",
-      city: userinfo?.city || "", // Update this based on your data structure
+      city: userinfo?.city || "",
       alter_phone: userinfo?.strContactNo || "",
     });
     const fetchCities = async () => {
@@ -226,7 +228,8 @@ export const MyAccount = () => {
                         <div className="card">
                           <div className="card-header">
                             <h3 className="mb-0">
-                              Hello {userinfo?.strUserName}
+                              Hello
+                              {userinfo?.strUserName}
                             </h3>
                           </div>
                           <div className="card-body">
@@ -395,7 +398,7 @@ export const MyAccount = () => {
                         </div>
                       </div>
 
-                      {/* Accounts */}
+                      {/* My Account */}
                       <div
                         style={{
                           display: `${

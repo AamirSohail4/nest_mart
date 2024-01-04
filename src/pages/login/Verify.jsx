@@ -55,7 +55,7 @@ export const Verify = () => {
           );
           if (response1.ok) {
             const res = await response1.json();
-            console.log("dddddd", res);
+            // console.log("dddddd", res);
             if (
               res.data[0]?.strFullName === "" ||
               res.data[0]?.strFullName === null ||
@@ -65,12 +65,11 @@ export const Verify = () => {
             } else {
               navigate("/");
             }
-            console.log("user data", res.data[0]?.strFullName);
+            // console.log("user data", res.data[0]?.strFullName);
           }
         } else {
-          console.error("API Error:", response.status, response.statusText);
-
-          console.error("Error Details:");
+          // console.error("API Error:", response.status, response.statusText);
+          // console.error("Error Details:");
           // Handle API error if needed
         }
       } else {

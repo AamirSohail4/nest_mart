@@ -25,6 +25,7 @@ import { Verify } from "../pages/login/Verify";
 import { ManuCategory } from "../pages/allproduct/Category/ManuCategory";
 import { Shop } from "../pages/shop/Shop";
 import { DashboardLayout } from "../layouts/DashboardLayout";
+import { TestDemo } from "../pages/allproduct/Category/TestDemo";
 
 export const Router = () => {
   const [mydata, setMydata] = useState([]);
@@ -62,6 +63,7 @@ export const Router = () => {
           element={<ManuCategory component={ManuCategory} />}
         />
         <Route path="verify" element={<Verify />} />
+        <Route path="testdemo" element={<TestDemo />} />
       </Route>
       <Route path="/admin" element={<DashboardLayout />}>
         <Route path="myacount" element={<MyAccount />} />
