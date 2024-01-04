@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { allProduct_url } from "../../config/env";
 import loadingGif from "../../assets/imgs/banner/loading.gif";
@@ -9,6 +9,7 @@ import { MyAccountContext } from "../../context/AccountContext";
 import { WishListContext } from "../../context/WishListContext";
 
 export const ProductsGrid = () => {
+  const navigate = useNavigate();
   const { userId } = useContext(MyAccountContext);
   const { addToWishList } = useContext(WishListContext);
   const { addToCart } = useContext(CartContext);
@@ -24,7 +25,7 @@ export const ProductsGrid = () => {
     if (userId !== null) {
       addToWishList(itemId);
     } else {
-      alert("please first Login");
+      navigate("/login");
     }
   };
 
@@ -36,7 +37,7 @@ export const ProductsGrid = () => {
         setSelectedProductDesc("");
       }, 4000);
     } else {
-      alert("please first Login");
+      navigate("/login");
     }
   };
 

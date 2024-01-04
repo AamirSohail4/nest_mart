@@ -35,7 +35,6 @@ export const MyAccountProvider = ({ children }) => {
     setUserInfo(userData?.data[0]);
   }
   const handleManuClick = async (categoryId, seolink) => {
-    navigate("/manuCategory");
     try {
       setLoading(true);
       const response = await fetch(
@@ -44,8 +43,8 @@ export const MyAccountProvider = ({ children }) => {
 
       if (response.ok) {
         const manudata = await response.json();
-
         setCategoryData(manudata.data);
+        navigate("/manuCategory");
         setLoading(false);
       } else {
         console.error("API request failed with status:", response.status);
@@ -71,6 +70,7 @@ export const MyAccountProvider = ({ children }) => {
         categoryData,
         userInfoDisplay,
         loading,
+        setLoading,
       }}
     >
       {children}

@@ -2,12 +2,14 @@ import Slider from "react-slick";
 import he from "he";
 import Zoom from "react-img-zoom-gdn";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { api_url } from "../../../config/env";
 import { CartContext } from "../../../context/CartContext";
 import { WishListContext } from "../../../context/WishListContext";
 import { MyAccountContext } from "../../../context/AccountContext";
+
 export const ProductDetail = () => {
+  const navigate = useNavigate();
   const { seoLink } = useParams();
   const { addToCart } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
@@ -22,7 +24,7 @@ export const ProductDetail = () => {
     if (userId !== null) {
       addToWishList(itemId);
     } else {
-      alert("please first Login");
+      navigate("/login");
     }
   };
 
@@ -34,8 +36,7 @@ export const ProductDetail = () => {
         setSelectedProductDesc("");
       }, 4000);
     } else {
-      alert("please first Login");
-      history && history.push("login");
+      navigate("/login");
     }
   };
   const handleDec = () => {

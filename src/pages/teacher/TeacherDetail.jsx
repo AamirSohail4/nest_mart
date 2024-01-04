@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import he from "he";
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { teacher_url } from "../../config/env";
 import { api_url } from "../../config/env";
 import { CartContext } from "../../context/CartContext";
@@ -9,6 +9,7 @@ import { WishListContext } from "../../context/WishListContext";
 import { MyAccountContext } from "../../context/AccountContext";
 
 export const TeacherDetail = () => {
+  const navigate = useNavigate();
   const { userId } = useContext(MyAccountContext);
   const { addToCart } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
@@ -25,7 +26,7 @@ export const TeacherDetail = () => {
     if (userId !== null) {
       addToWishList(itemId);
     } else {
-      alert("please first Login");
+      navigate("/login");
     }
   };
 
@@ -37,8 +38,7 @@ export const TeacherDetail = () => {
         setSelectedProductDesc("");
       }, 4000);
     } else {
-      alert("please first Login");
-      history && history.push("login");
+      navigate("/login");
     }
   };
   async function ShowPublication() {
