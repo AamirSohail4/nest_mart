@@ -3,13 +3,22 @@ import { api_url } from "../../../../config/env";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../../../context/CartContext";
 import { WishListContext } from "../../../../context/WishListContext";
+import { MyAccountContext } from "../../../../context/AccountContext";
 
 export const PopularProducts = () => {
+  const { userId } = useContext(MyAccountContext);
   const { addToCart } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
   const [myproduct, setMyProduct] = useState([]);
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
 
+  const handleHeartClick = (itemId) => {
+    if (userId !== null) {
+      addToWishList(itemId);
+    } else {
+      console.log("User is not logged in");
+    }
+  };
   const handleAddToCart = (productId, quantity, productDesc) => {
     addToCart(productId, quantity);
     setSelectedProductDesc(productDesc);
@@ -75,8 +84,7 @@ export const PopularProducts = () => {
                           </Link>
                         </div>
                         <div className="product-action-1">
-                          <Link
-                            to="/admin/myacount"
+                          {/* <Link
                             aria-label="Add To Wishlist"
                             className="action-btn"
                           >
@@ -84,6 +92,14 @@ export const PopularProducts = () => {
                               className="fi-rs-heart"
                               onClick={() => addToWishList(item.intID)}
                             ></i>
+                          </Link> */}
+                          <Link
+                            to="#"
+                            aria-label="Add To Wishlist"
+                            className="action-btn"
+                            onClick={() => handleHeartClick(item.intID)}
+                          >
+                            <i className="fi-rs-heart"></i>
                           </Link>
 
                           <Link

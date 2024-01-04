@@ -25,14 +25,11 @@ import { Verify } from "../pages/login/Verify";
 import { ManuCategory } from "../pages/allproduct/Category/ManuCategory";
 import { Shop } from "../pages/shop/Shop";
 import { DashboardLayout } from "../layouts/DashboardLayout";
-import { TestDemo } from "../pages/allproduct/Category/TestDemo";
 
 export const Router = () => {
-  const [mydata, setMydata] = useState([]);
-
   return (
     <Routes>
-      <Route path="/" element={<FrontendLayout setMydata={setMydata} />}>
+      <Route path="/" element={<FrontendLayout />}>
         <Route index element={<Home />} />
         <Route path="allProducts/:page?" element={<ProductsGrid />} />
         <Route path="product/:seoLink" element={<SingleProduct />} />
@@ -56,14 +53,13 @@ export const Router = () => {
         <Route path="page-404" element={<PageNotFound />} />
         <Route
           path="Categories/:page?"
-          element={<Categories fetchData={mydata} component={Categories} />}
+          element={<Categories component={Categories} />}
         />
         <Route
           path="manuCategory/:page?"
           element={<ManuCategory component={ManuCategory} />}
         />
         <Route path="verify" element={<Verify />} />
-        <Route path="testdemo" element={<TestDemo />} />
       </Route>
       <Route path="/admin" element={<DashboardLayout />}>
         <Route path="myacount" element={<MyAccount />} />
