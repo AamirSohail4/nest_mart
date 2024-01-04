@@ -12,6 +12,7 @@ export const PopularProducts = () => {
   const [myproduct, setMyProduct] = useState([]);
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
 
+  
   const handleHeartClick = (itemId) => {
     if (userId !== null) {
       addToWishList(itemId);

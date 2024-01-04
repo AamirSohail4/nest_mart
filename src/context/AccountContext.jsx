@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 export const MyAccountContext = createContext({});
 
 export const MyAccountProvider = ({ children }) => {
+  const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   // console.log("user id globel =>>", userId);
   const navigate = useNavigate();
@@ -34,7 +35,9 @@ export const MyAccountProvider = ({ children }) => {
     setUserInfo(userData?.data[0]);
   }
   const handleManuClick = async (categoryId, seolink) => {
+    navigate("/manuCategory");
     try {
+      setLoading(true);
       const response = await fetch(
         `${api_url}&tag=get_items_web&strCategorySEOLink=${seolink}`
       );
@@ -43,8 +46,7 @@ export const MyAccountProvider = ({ children }) => {
         const manudata = await response.json();
 
         setCategoryData(manudata.data);
-
-        navigate(`manuCategory`);
+        setLoading(false);
       } else {
         console.error("API request failed with status:", response.status);
       }
@@ -68,6 +70,7 @@ export const MyAccountProvider = ({ children }) => {
         handleManuClick,
         categoryData,
         userInfoDisplay,
+        loading,
       }}
     >
       {children}

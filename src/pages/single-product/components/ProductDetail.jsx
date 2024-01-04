@@ -188,9 +188,9 @@ export const ProductDetail = () => {
                   <i className="fi-rs-shopping-cart"></i>Add to cart
                 </button>
                 <Link
-                  to="/shop-wishlist"
                   aria-label="Add To Wishlist"
-                  className="action-btn hover-up"
+                  className="action-btn"
+                  onClick={() => handleHeartClick(singleproduct?.intID)}
                 >
                   <i className="fi-rs-heart"></i>
                 </Link>
@@ -217,7 +217,7 @@ export const ProductDetail = () => {
                   <li className="mb-5">
                     Syllabus:
                     <Link to="#">
-                      {singleproduct?.attributes[4].strAttributeValue}
+                      {singleproduct?.attributes[4]?.strAttributeValue}
                     </Link>
                   </li>
                   <li className="mb-5">
@@ -338,15 +338,7 @@ export const ProductDetail = () => {
                         >
                           <i className="fi-rs-eye"></i>
                         </Link>
-                        {/* <Link
-                          aria-label="Add To Wishlist"
-                          className="action-btn small hover-up"
-                          to=""
-                          tabIndex="0"
-                          onClick={() => addToWishList(item.intID)}
-                        >
-                          <i className="fi-rs-heart"></i>
-                        </Link> */}
+
                         <Link
                           aria-label="Add To Wishlist"
                           className="action-btn"

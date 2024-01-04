@@ -10,9 +10,9 @@ import { WishListContext } from "../../context/WishListContext";
 
 export const ProductsGrid = () => {
   const { userId } = useContext(MyAccountContext);
-  const { addToWishList } = useContext(WishListContext);
+  const { addToWishList, loading } = useContext(WishListContext);
   const { addToCart } = useContext(CartContext);
-  const [loading, setLoading] = useState(true);
+
   const [pageCount, setPageCount] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
   const [itemOffset, setItemOffset] = useState(0);
@@ -36,7 +36,6 @@ export const ProductsGrid = () => {
       }, 4000);
     } else {
       alert("please first Login");
-      history && history.push("login");
     }
   };
 
@@ -45,6 +44,7 @@ export const ProductsGrid = () => {
       try {
         const response = await fetch(allProduct_url);
         const productData = await response.json();
+        console.log("Myproduct on all Products", productData);
         setFechProduct(productData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -56,10 +56,11 @@ export const ProductsGrid = () => {
 
   const itemsPerPage = 20;
   useEffect(() => {
-    const endOffset = itemOffset + itemsPerPage;
-
-    setCurrentItems(fetchProduct?.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(fetchProduct?.length / itemsPerPage));
+    if (fetchProduct) {
+      const endOffset = itemOffset + itemsPerPage;
+      setCurrentItems(fetchProduct?.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(fetchProduct?.length / itemsPerPage));
+    }
   }, [itemOffset, itemsPerPage, fetchProduct]);
 
   const handlePageClick = (event) => {
@@ -67,11 +68,6 @@ export const ProductsGrid = () => {
     setItemOffset(newOffset);
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
   return (
     <>
       {loading ? (

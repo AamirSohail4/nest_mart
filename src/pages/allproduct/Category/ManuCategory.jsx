@@ -8,8 +8,7 @@ import { MyAccountContext } from "../../../context/AccountContext";
 
 export const ManuCategory = () => {
   const { addToCart } = useContext(CartContext);
-  const { categoryData } = useContext(MyAccountContext);
-  const [loading, setLoading] = useState(true);
+  const { categoryData, loading } = useContext(MyAccountContext);
   const [pageCount, setPageCount] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
   const [itemOffset, setItemOffset] = useState(0);
@@ -24,22 +23,17 @@ export const ManuCategory = () => {
   };
   const itemsPerPage = 20;
   useEffect(() => {
-    const endOffset = itemOffset + itemsPerPage;
-
-    setCurrentItems(categoryData?.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(categoryData?.length / itemsPerPage));
+    if (categoryData) {
+      const endOffset = itemOffset + itemsPerPage;
+      setCurrentItems(categoryData?.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(categoryData?.length / itemsPerPage));
+    }
   }, [itemOffset, itemsPerPage, categoryData]);
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % categoryData?.length;
     setItemOffset(newOffset);
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
 
   return (
     <>
