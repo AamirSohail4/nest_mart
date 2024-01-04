@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { allProduct_url } from "../../config/env";
-
 import loadingGif from "../../assets/imgs/banner/loading.gif";
 import { CartContext } from "../../context/CartContext";
 import { Icon } from "@iconify/react";
 import ReactPaginate from "react-paginate";
+import { MyAccountContext } from "../../context/AccountContext";
+import { WishListContext } from "../../context/WishListContext";
 
 export const ProductsGrid = () => {
+  const { userId } = useContext(MyAccountContext);
+  const { addToWishList } = useContext(WishListContext);
   const { addToCart } = useContext(CartContext);
-
   const [loading, setLoading] = useState(true);
   const [pageCount, setPageCount] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
@@ -17,12 +19,25 @@ export const ProductsGrid = () => {
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
   const [fetchProduct, setFechProduct] = useState();
 
+  const handleHeartClick = (itemId) => {
+    if (userId !== null) {
+      addToWishList(itemId);
+    } else {
+      alert("please first Login");
+    }
+  };
+
   const handleAddToCart = (productId, quantity, productDesc) => {
-    addToCart(productId, quantity);
-    setSelectedProductDesc(productDesc);
-    setTimeout(() => {
-      setSelectedProductDesc("");
-    }, 4000);
+    if (userId !== null) {
+      addToCart(productId, quantity);
+      setSelectedProductDesc(productDesc);
+      setTimeout(() => {
+        setSelectedProductDesc("");
+      }, 4000);
+    } else {
+      alert("please first Login");
+      history && history.push("login");
+    }
   };
 
   useEffect(() => {
@@ -113,7 +128,7 @@ export const ProductsGrid = () => {
                             <Link
                               aria-label="Add To Wishlist"
                               className="action-btn"
-                              to="/admin/myacount"
+                              onClick={() => handleHeartClick(item.intID)}
                             >
                               <i className="fi-rs-heart"></i>
                             </Link>
@@ -153,14 +168,16 @@ export const ProductsGrid = () => {
                               </div>
                             </div>
                             <div className="add-cart">
-                              <Link
-                                className="add"
+                              <button
+                                id="feature-prod-btn1500"
+                                type="button"
+                                className="btn btn-heading add_in_cart"
                                 onClick={() =>
                                   handleAddToCart(item.intID, 1, item.strDesc)
                                 }
                               >
-                                <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
-                              </Link>
+                                <i className="fi-rs-shopping-cart mr-5"></i>Add
+                              </button>
                             </div>
                           </div>
                         </div>

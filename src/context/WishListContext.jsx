@@ -79,14 +79,11 @@ export const WishListProvider = ({ children }) => {
         body: data,
       }
     );
-    if (response.ok) {
-      WishListDisplay();
-    }
+    console.log("", response);
   };
 
   useEffect(() => {
     WishListDisplay();
-    // SerchCategoryClick();
   }, [userId]);
 
   return (

@@ -6,8 +6,10 @@ import { teacher_url } from "../../config/env";
 import { api_url } from "../../config/env";
 import { CartContext } from "../../context/CartContext";
 import { WishListContext } from "../../context/WishListContext";
+import { MyAccountContext } from "../../context/AccountContext";
 
 export const TeacherDetail = () => {
+  const { userId } = useContext(MyAccountContext);
   const { addToCart } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
   const { strSEOLink } = useParams();
@@ -15,8 +17,30 @@ export const TeacherDetail = () => {
   const [teacher, setTeacher] = useState({});
   const [teacherDetail, setTeacherDetail] = useState([]);
   const [publicationData, setPulicationData] = useState([]);
+  const [selectedProductDesc, setSelectedProductDesc] = useState("");
+
   const [strSpec, setStrSpec] = useState("");
 
+  const handleHeartClick = (itemId) => {
+    if (userId !== null) {
+      addToWishList(itemId);
+    } else {
+      alert("please first Login");
+    }
+  };
+
+  const handleAddToCart = (productId, quantity, productDesc) => {
+    if (userId !== null) {
+      addToCart(productId, quantity);
+      setSelectedProductDesc(productDesc);
+      setTimeout(() => {
+        setSelectedProductDesc("");
+      }, 4000);
+    } else {
+      alert("please first Login");
+      history && history.push("login");
+    }
+  };
   async function ShowPublication() {
     const response = await fetch(
       `${api_url}&tag=get_items_web& intSupplierID=${id}`
@@ -166,12 +190,9 @@ export const TeacherDetail = () => {
                             </div>
                             <div className="product-action-1">
                               <Link
-                                to="#"
-                                onClick={() => addToWishList(item.intID)}
-                                style={{
-                                  border: "none",
-                                  backgroundColor: "white",
-                                }}
+                                aria-label="Add To Wishlist"
+                                className="action-btn"
+                                onClick={() => handleHeartClick(item.intID)}
                               >
                                 <i className="fi-rs-heart"></i>
                               </Link>
@@ -195,14 +216,23 @@ export const TeacherDetail = () => {
                               <div className="product-price">
                                 <span>Rs. {item?.dblSalePrice}</span>
                               </div>
+                              <div className="contact-info">
+                                <div className="social-info">
+                                  <h4>{selectedProductDesc}</h4>
+                                </div>
+                              </div>
                               <div className="add-cart">
-                                <Link
-                                  className="add add_in_cart"
-                                  onClick={() => addToCart(item?.intID, 1)}
+                                <button
+                                  id="feature-prod-btn1500"
+                                  type="button"
+                                  className="btn btn-heading add_in_cart"
+                                  onClick={() =>
+                                    handleAddToCart(item.intID, 1, item.strDesc)
+                                  }
                                 >
                                   <i className="fi-rs-shopping-cart mr-5"></i>
-                                  Add{" "}
-                                </Link>
+                                  Add
+                                </button>
                               </div>
                             </div>
                           </div>

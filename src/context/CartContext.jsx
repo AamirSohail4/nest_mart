@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useState, useEffect, createContext, useContext } from 'react';
-import { cart_url } from '../config/env';
-import { MyAccountContext } from './AccountContext';
+import { useState, useEffect, createContext, useContext } from "react";
+import { cart_url } from "../config/env";
+import { MyAccountContext } from "./AccountContext";
 
 export const CartContext = createContext({});
 
@@ -12,14 +12,14 @@ export const CartProvider = ({ children }) => {
   const [cartItem, setCartItem] = useState();
 
   const addToCart = async (productId, quantity) => {
-    console.log('quantity', quantity);
+    console.log("quantity", quantity);
     let data = new FormData();
-    data.append('intUserID', userId);
-    data.append('intItemID', productId);
-    data.append('dblItemQty', quantity);
-    data.append('strItemRemarks', '');
+    data.append("intUserID", userId);
+    data.append("intItemID", productId);
+    data.append("dblItemQty", quantity);
+    data.append("strItemRemarks", "");
     const response = await fetch(`${cart_url}&tag=update_user_cart_item`, {
-      method: 'POST',
+      method: "POST",
       body: data,
     });
     if (response.ok) {
@@ -38,9 +38,9 @@ export const CartProvider = ({ children }) => {
 
   const deleteAllCartItems = async () => {
     let data = new FormData();
-    data.append('intUserID', userId);
+    data.append("intUserID", userId);
     const response = await fetch(`${cart_url}&tag=empty_user_cart`, {
-      method: 'POST',
+      method: "POST",
       body: data,
     });
 
@@ -52,11 +52,11 @@ export const CartProvider = ({ children }) => {
   // delete single cart item api
   const deleteSingleCartItem = async (product) => {
     let data = new FormData();
-    data.append('intUserID', userId);
-    data.append('intItemID', product?.item?.intID);
-    data.append('strItemRemark', product?.strItemRemarks);
+    data.append("intUserID", userId);
+    data.append("intItemID", product?.item?.intID);
+    data.append("strItemRemark", product?.strItemRemarks);
     const response = await fetch(`${cart_url}&tag=delete_user_cart_item`, {
-      method: 'POST',
+      method: "POST",
       body: data,
     });
     if (response.ok) {
@@ -66,7 +66,7 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     cartItemDisplay();
-  }, []);
+  }, [userId]);
 
   return (
     <CartContext.Provider

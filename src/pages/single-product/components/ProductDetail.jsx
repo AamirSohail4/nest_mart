@@ -6,16 +6,38 @@ import { Link, useParams } from "react-router-dom";
 import { api_url } from "../../../config/env";
 import { CartContext } from "../../../context/CartContext";
 import { WishListContext } from "../../../context/WishListContext";
-
+import { MyAccountContext } from "../../../context/AccountContext";
 export const ProductDetail = () => {
   const { seoLink } = useParams();
   const { addToCart } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
-
+  const { userId } = useContext(MyAccountContext);
   const [singleproduct, setSingleProduct] = useState();
   const [strSpec, setStrSpec] = useState("");
   const [teacherProfileData, setTeacherProfile] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [selectedProductDesc, setSelectedProductDesc] = useState("");
+
+  const handleHeartClick = (itemId) => {
+    if (userId !== null) {
+      addToWishList(itemId);
+    } else {
+      alert("please first Login");
+    }
+  };
+
+  const handleAddToCart = (productId, quantity, productDesc) => {
+    if (userId !== null) {
+      addToCart(productId, quantity);
+      setSelectedProductDesc(productDesc);
+      setTimeout(() => {
+        setSelectedProductDesc("");
+      }, 4000);
+    } else {
+      alert("please first Login");
+      history && history.push("login");
+    }
+  };
   const handleDec = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
@@ -316,12 +338,19 @@ export const ProductDetail = () => {
                         >
                           <i className="fi-rs-eye"></i>
                         </Link>
-                        <Link
+                        {/* <Link
                           aria-label="Add To Wishlist"
                           className="action-btn small hover-up"
                           to=""
                           tabIndex="0"
                           onClick={() => addToWishList(item.intID)}
+                        >
+                          <i className="fi-rs-heart"></i>
+                        </Link> */}
+                        <Link
+                          aria-label="Add To Wishlist"
+                          className="action-btn"
+                          onClick={() => handleHeartClick(item.intID)}
                         >
                           <i className="fi-rs-heart"></i>
                         </Link>
@@ -345,15 +374,23 @@ export const ProductDetail = () => {
                             {item.strUOM} {item.dblSalePrice}
                           </span>
                         </div>
+                        <div className="contact-info">
+                          <div className="social-info">
+                            <h4>{selectedProductDesc}</h4>
+                          </div>
+                        </div>
                         <div className="add-cart">
                           <button
+                            id="feature-prod-btn1500"
                             type="button"
                             className="btn btn-heading add_in_cart"
-                            onClick={() => addToCart(item?.intID, 1)}
+                            onClick={() =>
+                              handleAddToCart(item.intID, 1, item.strDesc)
+                            }
                           >
-                            <i className="fi-rs-shopping-cart mr-5"></i>
-                            Add To Cart
+                            <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                           </button>
+
                           <div className="overlay"></div>
                         </div>
                       </div>

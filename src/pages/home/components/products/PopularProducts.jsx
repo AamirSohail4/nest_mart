@@ -16,16 +16,23 @@ export const PopularProducts = () => {
     if (userId !== null) {
       addToWishList(itemId);
     } else {
-      console.log("User is not logged in");
+      alert("please first Login");
     }
   };
+
   const handleAddToCart = (productId, quantity, productDesc) => {
-    addToCart(productId, quantity);
-    setSelectedProductDesc(productDesc);
-    setTimeout(() => {
-      setSelectedProductDesc("");
-    }, 4000);
+    if (userId !== null) {
+      addToCart(productId, quantity);
+      setSelectedProductDesc(productDesc);
+      setTimeout(() => {
+        setSelectedProductDesc("");
+      }, 4000);
+    } else {
+      alert("please first Login");
+      history && history.push("login");
+    }
   };
+
   useEffect(() => {
     async function AllProductShow() {
       const response = await fetch(
@@ -84,17 +91,7 @@ export const PopularProducts = () => {
                           </Link>
                         </div>
                         <div className="product-action-1">
-                          {/* <Link
-                            aria-label="Add To Wishlist"
-                            className="action-btn"
-                          >
-                            <i
-                              className="fi-rs-heart"
-                              onClick={() => addToWishList(item.intID)}
-                            ></i>
-                          </Link> */}
                           <Link
-                            to="#"
                             aria-label="Add To Wishlist"
                             className="action-btn"
                             onClick={() => handleHeartClick(item.intID)}
@@ -132,14 +129,16 @@ export const PopularProducts = () => {
                             </div>
                           </div>
                           <div className="add-cart">
-                            <Link
-                              className="add"
+                            <button
+                              id="feature-prod-btn1500"
+                              type="button"
+                              className="btn btn-heading add_in_cart"
                               onClick={() =>
                                 handleAddToCart(item.intID, 1, item.strDesc)
                               }
                             >
-                              <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
-                            </Link>
+                              <i className="fi-rs-shopping-cart mr-5"></i>Add
+                            </button>
                           </div>
                         </div>
                       </div>

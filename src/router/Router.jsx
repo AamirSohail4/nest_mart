@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { FrontendLayout } from "../layouts/FrontendLayout";
 import { Home } from "../pages/home/Home";

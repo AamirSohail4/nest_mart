@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 // import { AddressContext } from "../context/AddresContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import img5 from "../assets/imgs/theme/icons/icon-heart.svg";
 import img6 from "../assets/imgs/theme/icons/icon-cart.svg";
 import img9 from "../assets/imgs/theme/icons/icon-user.svg";
@@ -17,8 +17,6 @@ import { WishListContext } from "../context/WishListContext";
 import { MyAccountContext } from "../context/AccountContext";
 
 export const Navbar = () => {
-  const navigate = useNavigate();
-
   const { cartItem, deleteSingleCartItem } = useContext(CartContext);
   const { wishListItem, SerchCategoryClick } = useContext(WishListContext);
   const { handleManuClick } = useContext(MyAccountContext);
@@ -33,9 +31,18 @@ export const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("roleId");
-    navigate("/");
+    window.location.reload();
   };
+  //   const Logout = () => {
+  //     localStorage.clearToken();
+  //     if (localStorage.getItem()) {
+  //         //check something in local storage so you can know
+  //         // if you should reload or not
 
+  //         window.location.reload();
+  //     }
+  //     return 'you were logout';
+  // };
   async function ManuDisplay() {
     const response = await fetch(
       `${cart_url}&tag=get_all_category&intCompanyID=1`
