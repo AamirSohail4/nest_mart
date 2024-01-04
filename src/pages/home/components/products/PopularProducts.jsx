@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api_url } from "../../../../config/env";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../../../context/CartContext";
@@ -6,13 +6,13 @@ import { WishListContext } from "../../../../context/WishListContext";
 import { MyAccountContext } from "../../../../context/AccountContext";
 
 export const PopularProducts = () => {
+  const navigate = useNavigate();
   const { userId } = useContext(MyAccountContext);
   const { addToCart } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
   const [myproduct, setMyProduct] = useState([]);
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
 
-  
   const handleHeartClick = (itemId) => {
     if (userId !== null) {
       addToWishList(itemId);
@@ -29,8 +29,8 @@ export const PopularProducts = () => {
         setSelectedProductDesc("");
       }, 4000);
     } else {
-      alert("please first Login");
-      history && history.push("login");
+      // alert("please first Login");
+      navigate("/login");
     }
   };
 

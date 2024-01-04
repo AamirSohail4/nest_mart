@@ -10,8 +10,9 @@ import { WishListContext } from "../../context/WishListContext";
 
 export const ProductsGrid = () => {
   const { userId } = useContext(MyAccountContext);
-  const { addToWishList, loading } = useContext(WishListContext);
+  const { addToWishList } = useContext(WishListContext);
   const { addToCart } = useContext(CartContext);
+  const [loading, setLoading] = useState(false);
 
   const [pageCount, setPageCount] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
@@ -42,10 +43,12 @@ export const ProductsGrid = () => {
   useEffect(() => {
     async function fetchAllProducts() {
       try {
+        setLoading(true);
         const response = await fetch(allProduct_url);
         const productData = await response.json();
         console.log("Myproduct on all Products", productData);
         setFechProduct(productData.data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
