@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { MyAccountContext } from "../../context/AccountContext";
 import { shipAddres_url, api_url, userUpdate_url } from "../../config/env";
 import { WishListContext } from "../../context/WishListContext";
@@ -17,15 +17,15 @@ export const MyAccount = () => {
   const userData = userAddress;
   // console.log("user infoo for hellow", userinfo);
   const [activeSection, setActiveSection] = useState("dashboard");
-  const navigate = useNavigate();
   const handleSectionClick = (section) => {
     setActiveSection(section);
   };
+
   const handleLogout = () => {
     localStorage.removeItem("userId");
-    navigate("/");
-
-    return;
+    localStorage.removeItem("roleId");
+    window.location.reload();
+    window.location.href = "/";
   };
   // fetch all cart items from db
   const OrderDetails = async () => {

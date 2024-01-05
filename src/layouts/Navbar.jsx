@@ -20,9 +20,7 @@ export const Navbar = () => {
   const { cartItem, deleteSingleCartItem } = useContext(CartContext);
   const { wishListItem, SerchCategoryClick } = useContext(WishListContext);
   const { handleManuClick } = useContext(MyAccountContext);
-
   const [scrolled, setScrolled] = useState(false);
-
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchBarCategory, setSearchBarCategory] = useState([]);
@@ -32,17 +30,9 @@ export const Navbar = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("roleId");
     window.location.reload();
+    window.location.href = "/";
   };
-  //   const Logout = () => {
-  //     localStorage.clearToken();
-  //     if (localStorage.getItem()) {
-  //         //check something in local storage so you can know
-  //         // if you should reload or not
 
-  //         window.location.reload();
-  //     }
-  //     return 'you were logout';
-  // };
   async function ManuDisplay() {
     const response = await fetch(
       `${cart_url}&tag=get_all_category&intCompanyID=1`
@@ -57,7 +47,7 @@ export const Navbar = () => {
   useEffect(() => {
     ManuDisplay();
   }, []);
-
+  console.log("category data", showManu);
   const calculateSubtotal = () => {
     if (!cartItem || cartItem.length === 0) {
       return 0;
@@ -75,6 +65,7 @@ export const Navbar = () => {
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
+  // console.log("This is Selecte Category Id of Manu ", selectedCategoryId);
 
   const handleCategoryChange = (event) => {
     const selectedId = event.target.value;
@@ -126,7 +117,7 @@ export const Navbar = () => {
                     <Link to="admin/myacount">Wishlist</Link>
                   </li>
                   <li>
-                    <Link to="#">Order Tracking</Link>
+                    <Link to="admin/myacount">Order Tracking</Link>
                   </li>
                 </ul>
               </div>
@@ -327,8 +318,11 @@ export const Navbar = () => {
                         <li key={index}>
                           <Link
                             onClick={() => {
-                              console.log("hhhh");
-                              handleManuClick(item.intID, item.strSEOLink);
+                              handleManuClick(
+                                item.intID,
+                                item.strSEOLink,
+                                item.intParentID
+                              );
                             }}
                           >
                             {item.strDesc}{" "}
@@ -362,7 +356,8 @@ export const Navbar = () => {
                                       onClick={() =>
                                         handleManuClick(
                                           subItem.intID,
-                                          subItem.strSEOLink
+                                          subItem.strSEOLink,
+                                          subItem.intParentID
                                         )
                                       }
                                     >
@@ -400,7 +395,8 @@ export const Navbar = () => {
                                                 onClick={() =>
                                                   handleManuClick(
                                                     thirdItem.intID,
-                                                    thirdItem.strSEOLink
+                                                    thirdItem.strSEOLink,
+                                                    thirdItem.intParentID
                                                   )
                                                 }
                                               >
@@ -424,7 +420,7 @@ export const Navbar = () => {
                       <Link to="/shop ">Book Shops</Link>
                     </li>
                     <li>
-                      <Link to="about">About</Link>
+                      <Link to="/about">About</Link>
                     </li>
                     <li>
                       <Link to="contact ">Contact</Link>

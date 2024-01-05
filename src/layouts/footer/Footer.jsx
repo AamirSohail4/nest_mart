@@ -24,33 +24,10 @@ export const Footer = () => {
       const filteredData = mainData.filter(
         (item) => item.intParentID === "0" && item.intLevel === "1"
       );
-      // console.log("bbb", filteredData);
-
       setFooterCategory(filteredData);
-      // console.log("This is Category of Day", footerCategory);
     };
     DisplayCategory();
   }, []);
-
-  // const handleClick = async (categoryId, seolink) => {
-  //   const searchLink = seolink;
-  //   console.log(searchLink);
-  //   try {
-  //     const response = await fetch(
-  //       `${api_url}&tag=get_items_web&strCategorySEOLink=${seolink}`
-  //     );
-  //     const manudata = await response.json();
-
-  //     if (manudata.status === "1") {
-  //       // setManuCategory(manudata.data);
-  //       navigate("/manuCategory", { state: { manudata } });
-  //     }
-
-  //     // console.log("API response of Manue:", manudata);
-  //   } catch (error) {
-  //     console.error("Error calling API:", error);
-  //   }
-  // };
 
   return (
     <>
@@ -129,19 +106,19 @@ export const Footer = () => {
               <h4 className="widget-title">Our Website</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="/sigin">Sign In</Link>
+                  <Link to="/teacher">Teacher</Link>
                 </li>
                 <li>
-                  <Link to="/admin/shop-cart">View Cart</Link>
+                  <Link to="/shop">Book Shop</Link>
                 </li>
                 <li>
-                  <Link to="/shop-wishlist">My Wishlist</Link>
+                  <Link to="/login">Sing in</Link>
                 </li>
                 <li>
-                  <Link to="/admin/myacount">Track My Order</Link>
+                  <Link to="/about">About</Link>
                 </li>
                 <li>
-                  <Link to="/admin/myacount">Shipping Details</Link>
+                  <Link to="/contact">Contact</Link>
                 </li>
               </ul>
             </div>

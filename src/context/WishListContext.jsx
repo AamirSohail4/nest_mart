@@ -48,6 +48,7 @@ export const WishListProvider = ({ children }) => {
   };
 
   const SerchCategoryClick = async (selectedCategoryId, searchQuery) => {
+    
     try {
       navigate('/categories');
       setLoading(true);

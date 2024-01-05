@@ -4,6 +4,7 @@ import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../../context/CartContext";
 import { MyAccountContext } from "../../../context/AccountContext";
+import { NewsLetterProduct } from "../../../layouts/NewsLetterProduct";
 
 export const ManuCategory = () => {
   const { addToCart } = useContext(CartContext);
@@ -63,13 +64,14 @@ export const ManuCategory = () => {
                   </div>
                 </div>
               </div>
+
               <div className="shop-product-fillter">
                 <div className="totall-product">
                   <p>
-                    We found
+                    We found{" "}
                     <strong className="text-brand">
-                      {currentItems?.length}
-                    </strong>
+                      {categoryData?.length}
+                    </strong>{" "}
                     items for you!
                   </p>
                 </div>
@@ -174,6 +176,7 @@ export const ManuCategory = () => {
             </nav>
           </div>
         </div>
+        <NewsLetterProduct />
       </main>
     </>
   );

@@ -7,6 +7,7 @@ import { WishListContext } from "../../../context/WishListContext";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../../context/CartContext";
+import { NewsLetterProduct } from "../../../layouts/NewsLetterProduct";
 
 export const Categories = () => {
   const { addToCart } = useContext(CartContext);
@@ -24,7 +25,7 @@ export const Categories = () => {
     }, 4000);
   };
   const itemsPerPage = 20;
-
+  console.log("This my final Amount", searchCategory);
   useEffect(() => {
     if (searchCategory) {
       const endOffset = itemOffset + itemsPerPage;
@@ -71,13 +72,14 @@ export const Categories = () => {
                     </div>
                   </div>
                 </div>
+
                 <div className="shop-product-fillter">
                   <div className="totall-product">
                     <p>
-                      We found
+                      We found{" "}
                       <strong className="text-brand">
-                        {currentItems?.length}
-                      </strong>
+                        {searchCategory?.length}
+                      </strong>{" "}
                       items for you!
                     </p>
                   </div>
@@ -184,6 +186,7 @@ export const Categories = () => {
               </nav>
             </div>
           </div>
+          <NewsLetterProduct />
         </main>
       )}
     </>

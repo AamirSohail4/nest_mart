@@ -34,7 +34,8 @@ export const MyAccountProvider = ({ children }) => {
 
     setUserInfo(userData?.data[0]);
   }
-  const handleManuClick = async (categoryId, seolink) => {
+  const handleManuClick = async (categoryId, seolink, intParentID) => {
+    console.log("This parent Id ", intParentID);
     try {
       setLoading(true);
       const response = await fetch(
@@ -53,6 +54,7 @@ export const MyAccountProvider = ({ children }) => {
       console.error("Error calling API:", error);
     }
   };
+  // console.log("This is Category Id ", categoryData);
 
   useEffect(() => {
     userDetails();

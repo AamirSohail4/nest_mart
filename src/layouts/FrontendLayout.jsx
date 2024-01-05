@@ -2,7 +2,6 @@
 import { Outlet } from "react-router-dom";
 import { Navbar } from "./Navbar";
 import { Footer } from "./footer/Footer";
-import { NewsLetterForm } from "./NewsLetterForm";
 import { CopyRight } from "./footer/CopyRight";
 import { MyAccountContext } from "../context/AccountContext";
 import { useContext } from "react";
@@ -20,7 +19,6 @@ export const FrontendLayout = () => {
         <div className="app_layout">
           <Navbar />
           <Outlet />
-          <NewsLetterForm />
           <footer className="main">
             <Footer />
             <CopyRight />

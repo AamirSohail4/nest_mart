@@ -7,6 +7,7 @@ import { Icon } from "@iconify/react";
 import ReactPaginate from "react-paginate";
 import { MyAccountContext } from "../../context/AccountContext";
 import { WishListContext } from "../../context/WishListContext";
+import { NewsLetterProduct } from "../../layouts/NewsLetterProduct";
 
 export const ProductsGrid = () => {
   const navigate = useNavigate();
@@ -47,7 +48,6 @@ export const ProductsGrid = () => {
         setLoading(true);
         const response = await fetch(allProduct_url);
         const productData = await response.json();
-        console.log("Myproduct on all Products", productData);
         setFechProduct(productData.data);
         setLoading(false);
       } catch (error) {
@@ -106,6 +106,18 @@ export const ProductsGrid = () => {
                     </div>
                   </div>
                 </div>
+                <div className="shop-product-fillter">
+                  <div className="totall-product">
+                    <p>
+                      We found{" "}
+                      <strong className="text-brand">
+                        {fetchProduct?.length}
+                      </strong>{" "}
+                      items for you!
+                    </p>
+                  </div>
+                </div>
+
                 <div className="row product-grid">
                   {currentItems?.map((item, index) => (
                     <div
@@ -209,6 +221,7 @@ export const ProductsGrid = () => {
               </nav>
             </div>
           </div>
+          <NewsLetterProduct />
         </main>
       )}
     </>

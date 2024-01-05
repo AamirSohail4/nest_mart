@@ -17,24 +17,26 @@ export const ShopCart = () => {
   // console.log("myShipment Address", shipmentAddress);
 
   const [open, setOpen] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [selectedPayment, setSelectedPayment] = useState();
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [locatCities, setCities] = useState([]);
   const [shipmentaddresValue, setShipmentaddresValue] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
 
   const handelShipmentValue = async (itemValue) => {
     setShipmentaddresValue(itemValue);
   };
 
-  // console.log("shipment addres select value=>", shipmentaddresValue);
-
   const handleCheckout = () => {
-    navigatie("/admin/checkout", {
-      state: { selectedPayment, shipmentaddresValue },
-    });
-    // navigatie("/admin/checkout", { state: { shipmentaddresValue } });
+    if (!selectedPayment || !shipmentaddresValue) {
+      alert("Please Select a Payment option and a Shipment address.");
+      return;
+    } else {
+      navigatie("/admin/checkout", {
+        state: { selectedPayment, shipmentaddresValue },
+      });
+    }
   };
-
   const handleAddModalClick = () => {
     setOpen(!open);
   };
@@ -87,8 +89,21 @@ export const ShopCart = () => {
       0
     );
 
-    return total;
+    // Apply number formatting to the total
+    const formattedTotal = total.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 4,
+    });
+
+    return formattedTotal;
   };
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "PKR",
+
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4,
+  });
 
   const [formData, setFormData] = useState({
     name: "",
@@ -98,43 +113,11 @@ export const ShopCart = () => {
     city: "",
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleButtonClick = async () => {
-    let data = new FormData();
-    data.append("intUserID", userId);
-    data.append("strShipmentContactPerson", formData.name);
-    data.append("strShipmentPhone", formData.phone);
-    data.append("strShipmentEmail", formData.email);
-    data.append("intShipmentCityID", formData.city);
-    data.append("strShipmentAddress", formData.address);
-
-    // console.log("Form Data:", data);
-    const response = await fetch(`${cart_url}&tag=add_user_shipment_address`, {
-      method: "POST",
-      body: data,
-    });
-    if (response.ok) {
-      // const resData = await response.json();
-      alert("shipmentAddress is update");
-
-      fetchShipmentAddress();
-      resetForm();
-    }
-  };
-
   useEffect(() => {
     const fetchCities = async () => {
       try {
         const response = await fetch(`${api_url}&tag=get_city&intCountryID=1`);
         const data = await response.json();
-
         setCities(data.data);
       } catch (error) {
         console.error("Error fetching city data:", error);
@@ -144,6 +127,74 @@ export const ShopCart = () => {
     fetchCities();
   }, []);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    setFormErrors({ ...formErrors, [name]: "" });
+  };
+
+  const handleButtonClick = async () => {
+    const errors = {};
+
+    // Validate name field
+    if (!formData.name.trim()) {
+      errors.name = "Name is required";
+    }
+
+    // Validate phone field
+    if (!/^\d{12}$/.test(formData.phone)) {
+      errors.phone = "Phone must be 12 digits";
+    }
+
+    // Validate email field
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Invalid email address";
+    }
+
+    // Validate city field
+    if (!formData.city) {
+      errors.city = "City is required";
+    }
+
+    // Validate address field
+    if (!formData.address.trim()) {
+      errors.address = "Address is required";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      // If there are errors, update the state and prevent form submission
+      setFormErrors(errors);
+      return;
+    }
+
+    // If there are no errors, proceed with the form submission logic
+    let data = new FormData();
+    data.append("intUserID", userId);
+    data.append("strShipmentContactPerson", formData.name);
+    data.append("strShipmentPhone", formData.phone);
+    data.append("strShipmentEmail", formData.email);
+    data.append("intShipmentCityID", formData.city);
+    data.append("strShipmentAddress", formData.address);
+
+    const response = await fetch(`${cart_url}&tag=add_user_shipment_address`, {
+      method: "POST",
+      body: data,
+    });
+
+    if (response.ok) {
+      alert("Shipment Address is updated");
+      fetchShipmentAddress();
+    }
+
+    // Reset the form after submission
+    resetForm();
+  };
+
   const resetForm = () => {
     setFormData({
       name: "",
@@ -152,6 +203,8 @@ export const ShopCart = () => {
       address: "",
       city: "",
     });
+
+    setFormErrors({});
   };
 
   return (
@@ -237,7 +290,13 @@ export const ShopCart = () => {
                         <td className="price" data-title="Price">
                           <h4 className="text-body">
                             {item?.item?.strUOM}
-                            {parseFloat(item?.item?.dblSalePrice)}
+
+                            {parseFloat(
+                              item?.item?.dblSalePrice
+                            ).toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
                           </h4>
                         </td>
                         <td
@@ -278,9 +337,12 @@ export const ShopCart = () => {
                         </td>
                         <td className="price" data-title="Price">
                           <h4 className="text-brand">
-                            {item?.item?.strUOM}
-                            {parseFloat(item?.item?.dblSalePrice) *
-                              parseFloat(item?.dblItemQty)}
+                            {/* {item?.item?.strUOM} */}
+
+                            {formatter.format(
+                              parseFloat(item?.item?.dblSalePrice) *
+                                parseFloat(item?.dblItemQty)
+                            )}
                           </h4>
                         </td>
                         <td className="action text-center" data-title="Remove">
@@ -349,11 +411,12 @@ export const ShopCart = () => {
                               <div key={index} className="custome-radio">
                                 <input
                                   className="form-check-input"
-                                  required=""
+                                  required
                                   type="radio"
                                   name="payment_option"
                                   id={`paymentRadios${index}`}
                                   value={item.intID}
+                                  checked={selectedPayment === item.intID}
                                   onChange={() =>
                                     handlePaymentSelection(item.intID)
                                   }
@@ -412,7 +475,7 @@ export const ShopCart = () => {
                                 <div key={index} className="custome-radio">
                                   <input
                                     className="form-check-input"
-                                    required=""
+                                    required
                                     type="radio"
                                     name="shipment_option"
                                     data-name=" "
@@ -536,12 +599,19 @@ export const ShopCart = () => {
                         </label>
                         <input
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.name ? "is-invalid" : ""
+                          }`}
                           name="name"
                           type="text"
                           value={formData.name}
                           onChange={handleInputChange}
                         />
+                        {formErrors.name && (
+                          <div className="invalid-feedback">
+                            {formErrors.name}
+                          </div>
+                        )}
                       </div>
 
                       <div className="form-group col-md-6">
@@ -550,27 +620,42 @@ export const ShopCart = () => {
                         </label>
                         <input
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.phone ? "is-invalid" : ""
+                          }`}
                           name="phone"
                           id="phone"
                           type="text"
                           value={formData.phone}
                           onChange={handleInputChange}
                         />
+                        {formErrors.phone && (
+                          <div className="invalid-feedback">
+                            {formErrors.phone}
+                          </div>
+                        )}
                       </div>
+
                       <div className="form-group col-md-6">
                         <label>
                           Email Address <span className="required">*</span>
                         </label>
                         <input
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.email ? "is-invalid" : ""
+                          }`}
                           name="email"
                           id="email"
                           type="email"
                           value={formData.email}
                           onChange={handleInputChange}
                         />
+                        {formErrors.email && (
+                          <div className="invalid-feedback">
+                            {formErrors.email}
+                          </div>
+                        )}
                       </div>
 
                       <div className="form-group col-md-6">
@@ -578,7 +663,9 @@ export const ShopCart = () => {
                           City<span className="required">*</span>
                         </label>
                         <select
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.city ? "is-invalid" : ""
+                          }`}
                           name="city"
                           id="city"
                           value={formData.city}
@@ -587,28 +674,41 @@ export const ShopCart = () => {
                           <option value="" disabled>
                             Select a city
                           </option>
-
                           {locatCities.map((pakCity, index) => (
                             <option key={index} value={pakCity.intID}>
                               {pakCity.strDesc}
                             </option>
                           ))}
                         </select>
+                        {formErrors.city && (
+                          <div className="invalid-feedback">
+                            {formErrors.city}
+                          </div>
+                        )}
                       </div>
+
                       <div className="form-group col-md-12">
                         <label>
                           Address <span className="required">*</span>
                         </label>
                         <input
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.address ? "is-invalid" : ""
+                          }`}
                           name="address"
                           id="address"
                           type="text"
                           value={formData.address}
                           onChange={handleInputChange}
                         />
+                        {formErrors.address && (
+                          <div className="invalid-feedback">
+                            {formErrors.address}
+                          </div>
+                        )}
                       </div>
+
                       <div className="col-md-12">
                         <button
                           id="address-btn"
