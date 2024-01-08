@@ -14,11 +14,21 @@ export const MyAccount = () => {
   const { wishListItem, deleteWishlist } = useContext(WishListContext);
   const [orderDetails, setOrderDetails] = useState();
   const [locatCities, setCities] = useState([]);
-  const userData = userAddress;
-  // console.log("user infoo for hellow", userinfo);
+  const [formErrors, setFormErrors] = useState({});
+  const [selectedProductDesc, setSelectedProductDesc] = useState("");
+
+  console.log("user infoo for hellow", userinfo);
   const [activeSection, setActiveSection] = useState("dashboard");
   const handleSectionClick = (section) => {
     setActiveSection(section);
+  };
+
+  const handleAddToCart = (productId, quantity, productDesc) => {
+    addToCart(productId, quantity);
+    setSelectedProductDesc(productDesc);
+    setTimeout(() => {
+      setSelectedProductDesc("");
+    }, 4000);
   };
 
   const handleLogout = () => {
@@ -51,9 +61,48 @@ export const MyAccount = () => {
       ...prevData,
       [name]: value,
     }));
+    setFormErrors({ ...formErrors, [name]: "" });
   };
 
   const handleUpdateClick = async () => {
+    const errors = {};
+
+    // Validate name field
+    if (!formData.full_name.trim()) {
+      errors.full_name = "Name is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.full_name.trim())) {
+      errors.full_name = "Only alphabetic characters are allowed";
+    }
+    // Validate name field
+
+    // Validate phone field
+    if (!/^\d{11,12}$/.test(formData.alter_phone)) {
+      errors.phone = "Phone must be 11 or 12 digits like 923014788965";
+    }
+
+    // Validate email field
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Invalid email address";
+    }
+
+    // Validate city field
+    if (!formData.city) {
+      errors.city = "City is required";
+    }
+
+    // Validate address field
+    if (!formData.address.trim()) {
+      errors.address = "Address is required";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      // If there are errors, update the state and prevent form submission
+      setFormErrors(errors);
+      return;
+    }
+
     let data = new FormData();
     data.append("intUserID", userId);
     data.append("strFullName", formData.full_name);
@@ -202,16 +251,6 @@ export const MyAccount = () => {
                           >
                             <i className="fi-rs-sign-out mr-10"></i>Logout
                           </a>
-                          {/* <li>
-                            <button
-                              type="button"
-                              className="btn mb-20 w-100 btnValidateCheckout "
-                              onClick={handleLogout}
-                            >
-                              <i className="fi fi-rs-sign-out mr-10"></i>Sign
-                              out
-                            </button>
-                          </li> */}
                         </li>
                       </ul>
                     </div>
@@ -275,17 +314,25 @@ export const MyAccount = () => {
                                     return (
                                       <tr key={index}>
                                         <td className="image product-thumbnail">
-                                          <img src={item.strImage} alt="#" />
+                                          <img src={item?.strImage} alt="#" />
                                         </td>
-                                        <td>{item.strDesc}</td>
-                                        <td>{item.dblSalePrice}</td>
+                                        <td>{item?.strDesc}</td>
+                                        <td>
+                                          {new Intl.NumberFormat("en-US", {
+                                            style: "decimal",
+                                          }).format(item?.dblSalePrice)}
+                                        </td>
                                         <td>
                                           <button
                                             style={{ border: "none" }}
                                             type="button"
                                             className="add add_in_cart"
                                             onClick={() =>
-                                              addToCart(item.intID, 1)
+                                              handleAddToCart(
+                                                item?.intID,
+                                                1,
+                                                item?.strDesc
+                                              )
                                             }
                                           >
                                             Add to Cart
@@ -301,6 +348,11 @@ export const MyAccount = () => {
                                             Delete
                                           </button>
                                         </td>
+                                        <div className="contact-info">
+                                          <div className="social-info">
+                                            <h4>{selectedProductDesc}</h4>
+                                          </div>
+                                        </div>
                                       </tr>
                                     );
                                   })}
@@ -339,10 +391,10 @@ export const MyAccount = () => {
                                   {orderDetails?.map((item, index) => {
                                     return (
                                       <tr key={index}>
-                                        <th>{item.strCode}</th>
-                                        <th>{item.dtDate}</th>
-                                        <th>{item.strCustomerDesc}</th>
-                                        <th>{item.strOrderStatus}</th>
+                                        <th>{item?.strCode}</th>
+                                        <th>{item?.dtDate}</th>
+                                        <th>{item?.strCustomerDesc}</th>
+                                        <th>{item?.strOrderStatus}</th>
                                       </tr>
                                     );
                                   })}
@@ -380,17 +432,21 @@ export const MyAccount = () => {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr>
-                                    <td>#{userData?.intID}</td>
-                                    <td>
-                                      {userData?.strShipmentContactPerson}
-                                    </td>
-                                    <td>{userData?.strShipmentAddress}</td>
-                                    <td></td>
-                                    <td>{userData?.strShipmentPhone}</td>
-                                    <td>{userData?.strShipmentCity} </td>
-                                    <td>&nbsp;</td>
-                                  </tr>
+                                  {userAddress?.map((item, index) => {
+                                    return (
+                                      <tr key={index}>
+                                        <td>#{item?.intID}</td>
+                                        <td>
+                                          {item?.strShipmentContactPerson}
+                                        </td>
+                                        <td>{item?.strShipmentAddress}</td>
+                                        <td></td>
+                                        <td>{item?.strShipmentPhone}</td>
+                                        <td>{item?.strShipmentCity} </td>
+                                        <td>&nbsp;</td>
+                                      </tr>
+                                    );
+                                  })}
                                 </tbody>
                               </table>
                             </div>
@@ -418,13 +474,20 @@ export const MyAccount = () => {
                                 </label>
                                 <input
                                   required=""
-                                  className="form-control"
+                                  className={`form-control ${
+                                    formErrors.full_name ? "is-invalid" : ""
+                                  }`}
                                   name="full_name"
                                   id="full_name"
                                   type="text"
                                   value={formData.full_name}
                                   onChange={handleInputChange}
                                 />
+                                {formErrors.full_name && (
+                                  <div className="invalid-feedback">
+                                    {formErrors.full_name}
+                                  </div>
+                                )}
                               </div>
                               <div className="form-group col-md-6">
                                 <label>
@@ -433,13 +496,20 @@ export const MyAccount = () => {
                                 </label>
                                 <input
                                   required=""
-                                  className="form-control"
+                                  className={`form-control ${
+                                    formErrors.email ? "is-invalid" : ""
+                                  }`}
                                   name="email"
                                   id="email"
                                   type="email"
                                   value={formData.email}
                                   onChange={handleInputChange}
                                 />
+                                {formErrors.email && (
+                                  <div className="invalid-feedback">
+                                    {formErrors.email}
+                                  </div>
+                                )}
                               </div>
                               <div className="form-group col-md-12">
                                 <label>
@@ -447,20 +517,29 @@ export const MyAccount = () => {
                                 </label>
                                 <input
                                   required=""
-                                  className="form-control"
+                                  className={`form-control ${
+                                    formErrors.address ? "is-invalid" : ""
+                                  }`}
                                   name="address"
                                   id="user_address"
                                   type="text"
                                   value={formData.address}
                                   onChange={handleInputChange}
                                 />
+                                {formErrors.address && (
+                                  <div className="invalid-feedback">
+                                    {formErrors.address}
+                                  </div>
+                                )}
                               </div>
                               <div className="form-group col-md-12">
                                 <label>
                                   City<span className="required">*</span>
                                 </label>
                                 <select
-                                  className="form-control"
+                                  className={`form-control ${
+                                    formErrors.city ? "is-invalid" : ""
+                                  }`}
                                   name="city"
                                   id="city"
                                   value={formData.city}
@@ -477,6 +556,11 @@ export const MyAccount = () => {
                                     </option>
                                   ))}
                                 </select>
+                                {formErrors.city && (
+                                  <div className="invalid-feedback">
+                                    {formErrors.city}
+                                  </div>
+                                )}
                               </div>
 
                               <div
@@ -491,13 +575,20 @@ export const MyAccount = () => {
                                 </label>
                                 <input
                                   required=""
-                                  className="form-control"
+                                  className={`form-control ${
+                                    formErrors.alter_phone ? "is-invalid" : ""
+                                  }`}
                                   name="alter_phone"
                                   id="alter_phone"
                                   type="text"
                                   value={formData.alter_phone}
                                   onChange={handleInputChange}
                                 />
+                                {formErrors.alter_phone && (
+                                  <div className="invalid-feedback">
+                                    {formErrors.alter_phone}
+                                  </div>
+                                )}
                               </div>
                               <div className="col-md-12">
                                 <button

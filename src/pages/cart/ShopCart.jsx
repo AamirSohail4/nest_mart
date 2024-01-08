@@ -14,7 +14,6 @@ export const ShopCart = () => {
     useContext(CartContext);
   const { shipmentAddress, fetchShipmentAddress, showPaymentMode } =
     useContext(PaymentContext);
-  // console.log("myShipment Address", shipmentAddress);
 
   const [open, setOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState();
@@ -97,13 +96,13 @@ export const ShopCart = () => {
 
     return formattedTotal;
   };
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "PKR",
+  // const formatter = new Intl.NumberFormat("en-US", {
+  //   style: "currency",
+  //   currency: "PKR",
 
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 4,
-  });
+  //   minimumFractionDigits: 0,
+  //   maximumFractionDigits: 4,
+  // });
 
   const [formData, setFormData] = useState({
     name: "",
@@ -140,13 +139,15 @@ export const ShopCart = () => {
     const errors = {};
 
     // Validate name field
+
     if (!formData.name.trim()) {
       errors.name = "Name is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.name.trim())) {
+      errors.name = "Only alphabetic characters are allowed";
     }
-
     // Validate phone field
-    if (!/^\d{12}$/.test(formData.phone)) {
-      errors.phone = "Phone must be 12 digits";
+    if (!/^\d{11,12}$/.test(formData.phone)) {
+      errors.phone = "Phone must be 11 or 12 digits like 923014788965";
     }
 
     // Validate email field
@@ -189,6 +190,7 @@ export const ShopCart = () => {
     if (response.ok) {
       alert("Shipment Address is updated");
       fetchShipmentAddress();
+      handleAddModalClick();
     }
 
     // Reset the form after submission
@@ -290,13 +292,16 @@ export const ShopCart = () => {
                         <td className="price" data-title="Price">
                           <h4 className="text-body">
                             {item?.item?.strUOM}
+                            {new Intl.NumberFormat("en-US", {
+                              style: "decimal",
+                            }).format(parseFloat(item?.item?.dblSalePrice))}
 
-                            {parseFloat(
+                            {/* {parseFloat(
                               item?.item?.dblSalePrice
                             ).toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
-                            })}
+                            })} */}
                           </h4>
                         </td>
                         <td
@@ -338,11 +343,16 @@ export const ShopCart = () => {
                         <td className="price" data-title="Price">
                           <h4 className="text-brand">
                             {/* {item?.item?.strUOM} */}
-
-                            {formatter.format(
+                            {new Intl.NumberFormat("en-US", {
+                              style: "decimal",
+                            }).format(
                               parseFloat(item?.item?.dblSalePrice) *
                                 parseFloat(item?.dblItemQty)
                             )}
+                            {/* {formatter.format(
+                              parseFloat(item?.item?.dblSalePrice) *
+                                parseFloat(item?.dblItemQty)
+                            )} */}
                           </h4>
                         </td>
                         <td className="action text-center" data-title="Remove">
@@ -628,6 +638,7 @@ export const ShopCart = () => {
                           type="text"
                           value={formData.phone}
                           onChange={handleInputChange}
+                          maxLength={12}
                         />
                         {formErrors.phone && (
                           <div className="invalid-feedback">

@@ -13,7 +13,7 @@ export const ShopMenuBar = () => {
               <div className="product-cart-wrap hover-up">
                 <div className="product-img-action-wrap">
                   <div className="product-img product-img-zoom">
-                    <Link to="/teacher" tabIndex="0">
+                    <Link to="/teachers" tabIndex="0">
                       <img className="default-img" src={img1} alt="" />
                       <img className="hover-img" src={img1} alt="" />
                     </Link>
@@ -23,7 +23,7 @@ export const ShopMenuBar = () => {
                 </div>
                 <div className="product-content-wrap" id="productContent">
                   <h2>
-                    <Link to="/teacher" tabIndex="0">
+                    <Link to="/teachers" tabIndex="0">
                       Teachers
                     </Link>
                   </h2>

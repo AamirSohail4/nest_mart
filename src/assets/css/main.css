@@ -6737,7 +6737,11 @@ h6.post-title {
 }
 .search-style-2_my .input_wrap button svg {
   font-size: 30px;
-  color: #4fa0d8;
+  color: #7e7e7e;
+}
+button.mysearchbtn:hover {
+  background-color: #0b6ba2 !important;
+  color: white;
 }
 .search-style-2_my input::-moz-input-placeholder {
   opacity: 1;

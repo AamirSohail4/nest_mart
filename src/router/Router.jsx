@@ -3,8 +3,6 @@ import { FrontendLayout } from "../layouts/FrontendLayout";
 import { Home } from "../pages/home/Home";
 import { SingleProduct } from "../pages/single-product/SingleProduct";
 import { ShopCart } from "../pages/cart/ShopCart";
-import { ShopWishlist } from "../pages/cart/ShopWishlist";
-import { ShopCompare } from "../pages/cart/ShopCompare";
 import { ShopCheckout } from "../pages/cart/ShopCheckout";
 import { Login } from "../pages/login/Login";
 import { Register } from "../pages/login/Register";
@@ -32,8 +30,6 @@ export const Router = () => {
         <Route index element={<Home />} />
         <Route path="allProducts/:page?" element={<ProductsGrid />} />
         <Route path="product/:seoLink" element={<SingleProduct />} />
-        <Route path="shop-wishlist" element={<ShopWishlist />} />
-        <Route path="shop-compare" element={<ShopCompare />} />
         <Route path="signUp" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="about" element={<About />} />
@@ -42,11 +38,8 @@ export const Router = () => {
         <Route path="purchase-guide" element={<PurchaseGuide />} />
         <Route path="terms" element={<Terms />} />
         <Route path="quick-view" element={<QuickView />} />
-        <Route path="teacher" element={<Teacher />} />
-        <Route
-          path="teacher-detail/:strSEOLink/:id"
-          element={<TeacherDetail />}
-        />
+        <Route path="teachers" element={<Teacher />} />
+        <Route path="teacher/:strSEOLink/:id" element={<TeacherDetail />} />
 
         <Route path="shop" element={<Shop />} />
         <Route path="page-404" element={<PageNotFound />} />
@@ -55,7 +48,7 @@ export const Router = () => {
           element={<Categories element={<Categories />} />}
         />
         <Route
-          path="manuCategory"
+          path="Category"
           element={<ManuCategory element={<ManuCategory />} />}
         />
         <Route path="verify" element={<Verify />} />
@@ -63,7 +56,7 @@ export const Router = () => {
       <Route path="/admin" element={<DashboardLayout />}>
         <Route path="myacount" element={<MyAccount />} />
         <Route path="checkout" element={<ShopCheckout />} />
-        <Route path="shop-cart" element={<ShopCart />} />
+        <Route path="cart" element={<ShopCart />} />
       </Route>
     </Routes>
   );

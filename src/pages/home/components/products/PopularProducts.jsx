@@ -13,11 +13,26 @@ export const PopularProducts = () => {
   const [myproduct, setMyProduct] = useState([]);
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
 
+  // const formatTotal = (total) => {
+  //   // Check if total is a valid number
+  //   if (typeof total !== 'number' || isNaN(total)) {
+  //     throw new Error('Invalid input. Please provide a valid number.');
+  //   }
+
+  //   // Format the number with a minimum of 2 and a maximum of 4 decimal places
+  //   const formattedTotal = total.toLocaleString(undefined, {
+  //     minimumFractionDigits: 2,
+  //     maximumFractionDigits: 4,
+  //   });
+
+  //   return formattedTotal;
+  // };
+
   const handleHeartClick = (itemId) => {
     if (userId !== null) {
       addToWishList(itemId);
     } else {
-      alert("please first Login");
+      navigate("/login");
     }
   };
 
@@ -92,13 +107,13 @@ export const PopularProducts = () => {
                           </Link>
                         </div>
                         <div className="product-action-1">
-                          <Link
+                          <a
                             aria-label="Add To Wishlist"
                             className="action-btn"
                             onClick={() => handleHeartClick(item.intID)}
                           >
                             <i className="fi-rs-heart"></i>
-                          </Link>
+                          </a>
 
                           <Link
                             to={`product/${item.strSEOLink}`}
@@ -122,7 +137,12 @@ export const PopularProducts = () => {
                         </h2>
                         <div className="product-card-bottom">
                           <div className="product-price">
-                            <span>Rs: {item.dblSalePrice}</span>
+                            <span>
+                              {item.strUOM ? item.strUOM : "Rs"}
+                              {new Intl.NumberFormat("en-US", {
+                                style: "decimal",
+                              }).format(item.dblSalePrice)}
+                            </span>
                           </div>
                           <div className="contact-info">
                             <div className="social-info">

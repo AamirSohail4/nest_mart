@@ -1,24 +1,23 @@
+import { useContext, useEffect, useState } from "react";
 import img1 from "../assets/imgs/banner/banner-9.png";
-
-// import { bannerText_url } from "../config/env";
+import { api_url } from "../config/env";
+import { MyAccountContext } from "../context/AccountContext";
 
 export const NewsLetterProduct = () => {
-  //   const [contentBanner, setContentBanner] = useState();
-
-  //   useEffect(() => {
-  //     async function TextDisplay() {
-  //       const response = await fetch(
-  //         `${bannerText_url}&tag=get_webtext_content&intID=15`
-  //       );
-  //       const bannerData = await response.json();
-  //       // console.log("mydata====>", bannerData);
-  //       setContentBanner(bannerData.data[0].strText);
-  //     }
-  //     TextDisplay();
-  //   }, []);
-  //   // console.log("-This is Banner WebTex-===>", myWebText);
-  //   const bannerText = contentBanner;
-  //   // const htmlContent = he.decode(bannerText);
+  const { catParentId } = useContext(MyAccountContext);
+  const [newsData, setNewsData] = useState();
+  const NewsLetterDisplay = async () => {
+    const response = await fetch(
+      `${api_url}&tag=get_category_web&intParentID=${catParentId}`
+    );
+    const newsdata = await response.json();
+    console.log(newsData);
+    setNewsData(newsdata?.data[0]?.strRemarks);
+  };
+  console.log("This is Response", newsData);
+  useEffect(() => {
+    NewsLetterDisplay();
+  }, []);
   return (
     <>
       <section
@@ -33,14 +32,14 @@ export const NewsLetterProduct = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="position-relative newsletter-inner">
-                {/* <div className="newsletter-content">
+                <div className="newsletter-content">
                   <div
                     style={{ color: "white" }}
                     dangerouslySetInnerHTML={{
-                      __html: bannerText,
+                      __html: newsData,
                     }}
                   />
-                </div> */}
+                </div>
                 <img src={img1} alt="newsletter" />
               </div>
             </div>

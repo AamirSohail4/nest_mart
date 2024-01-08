@@ -12,7 +12,7 @@ export const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (userPhone.length === 12) {
+    if (userPhone.length === 12 || userPhone.length === 11) {
       try {
         // Create a new FormData object
         const formData = new FormData();
@@ -51,7 +51,7 @@ export const Login = () => {
     const value = event.target.value;
     if (!isNaN(value)) {
       setUserPhone(value);
-      if (value.length === 12) {
+      if (value.length === 12 || value.length === 11) {
         setErrorMessage("");
       }
     } else {
@@ -102,6 +102,7 @@ export const Login = () => {
                             placeholder="923000000000 *"
                             id="user_phone"
                             value={userPhone}
+                            maxLength="12"
                             onChange={handleInputChange}
                           />
                         </div>

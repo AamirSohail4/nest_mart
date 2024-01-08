@@ -45,9 +45,7 @@ export const ShopCheckout = () => {
       body: data,
     });
     if (response.ok) {
-      const resData = await response.json();
-
-      // console.log("Order Palacment Response ", resData);
+      await response.json();
     }
   };
 
@@ -174,7 +172,10 @@ export const ShopCheckout = () => {
                               Total
                             </div>
                             <div style={{ display: "inline-block" }}>
-                              Rs.{calculateTotal()}
+                              Rs.
+                              {new Intl.NumberFormat("en-US", {
+                                style: "decimal",
+                              }).format(calculateTotal())}
                             </div>
                           </div>
                         </h4>

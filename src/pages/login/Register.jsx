@@ -32,17 +32,24 @@ export const Register = () => {
     const errors = {};
 
     // Validate name field
+
     if (!formData.firstName.trim()) {
       errors.firstName = "Name is required";
-    }
-    // Validate name field
-    if (!formData.lastName.trim()) {
-      errors.lastName = "Last Name is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.firstName.trim())) {
+      errors.firstName = "Only alphabetic characters are allowed";
     }
 
+    if (!formData.lastName.trim()) {
+      errors.lastName = "Name is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.lastName.trim())) {
+      errors.lastName = "Only alphabetic characters are allowed";
+    }
+
+    // Validate name field
+
     // Validate phone field
-    if (!/^\d{12}$/.test(formData.phone)) {
-      errors.phone = "Phone must be 12 digits";
+    if (!/^\d{11,12}$/.test(formData.phone)) {
+      errors.phone = "Phone must be 11 or 12 digits like 923014788965";
     }
 
     // Validate email field
@@ -216,7 +223,7 @@ export const Register = () => {
                         </label>
                         <input
                           name="phone"
-                          required=""
+                          maxLength="12"
                           className={`form-control ${
                             formErrors.phone ? "is-invalid" : ""
                           }`}
@@ -225,9 +232,9 @@ export const Register = () => {
                           value={formData.phone}
                           onChange={handleInputChange}
                         />
-                        {formErrors.email && (
+                        {formErrors.phone && (
                           <div className="invalid-feedback">
-                            {formErrors.email}
+                            {formErrors.phone}
                           </div>
                         )}
                       </div>

@@ -47,20 +47,20 @@ export const Navbar = () => {
   useEffect(() => {
     ManuDisplay();
   }, []);
-  console.log("category data", showManu);
-  const calculateSubtotal = () => {
-    if (!cartItem || cartItem.length === 0) {
-      return 0;
-    }
+  // console.log("category data", showManu);
+  // const calculateSubtotal = () => {
+  //   if (!cartItem || cartItem.length === 0) {
+  //     return 0;
+  //   }
 
-    let subtotal = 0;
+  //   let subtotal = 0;
 
-    cartItem.forEach((item) => {
-      subtotal += item?.dblItemQty * item.item?.dblSalePrice;
-    });
+  //   cartItem.forEach((item) => {
+  //     subtotal += item?.dblItemQty * item.item?.dblSalePrice;
+  //   });
 
-    return subtotal.toFixed(2);
-  };
+  //   return subtotal.toFixed(2);
+  // };
 
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
@@ -92,7 +92,27 @@ export const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     SearchBarCategory();
   }, []);
+  const calculateTotal = () => {
+    if (!cartItem || !cartItem.length) {
+      return 0; // Return 0 if cartItem is not defined or empty
+    }
 
+    // Calculate the subtotal for each item and sum them up
+    const total = cartItem.reduce(
+      (acc, item) =>
+        acc +
+        parseFloat(item?.item?.dblSalePrice) * parseFloat(item?.dblItemQty),
+      0
+    );
+
+    // Apply number formatting to the total
+    const formattedTotal = total.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 4,
+    });
+
+    return formattedTotal;
+  };
   return (
     <header className="header-area header-style-1 header-height-2">
       <div className="mobile-promotion">
@@ -131,7 +151,7 @@ export const Navbar = () => {
               <div className="header-info header-info-right">
                 <ul>
                   <li>
-                    Need help? Call Us:{" "}
+                    Need help? Call Us:
                     <strong className="text-brand"> + +92-42-35774780</strong>
                   </li>
                 </ul>
@@ -168,6 +188,7 @@ export const Navbar = () => {
                     type="text"
                     value={searchQuery}
                     onChange={handleInputChange}
+                    placeholder="Search for items..."
                   />
                   <button
                     type="button"
@@ -195,11 +216,11 @@ export const Navbar = () => {
                     </Link>
                   </div>
                   <div className="header-action-icon-2">
-                    <Link className="mini-cart-icon" href="/admin/shop-cart">
+                    <Link className="mini-cart-icon" href="/admin/cart">
                       <img alt="Nest" src={img6} />
                       <span className="pro-count blue">{cartItem?.length}</span>
                     </Link>
-                    <Link to="/admin/shop-cart">
+                    <Link to="/admin/cart">
                       <span className="lable">Cart</span>
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2">
@@ -208,7 +229,7 @@ export const Navbar = () => {
                           return (
                             <li key={index}>
                               <div className="shopping-cart-img">
-                                <Link to="/admin/shop-cart">
+                                <Link to="/admin/cart">
                                   <img
                                     alt="Nest"
                                     src={item.item?.strImageThumbnail}
@@ -221,7 +242,9 @@ export const Navbar = () => {
                                 </h4>
                                 <h4>
                                   <span>{item?.dblItemQty} × </span>
-                                  {item.item?.dblSalePrice}
+                                  {new Intl.NumberFormat("en-US", {
+                                    style: "decimal",
+                                  }).format(item.item?.dblSalePrice)}
                                 </h4>
                               </div>
                               <div
@@ -239,14 +262,14 @@ export const Navbar = () => {
                       <div className="shopping-cart-footer">
                         <div className="shopping-cart-total">
                           <h4>
-                            Total <span>Rs. {calculateSubtotal()}</span>
+                            Total <span>Rs. {calculateTotal()}</span>
                           </h4>
                         </div>
                         <div className="shopping-cart-button">
-                          <Link to="/admin/shop-cart" className="outline">
+                          <Link to="/admin/cart" className="outline">
                             View cart
                           </Link>
-                          <Link to="/admin/checkout">Checkout</Link>
+                          <Link to="/admin/cart">Checkout</Link>
                         </div>
                       </div>
                     </div>
@@ -414,7 +437,7 @@ export const Navbar = () => {
                       ))}
 
                     <li>
-                      <Link to="/teacher ">Teacher</Link>
+                      <Link to="/teachers ">Teacher</Link>
                     </li>
                     <li>
                       <Link to="/shop ">Book Shops</Link>

@@ -1,25 +1,44 @@
 import { Icon } from "@iconify/react";
 import { useContext, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CartContext } from "../../../context/CartContext";
 import { MyAccountContext } from "../../../context/AccountContext";
 import { NewsLetterProduct } from "../../../layouts/NewsLetterProduct";
+import { WishListContext } from "../../../context/WishListContext";
+import productImg from "../../../assets/imgs/banner/product.jpg";
 
 export const ManuCategory = () => {
+  const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
-  const { categoryData } = useContext(MyAccountContext);
+  const { userId } = useContext(MyAccountContext);
+  const { addToWishList } = useContext(WishListContext);
+  const { categoryData, catParentId } = useContext(MyAccountContext);
   const [pageCount, setPageCount] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
   const [itemOffset, setItemOffset] = useState(0);
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
 
+  console.log("This is not good", catParentId);
+
   const handleAddToCart = (productId, quantity, productDesc) => {
-    addToCart(productId, quantity);
-    setSelectedProductDesc(productDesc);
-    setTimeout(() => {
-      setSelectedProductDesc("");
-    }, 4000);
+    if (userId !== null) {
+      addToCart(productId, quantity);
+      setSelectedProductDesc(productDesc);
+      setTimeout(() => {
+        setSelectedProductDesc("");
+      }, 4000);
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleHeartClick = (itemId) => {
+    if (userId !== null) {
+      addToWishList(itemId);
+    } else {
+      navigate("/login");
+    }
   };
   const itemsPerPage = 20;
   useEffect(() => {
@@ -33,6 +52,10 @@ export const ManuCategory = () => {
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % categoryData?.length;
     setItemOffset(newOffset);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: Add smooth scrolling effect
+    });
   };
 
   return (
@@ -87,22 +110,36 @@ export const ManuCategory = () => {
                       <div className="product-img-action-wrap">
                         <div className="product-img product-img-zoom">
                           <Link to={`/product/${item.strSEOLink}`}>
-                            <img src={item?.strImageThumbnail} />
-                            <img
-                              className="hover-img"
-                              src={item?.strImageThumbnail}
-                              alt=""
-                            />
+                            {item.strImageThumbnail ? (
+                              <>
+                                <img
+                                  className="default-img"
+                                  src={item.strImageThumbnail}
+                                  alt=""
+                                />
+                                <img
+                                  className="hover-img"
+                                  src={item.strProfilePicture}
+                                  alt=""
+                                />
+                              </>
+                            ) : (
+                              <img
+                                className="default-img"
+                                src={productImg}
+                                alt=""
+                              />
+                            )}
                           </Link>
                         </div>
                         <div className="product-action-1">
-                          <Link
+                          <a
                             aria-label="Add To Wishlist"
                             className="action-btn"
-                            to="/admin/myacount"
+                            onClick={() => handleHeartClick(item.intID)}
                           >
                             <i className="fi-rs-heart"></i>
-                          </Link>
+                          </a>
 
                           <Link
                             to={`/product/${item.strSEOLink}`}
@@ -139,14 +176,16 @@ export const ManuCategory = () => {
                             </div>
                           </div>
                           <div className="add-cart">
-                            <Link
-                              className="add"
+                            <button
+                              id="feature-prod-btn1500"
+                              type="button"
+                              className="btn btn-heading add_in_cart"
                               onClick={() =>
                                 handleAddToCart(item.intID, 1, item.strDesc)
                               }
                             >
-                              <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
-                            </Link>
+                              <i className="fi-rs-shopping-cart mr-5"></i>Add
+                            </button>
                           </div>
                         </div>
                       </div>

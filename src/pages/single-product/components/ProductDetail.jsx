@@ -7,6 +7,7 @@ import { api_url } from "../../../config/env";
 import { CartContext } from "../../../context/CartContext";
 import { WishListContext } from "../../../context/WishListContext";
 import { MyAccountContext } from "../../../context/AccountContext";
+import productImg from "../../../assets/imgs/banner/product.jpg";
 
 export const ProductDetail = () => {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ export const ProductDetail = () => {
               fade={false}
             >
               <figure className="border-radius-10">
-                {singleproduct?.strImageThumbnail && (
+                {singleproduct?.strImageThumbnail ? (
                   <Zoom
                     img={singleproduct?.strImageThumbnail}
                     zoomScale={1.5}
@@ -142,6 +143,8 @@ export const ProductDetail = () => {
                     width={500}
                     transitionTime={0.5}
                   />
+                ) : (
+                  <img src={productImg} alt="Default Product Image" />
                 )}
               </figure>
             </Slider>
@@ -152,7 +155,7 @@ export const ProductDetail = () => {
             >
               <div>
                 <img
-                  src={singleproduct?.strImageThumbnail}
+                  src={singleproduct?.strImageThumbnail || productImg}
                   alt="product image"
                 />
               </div>
@@ -166,7 +169,10 @@ export const ProductDetail = () => {
               <div className="product-price primary-color float-left">
                 <span className="current-price text-brand">
                   {singleproduct?.strUOM}
-                  {singleproduct?.dblSalePrice}
+
+                  {new Intl.NumberFormat("en-US", {
+                    style: "decimal",
+                  }).format(singleproduct?.dblSalePrice)}
                 </span>
               </div>
             </div>
@@ -268,7 +274,7 @@ export const ProductDetail = () => {
                             <div className="product-img-action-wrap">
                               <div className="product-img product-img-zoom">
                                 <Link
-                                  to={`/teacher-detail/${singleproduct?.supplier[0].strSEOLink}/${singleproduct?.supplier[0].intID}`}
+                                  to={`/teacher/${singleproduct?.supplier[0].strSEOLink}/${singleproduct?.supplier[0].intID}`}
                                 >
                                   <img
                                     className="default-img"
@@ -321,12 +327,12 @@ export const ProductDetail = () => {
                         <Link to={`/product/${item.strSEOLink}`} tabIndex="0">
                           <img
                             className="default-img"
-                            src={item.strImage}
+                            src={item?.strImage}
                             alt=""
                           />
                           <img
                             className="hover-img"
-                            src={item.strImage}
+                            src={item?.strImage}
                             alt=""
                           />
                         </Link>
@@ -335,7 +341,7 @@ export const ProductDetail = () => {
                         <Link
                           aria-label="Quick view"
                           className="action-btn small hover-up"
-                          to={`/product/${item.strSEOLink}`}
+                          to={`/product/${item?.strSEOLink}`}
                         >
                           <i className="fi-rs-eye"></i>
                         </Link>
@@ -343,7 +349,7 @@ export const ProductDetail = () => {
                         <Link
                           aria-label="Add To Wishlist"
                           className="action-btn"
-                          onClick={() => handleHeartClick(item.intID)}
+                          onClick={() => handleHeartClick(item?.intID)}
                         >
                           <i className="fi-rs-heart"></i>
                         </Link>
@@ -353,25 +359,24 @@ export const ProductDetail = () => {
                     <div className="product-content-wrap">
                       <div className="product-category">
                         <Link to={`/product/${item.strSEOLink}`}>
-                          {item.strItemCategory}
+                          {item?.strItemCategory}
                         </Link>
                       </div>
                       <h2>
                         <Link to={`/product/${item.strSEOLink}`}>
-                          {item.strDesc}
+                          {item?.strDesc}
                         </Link>
                       </h2>
                       <div className="product-card-bottom">
                         <div className="product-price">
                           <span>
-                            {item.strUOM} {item.dblSalePrice}
+                            {item?.strUOM}
+                            {new Intl.NumberFormat("en-US", {
+                              style: "decimal",
+                            }).format(item?.dblSalePrice)}
                           </span>
                         </div>
-                        <div className="contact-info">
-                          <div className="social-info">
-                            <h4>{selectedProductDesc}</h4>
-                          </div>
-                        </div>
+
                         <div className="add-cart">
                           <button
                             id="feature-prod-btn1500"
@@ -385,6 +390,11 @@ export const ProductDetail = () => {
                           </button>
 
                           <div className="overlay"></div>
+                        </div>
+                        <div className="contact-info">
+                          <div className="social-info">
+                            <h4>{selectedProductDesc}</h4>
+                          </div>
                         </div>
                       </div>
                     </div>

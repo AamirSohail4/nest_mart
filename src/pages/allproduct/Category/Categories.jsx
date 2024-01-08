@@ -5,12 +5,17 @@ import { useContext, useEffect, useState } from "react";
 import loadingGif from "../../../assets/imgs/banner/loading.gif";
 import { WishListContext } from "../../../context/WishListContext";
 import ReactPaginate from "react-paginate";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CartContext } from "../../../context/CartContext";
 import { NewsLetterProduct } from "../../../layouts/NewsLetterProduct";
+import { MyAccountContext } from "../../../context/AccountContext";
+import productImg from "../../../assets/imgs/banner/product.jpg";
 
 export const Categories = () => {
+  const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
+  const { userId } = useContext(MyAccountContext);
+  const { addToWishList } = useContext(WishListContext);
   const { searchCategory, loading } = useContext(WishListContext);
   const [pageCount, setPageCount] = useState(1);
   const [currentItems, setCurrentItems] = useState([]);
@@ -18,11 +23,23 @@ export const Categories = () => {
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
 
   const handleAddToCart = (productId, quantity, productDesc) => {
-    addToCart(productId, quantity);
-    setSelectedProductDesc(productDesc);
-    setTimeout(() => {
-      setSelectedProductDesc("");
-    }, 4000);
+    if (userId !== null) {
+      addToCart(productId, quantity);
+      setSelectedProductDesc(productDesc);
+      setTimeout(() => {
+        setSelectedProductDesc("");
+      }, 4000);
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleHeartClick = (itemId) => {
+    if (userId !== null) {
+      addToWishList(itemId);
+    } else {
+      navigate("/login");
+    }
   };
   const itemsPerPage = 20;
   console.log("This my final Amount", searchCategory);
@@ -36,6 +53,10 @@ export const Categories = () => {
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % searchCategory?.length;
     setItemOffset(newOffset);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: Add smooth scrolling effect
+    });
   };
 
   return (
@@ -95,22 +116,36 @@ export const Categories = () => {
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
                             <Link to={`/product/${item.strSEOLink}`}>
-                              <img src={item?.strImageThumbnail} />
-                              <img
-                                className="hover-img"
-                                src={item?.strImageThumbnail}
-                                alt=""
-                              />
+                              {item.strImageThumbnail ? (
+                                <>
+                                  <img
+                                    className="default-img"
+                                    src={item.strImageThumbnail}
+                                    alt=""
+                                  />
+                                  <img
+                                    className="hover-img"
+                                    src={item.strProfilePicture}
+                                    alt=""
+                                  />
+                                </>
+                              ) : (
+                                <img
+                                  className="default-img"
+                                  src={productImg}
+                                  alt=""
+                                />
+                              )}
                             </Link>
                           </div>
                           <div className="product-action-1">
-                            <Link
+                            <a
                               aria-label="Add To Wishlist"
                               className="action-btn"
-                              to="/admin/myacount"
+                              onClick={() => handleHeartClick(item.intID)}
                             >
                               <i className="fi-rs-heart"></i>
-                            </Link>
+                            </a>
 
                             <Link
                               to={`/product/${item.strSEOLink}`}
@@ -147,14 +182,16 @@ export const Categories = () => {
                               </div>
                             </div>
                             <div className="add-cart">
-                              <Link
-                                className="add"
+                              <button
+                                id="feature-prod-btn1500"
+                                type="button"
+                                className="btn btn-heading add_in_cart"
                                 onClick={() =>
                                   handleAddToCart(item.intID, 1, item.strDesc)
                                 }
                               >
-                                <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
-                              </Link>
+                                <i className="fi-rs-shopping-cart mr-5"></i>Add
+                              </button>
                             </div>
                           </div>
                         </div>

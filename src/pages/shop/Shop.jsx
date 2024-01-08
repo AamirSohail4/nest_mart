@@ -90,6 +90,7 @@ export const Shop = () => {
                           <Link>
                             <button
                               style={{ border: "none", background: "none" }}
+                              onClick={() => handleShowModal(index)}
                             >
                               <img className="default-img" src={img1} alt="" />
                               <img className="hover-img" src={img1} alt="" />

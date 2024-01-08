@@ -4,7 +4,7 @@ import { AddressContext } from "../../context/AddresContext";
 
 export const Contact = () => {
   const { address } = useContext(AddressContext);
-  console.log("bbbbbbb", address);
+
   return (
     <>
       <main className="main">
@@ -26,14 +26,12 @@ export const Contact = () => {
                   <div className="row mb-60">
                     <p className="col-md-4"></p>
                     <h4 className="mb-15 text-brand">Office</h4>
-                    <li>
-                      <strong>Address: </strong>{" "}
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: address,
-                        }}
-                      />
-                    </li>
+
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: address,
+                      }}
+                    />
 
                     <div style={{ display: "flex" }}>
                       <div style={{ paddingRight: "20px" }}>

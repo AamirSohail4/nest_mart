@@ -7,6 +7,7 @@ import { api_url } from "../../config/env";
 import { CartContext } from "../../context/CartContext";
 import { WishListContext } from "../../context/WishListContext";
 import { MyAccountContext } from "../../context/AccountContext";
+import productImg from "../../assets/imgs/banner/product.jpg";
 
 export const TeacherDetail = () => {
   const navigate = useNavigate();
@@ -92,7 +93,8 @@ export const TeacherDetail = () => {
         >
           <div className="archive-header-3-inner">
             <div className="vendor-logo mr-50">
-              <img src={teacher.strProfilePicture} alt="" />
+              strProfilePicture
+              <img src={teacher?.strProfilePicture || productImg} alt="" />
             </div>
             <div className="vendor-content text-white">
               <h3 className="mb-5">
@@ -176,16 +178,26 @@ export const TeacherDetail = () => {
                           <div className="product-img-action-wrap">
                             <div className="product-img product-img-zoom">
                               <Link to={`/product/${item?.strSEOLink}`}>
-                                <img
-                                  className="default-img"
-                                  src={item?.strImageThumbnail}
-                                  alt=""
-                                />
-                                <img
-                                  className="hover-img"
-                                  src={item?.strImageThumbnail}
-                                  alt=""
-                                />
+                                {item.strImageThumbnail ? (
+                                  <>
+                                    <img
+                                      className="default-img"
+                                      src={item.strImageThumbnail}
+                                      alt=""
+                                    />
+                                    <img
+                                      className="hover-img"
+                                      src={item.strImageThumbnail}
+                                      alt=""
+                                    />
+                                  </>
+                                ) : (
+                                  <img
+                                    className="default-img"
+                                    src={productImg}
+                                    alt=""
+                                  />
+                                )}
                               </Link>
                             </div>
                             <div className="product-action-1">

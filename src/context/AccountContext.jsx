@@ -15,6 +15,7 @@ export const MyAccountProvider = ({ children }) => {
   const [userAddress, setUserAddress] = useState();
   const [userinfo, setUserInfo] = useState();
   const [categoryData, setCategoryData] = useState();
+  const [catParentId, setCatParenID] = useState();
 
   async function userDetails() {
     // console.log("user id user details funtion===>", userId);
@@ -23,7 +24,7 @@ export const MyAccountProvider = ({ children }) => {
     );
     const bannerData = await response.json();
 
-    setUserAddress(bannerData?.data[0]);
+    setUserAddress(bannerData?.data);
   }
   async function userInfoDisplay() {
     // console.log("user id user info dispaly vvvvv===>", userId);
@@ -35,7 +36,6 @@ export const MyAccountProvider = ({ children }) => {
     setUserInfo(userData?.data[0]);
   }
   const handleManuClick = async (categoryId, seolink, intParentID) => {
-    console.log("This parent Id ", intParentID);
     try {
       setLoading(true);
       const response = await fetch(
@@ -45,7 +45,9 @@ export const MyAccountProvider = ({ children }) => {
       if (response.ok) {
         const manudata = await response.json();
         setCategoryData(manudata.data);
-        navigate("/manuCategory");
+        setCatParenID(intParentID);
+
+        navigate("/Category");
         setLoading(false);
       } else {
         console.error("API request failed with status:", response.status);
@@ -54,7 +56,6 @@ export const MyAccountProvider = ({ children }) => {
       console.error("Error calling API:", error);
     }
   };
-  // console.log("This is Category Id ", categoryData);
 
   useEffect(() => {
     userDetails();
@@ -66,6 +67,7 @@ export const MyAccountProvider = ({ children }) => {
       value={{
         userId,
         setUserId,
+        catParentId,
         userAddress,
         userinfo,
         handleManuClick,

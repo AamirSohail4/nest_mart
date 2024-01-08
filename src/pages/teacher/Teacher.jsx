@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { teacher_url } from "../../config/env";
-
+import productImg from "../../assets/imgs/banner/product.jpg";
 export const Teacher = () => {
   const [allTeacher, setAllTeacher] = useState();
 
@@ -56,18 +56,28 @@ export const Teacher = () => {
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
                             <Link
-                              to={`/teacher-detail/${item.strSEOLink}/${item.intID}`}
+                              to={`/teacher/${item.strSEOLink}/${item.intID}`}
                             >
-                              <img
-                                className="default-img"
-                                src={item.strProfilePicture}
-                                alt=""
-                              />
-                              <img
-                                className="hover-img"
-                                src={item.strProfilePicture}
-                                alt=""
-                              />
+                              {item.strProfilePicture ? (
+                                <>
+                                  <img
+                                    className="default-img"
+                                    src={item.strProfilePicture}
+                                    alt=""
+                                  />
+                                  <img
+                                    className="hover-img"
+                                    src={item.strProfilePicture}
+                                    alt=""
+                                  />
+                                </>
+                              ) : (
+                                <img
+                                  className="default-img"
+                                  src={productImg}
+                                  alt=""
+                                />
+                              )}
                             </Link>
                           </div>
                         </div>

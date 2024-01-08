@@ -8,6 +8,7 @@ import ReactPaginate from "react-paginate";
 import { MyAccountContext } from "../../context/AccountContext";
 import { WishListContext } from "../../context/WishListContext";
 import { NewsLetterProduct } from "../../layouts/NewsLetterProduct";
+import productImg from "../../assets/imgs/banner/product.jpg";
 
 export const ProductsGrid = () => {
   const navigate = useNavigate();
@@ -70,6 +71,10 @@ export const ProductsGrid = () => {
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % fetchProduct?.length;
     setItemOffset(newOffset);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: Add smooth scrolling effect
+    });
   };
 
   return (
@@ -109,10 +114,10 @@ export const ProductsGrid = () => {
                 <div className="shop-product-fillter">
                   <div className="totall-product">
                     <p>
-                      We found{" "}
+                      We found
                       <strong className="text-brand">
                         {fetchProduct?.length}
-                      </strong>{" "}
+                      </strong>
                       items for you!
                     </p>
                   </div>
@@ -128,22 +133,36 @@ export const ProductsGrid = () => {
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
                             <Link to={`/product/${item.strSEOLink}`}>
-                              <img src={item?.strImageThumbnail} />
-                              <img
-                                className="hover-img"
-                                src={item?.strImageThumbnail}
-                                alt=""
-                              />
+                              {item.strImageThumbnail ? (
+                                <>
+                                  <img
+                                    className="default-img"
+                                    src={item.strImageThumbnail}
+                                    alt=""
+                                  />
+                                  <img
+                                    className="hover-img"
+                                    src={item.strProfilePicture}
+                                    alt=""
+                                  />
+                                </>
+                              ) : (
+                                <img
+                                  className="default-img"
+                                  src={productImg}
+                                  alt=""
+                                />
+                              )}
                             </Link>
                           </div>
                           <div className="product-action-1">
-                            <Link
+                            <a
                               aria-label="Add To Wishlist"
                               className="action-btn"
                               onClick={() => handleHeartClick(item.intID)}
                             >
                               <i className="fi-rs-heart"></i>
-                            </Link>
+                            </a>
 
                             <Link
                               to={`/product/${item.strSEOLink}`}
