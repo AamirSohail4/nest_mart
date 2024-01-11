@@ -22,6 +22,7 @@ import { Verify } from "../pages/login/Verify";
 import { ManuCategory } from "../pages/allproduct/Category/ManuCategory";
 import { Shop } from "../pages/shop/Shop";
 import { DashboardLayout } from "../layouts/DashboardLayout";
+import { Index } from "../pages/allproduct/Category";
 
 export const Router = () => {
   return (
@@ -43,10 +44,12 @@ export const Router = () => {
 
         <Route path="shop" element={<Shop />} />
         <Route path="page-404" element={<PageNotFound />} />
+        <Route path="teachers/page-404" element={<PageNotFound />} />
         <Route
           path="categories"
           element={<Categories element={<Categories />} />}
         />
+        <Route path="index" element={<Index />} />
         <Route
           path="Category"
           element={<ManuCategory element={<ManuCategory />} />}

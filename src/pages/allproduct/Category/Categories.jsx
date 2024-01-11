@@ -5,22 +5,52 @@ import { useContext, useEffect, useState } from "react";
 import loadingGif from "../../../assets/imgs/banner/loading.gif";
 import { WishListContext } from "../../../context/WishListContext";
 import ReactPaginate from "react-paginate";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CartContext } from "../../../context/CartContext";
 import { NewsLetterProduct } from "../../../layouts/NewsLetterProduct";
 import { MyAccountContext } from "../../../context/AccountContext";
 import productImg from "../../../assets/imgs/banner/product.jpg";
+import { relateProd_url } from "../../../config/env";
 
 export const Categories = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const selectedCategoryId = new URLSearchParams(location.search).get(
+    "categoryId"
+  );
+  const searchQuery = new URLSearchParams(location.search).get("book_name");
   const { addToCart } = useContext(CartContext);
+  const [loading, setLoading] = useState(false);
   const { userId } = useContext(MyAccountContext);
   const { addToWishList } = useContext(WishListContext);
-  const { searchCategory, loading } = useContext(WishListContext);
+  // const { searchCategory } = useContext(WishListContext);
   const [pageCount, setPageCount] = useState(1);
   const [currentItems, setCurrentItems] = useState([]);
   const [itemOffset, setItemOffset] = useState(0);
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
+  const [searchCategory, setSearchCategory] = useState();
+  // console.log("first", selectedCategoryId, searchQuery);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        document.title = "Ms Books | Categories";
+        setLoading(true);
+        const response = await fetch(
+          ` ${relateProd_url}&tag=get_items_web&intCategoryID=${selectedCategoryId}&strSearch=${searchQuery} `
+        );
+        const SearbarResponse = await response.json();
+        setSearchCategory(SearbarResponse?.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+
+        setSearchCategory([]);
+      }
+    };
+
+    fetchData();
+  }, [selectedCategoryId, searchQuery]);
 
   const handleAddToCart = (productId, quantity, productDesc) => {
     if (userId !== null) {
@@ -42,12 +72,13 @@ export const Categories = () => {
     }
   };
   const itemsPerPage = 20;
-  console.log("This my final Amount", searchCategory);
+
   useEffect(() => {
+    document.title = "Ms Books | Categories";
     if (searchCategory) {
       const endOffset = itemOffset + itemsPerPage;
-      setCurrentItems(searchCategory.slice(itemOffset, endOffset));
-      setPageCount(Math.ceil(searchCategory.length / itemsPerPage));
+      setCurrentItems(searchCategory?.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(searchCategory?.length / itemsPerPage));
     }
   }, [itemOffset, itemsPerPage, searchCategory]);
   const handlePageClick = (event) => {
@@ -55,7 +86,7 @@ export const Categories = () => {
     setItemOffset(newOffset);
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // Optional: Add smooth scrolling effect
+      behavior: "smooth",
     });
   };
 
@@ -120,13 +151,21 @@ export const Categories = () => {
                                 <>
                                   <img
                                     className="default-img"
-                                    src={item.strImageThumbnail}
+                                    src={item.strImageThumbnail || productImg}
+                                    onError={(e) => {
+                                      e.target.onError = null;
+                                      e.target.src = productImg;
+                                    }}
                                     alt=""
                                   />
                                   <img
                                     className="hover-img"
                                     src={item.strProfilePicture}
                                     alt=""
+                                    onError={(e) => {
+                                      e.target.onError = null;
+                                      e.target.src = productImg;
+                                    }}
                                   />
                                 </>
                               ) : (

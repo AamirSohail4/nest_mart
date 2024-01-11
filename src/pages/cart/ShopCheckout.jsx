@@ -1,5 +1,5 @@
 import { PaymentContext } from "../../context/PaymentMethod";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CartContext } from "../../context/CartContext";
 
 import { shipAddres_url } from "../../config/env";
@@ -72,7 +72,9 @@ export const ShopCheckout = () => {
     maximumFractionDigits: 4,
   });
   const subtotal = calculateTotal();
-  // console.log("Sub Total", subtotal);
+  useEffect(() => {
+    document.title = "Ms Books | Checkout";
+  });
   return (
     <div className="container mb-80 mt-50">
       <div className="container mb-80 mt-50">

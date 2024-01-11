@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { useState, useEffect, createContext } from "react";
-import { api_url, shipAddres_url } from "../config/env";
+import { shipAddres_url } from "../config/env";
 import { userInfo_url } from "../config/env";
-import { useNavigate } from "react-router-dom";
 
 export const MyAccountContext = createContext({});
 
@@ -11,11 +10,9 @@ export const MyAccountProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
   // console.log("user id globel =>>", userId);
-  const navigate = useNavigate();
+
   const [userAddress, setUserAddress] = useState();
   const [userinfo, setUserInfo] = useState();
-  const [categoryData, setCategoryData] = useState();
-  const [catParentId, setCatParenID] = useState();
 
   async function userDetails() {
     // console.log("user id user details funtion===>", userId);
@@ -35,27 +32,30 @@ export const MyAccountProvider = ({ children }) => {
 
     setUserInfo(userData?.data[0]);
   }
-  const handleManuClick = async (categoryId, seolink, intParentID) => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `${api_url}&tag=get_items_web&strCategorySEOLink=${seolink}`
-      );
 
-      if (response.ok) {
-        const manudata = await response.json();
-        setCategoryData(manudata.data);
-        setCatParenID(intParentID);
+  // const handleManuClick = async (categoryId, seolink, intParentID) => {
+  //   // console.log("Heelo", seolink, categoryId, intParentID);
+  //   // navigate(`/Category?categoryId=${intParentID}&book_name=${seolink}`);
+  //   try {
+  //     setLoading(true);
+  //     const response = await fetch(
+  //       `${api_url}&tag=get_items_web&strCategorySEOLink=${seolink}`
+  //     );
 
-        navigate("/Category");
-        setLoading(false);
-      } else {
-        console.error("API request failed with status:", response.status);
-      }
-    } catch (error) {
-      console.error("Error calling API:", error);
-    }
-  };
+  //     if (response.ok) {
+  //       const manudata = await response.json();
+  //       setCategoryData(manudata.data);
+  //       setCatParenID(intParentID);
+
+  //       navigate("/Category");
+  //       setLoading(false);
+  //     } else {
+  //       console.error("API request failed with status:", response.status);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error calling API:", error);
+  //   }
+  // };
 
   useEffect(() => {
     userDetails();
@@ -67,11 +67,8 @@ export const MyAccountProvider = ({ children }) => {
       value={{
         userId,
         setUserId,
-        catParentId,
         userAddress,
         userinfo,
-        handleManuClick,
-        categoryData,
         userInfoDisplay,
         loading,
         setLoading,

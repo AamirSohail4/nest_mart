@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 
 import { ProductDetail } from "./components/ProductDetail";
+import { useEffect } from "react";
 
 export const SingleProduct = () => {
+  useEffect(() => {
+    document.title = "Ms Books | Product";
+  });
   return (
     <>
       <div className="page-header breadcrumb-wrap">

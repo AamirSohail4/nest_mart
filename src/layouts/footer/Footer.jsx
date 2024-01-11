@@ -13,7 +13,7 @@ export const Footer = () => {
   const { handleManuClick } = useContext(MyAccountContext);
   const { address } = useContext(AddressContext);
   const [footerCategory, setFooterCategory] = useState();
-
+  // console.log("This Addres Bar", address);
   useEffect(() => {
     const DisplayCategory = async () => {
       const response = await fetch(

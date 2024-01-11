@@ -113,6 +113,7 @@ export const ShopCart = () => {
   });
 
   useEffect(() => {
+    document.title = "Ms Books | Cart";
     const fetchCities = async () => {
       try {
         const response = await fetch(`${api_url}&tag=get_city&intCountryID=1`);

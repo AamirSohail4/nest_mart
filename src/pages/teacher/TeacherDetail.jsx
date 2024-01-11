@@ -52,6 +52,7 @@ export const TeacherDetail = () => {
   }
 
   useEffect(() => {
+    document.title = "Ms Books | Teacher";
     async function TeacherDetails() {
       const response = await fetch(
         `${teacher_url}&tag=get_teacher_detail&strSEOLink=${strSEOLink}`
@@ -63,7 +64,7 @@ export const TeacherDetail = () => {
       const subjects = [];
       const institute = [];
 
-      teacherData.data.teacher_detail.forEach((detail) => {
+      teacherData.data?.teacher_detail?.forEach((detail) => {
         if (detail.strType === "Class") {
           classes.push(detail.strDesc);
         } else if (detail.strType === "Subject") {
@@ -82,7 +83,7 @@ export const TeacherDetail = () => {
     ShowPublication();
   }, []);
 
-  const htmlContent = he.decode(strSpec);
+  const htmlContent = he.decode(strSpec ? strSpec : "");
 
   return (
     <>
@@ -93,7 +94,6 @@ export const TeacherDetail = () => {
         >
           <div className="archive-header-3-inner">
             <div className="vendor-logo mr-50">
-              strProfilePicture
               <img src={teacher?.strProfilePicture || productImg} alt="" />
             </div>
             <div className="vendor-content text-white">

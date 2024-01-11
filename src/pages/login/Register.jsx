@@ -94,6 +94,7 @@ export const Register = () => {
   };
 
   useEffect(() => {
+    document.title = "Ms Books | SingUp";
     const fetchCities = async () => {
       try {
         const response = await fetch(`${api_url}&tag=get_city&intCountryID=1`);

@@ -6,6 +6,7 @@ export const Teacher = () => {
   const [allTeacher, setAllTeacher] = useState();
 
   useEffect(() => {
+    document.title = "Ms Books | Teachers";
     async function AllTeacher() {
       const response = await fetch(`${teacher_url}&tag=get_teachers_web`);
       const teacherData = await response.json();
@@ -13,6 +14,19 @@ export const Teacher = () => {
     }
     AllTeacher();
   }, []);
+
+  const urlGenerater = (url) => {
+    console.log("seo link", url.strSEOLink);
+    if (
+      url.strSEOLink === null ||
+      url.strSEOLink === "" ||
+      url.strSEOLink === undefined
+    ) {
+      return "page-404";
+    } else {
+      return `/teacher/${url.strSEOLink}/${url.intID}`;
+    }
+  };
 
   return (
     <>
@@ -47,6 +61,7 @@ export const Teacher = () => {
               </div>
               <div className="row product-grid">
                 {allTeacher?.map((item, index) => {
+                  console.log("first", item);
                   return (
                     <div
                       key={index}
@@ -55,9 +70,7 @@ export const Teacher = () => {
                       <div className="product-cart-wrap mb-30">
                         <div className="product-img-action-wrap">
                           <div className="product-img product-img-zoom">
-                            <Link
-                              to={`/teacher/${item.strSEOLink}/${item.intID}`}
-                            >
+                            <Link to={`${urlGenerater(item)}`}>
                               {item.strProfilePicture ? (
                                 <>
                                   <img
@@ -65,9 +78,10 @@ export const Teacher = () => {
                                     src={item.strProfilePicture}
                                     alt=""
                                   />
+
                                   <img
                                     className="hover-img"
-                                    src={item.strProfilePicture}
+                                    src={item.strProfiPicture}
                                     alt=""
                                   />
                                 </>

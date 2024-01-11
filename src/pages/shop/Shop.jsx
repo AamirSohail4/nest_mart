@@ -29,6 +29,7 @@ export const Shop = () => {
   };
 
   useEffect(() => {
+    document.title='Ms Books | Shop'
     fetchData();
   }, []);
 

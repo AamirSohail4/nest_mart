@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 // import { AddressContext } from "../context/AddresContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import img5 from "../assets/imgs/theme/icons/icon-heart.svg";
 import img6 from "../assets/imgs/theme/icons/icon-cart.svg";
 import img9 from "../assets/imgs/theme/icons/icon-user.svg";
@@ -14,18 +14,21 @@ import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { cart_url } from "../config/env";
 import { WishListContext } from "../context/WishListContext";
-import { MyAccountContext } from "../context/AccountContext";
 
 export const Navbar = () => {
+  const navigate = useNavigate();
   const { cartItem, deleteSingleCartItem } = useContext(CartContext);
-  const { wishListItem, SerchCategoryClick } = useContext(WishListContext);
-  const { handleManuClick } = useContext(MyAccountContext);
+  const { wishListItem } = useContext(WishListContext);
+  // const { handleManuClick } = useContext(MyAccountContext);
   const [scrolled, setScrolled] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchBarCategory, setSearchBarCategory] = useState([]);
   const [showManu, setShowManau] = useState();
 
+  const handleManuClick = (intParentID, seolink) => {
+    navigate(`/Category?categoryId=${intParentID}&book_name=${seolink}`);
+  };
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("roleId");
@@ -65,11 +68,10 @@ export const Navbar = () => {
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
-  // console.log("This is Selecte Category Id of Manu ", selectedCategoryId);
 
   const handleCategoryChange = (event) => {
     const selectedId = event.target.value;
-    console.log("Thsi is my catigory id", selectedId);
+    // console.log("Thsi is my catigory id", selectedId);
     setSelectedCategoryId(selectedId === "all" ? "" : parseInt(selectedId, 10));
   };
 
@@ -97,7 +99,6 @@ export const Navbar = () => {
       return 0; // Return 0 if cartItem is not defined or empty
     }
 
-    // Calculate the subtotal for each item and sum them up
     const total = cartItem.reduce(
       (acc, item) =>
         acc +
@@ -112,6 +113,11 @@ export const Navbar = () => {
     });
 
     return formattedTotal;
+  };
+  const SerchCategoryClick = (selectedCategoryId, searchQuery) => {
+    navigate(
+      `/categories?categoryId=${selectedCategoryId}&book_name=${searchQuery}`
+    );
   };
   return (
     <header className="header-area header-style-1 header-height-2">
@@ -329,7 +335,7 @@ export const Navbar = () => {
                 <nav>
                   <ul>
                     <li>
-                      <Link to="/ ">Home</Link>
+                      <a to="/ ">Home</a>
                     </li>
 
                     {showManu
@@ -339,7 +345,7 @@ export const Navbar = () => {
                       )
                       .map((item, index) => (
                         <li key={index}>
-                          <Link
+                          <a
                             onClick={() => {
                               handleManuClick(
                                 item.intID,
@@ -356,7 +362,7 @@ export const Navbar = () => {
                             ).length > 0 && (
                               <i className="fi-rs-angle-down"></i>
                             )}
-                          </Link>
+                          </a>
                           {showManu?.filter(
                             (subItem) =>
                               subItem.intParentID === item.intID &&
@@ -374,8 +380,7 @@ export const Navbar = () => {
                                     key={subIndex}
                                     style={{ paddingLeft: "20px" }}
                                   >
-                                    <Link
-                                      to="#"
+                                    <a
                                       onClick={() =>
                                         handleManuClick(
                                           subItem.intID,
@@ -393,7 +398,7 @@ export const Navbar = () => {
                                       ).length > 0 && (
                                         <i className="fi-rs-angle-right"></i>
                                       )}
-                                    </Link>
+                                    </a>
                                     {showManu?.filter(
                                       (thirdItem) =>
                                         thirdItem.intParentID ===
@@ -413,8 +418,7 @@ export const Navbar = () => {
                                               key={thirdIndex}
                                               style={{ paddingLeft: "20px" }}
                                             >
-                                              <Link
-                                                to="#"
+                                              <a
                                                 onClick={() =>
                                                   handleManuClick(
                                                     thirdItem.intID,
@@ -424,7 +428,7 @@ export const Navbar = () => {
                                                 }
                                               >
                                                 {thirdItem.strDesc}
-                                              </Link>
+                                              </a>
                                             </li>
                                           ))}
                                       </ul>

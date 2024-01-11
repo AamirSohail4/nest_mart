@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { register_url } from "../../config/env";
 import { useNavigate } from "react-router-dom";
@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 export const Login = () => {
   const [userPhone, setUserPhone] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
   const navigate = useNavigate();
-
+  useEffect(() => {
+    document.title = "Ms Books | login";
+  });
   const handleSubmit = async (event) => {
     event.preventDefault();
 

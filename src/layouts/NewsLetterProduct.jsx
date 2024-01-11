@@ -1,20 +1,21 @@
-import { useContext, useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import img1 from "../assets/imgs/banner/banner-9.png";
 import { api_url } from "../config/env";
-import { MyAccountContext } from "../context/AccountContext";
 
-export const NewsLetterProduct = () => {
-  const { catParentId } = useContext(MyAccountContext);
+export const NewsLetterProduct = (props) => {
+  const { NewsLetterId } = props;
+
   const [newsData, setNewsData] = useState();
   const NewsLetterDisplay = async () => {
     const response = await fetch(
-      `${api_url}&tag=get_category_web&intParentID=${catParentId}`
+      `${api_url}&tag=get_category_web&intParentID=${NewsLetterId}`
     );
     const newsdata = await response.json();
-    console.log(newsData);
+
     setNewsData(newsdata?.data[0]?.strRemarks);
   };
-  console.log("This is Response", newsData);
+
   useEffect(() => {
     NewsLetterDisplay();
   }, []);

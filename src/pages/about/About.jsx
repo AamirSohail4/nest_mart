@@ -1,4 +1,9 @@
+import { useEffect } from "react";
+
 export const About = () => {
+  useEffect(() => {
+    document.title = "Ms Books | About";
+  });
   return (
     <>
       <main className="main">

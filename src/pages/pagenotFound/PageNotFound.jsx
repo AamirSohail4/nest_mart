@@ -15,27 +15,20 @@ export const PageNotFound = () => {
                   The link you clicked may be broken or the page may have been
                   removed.<br></br>
                   visit the{" "}
-                  <a href="index.html">
+                  <a href="/">
                     {" "}
                     <span> Homepage</span>
                   </a>{" "}
                   or{" "}
-                  <a href="page-contact.html">
+                  <a href="/contact">
                     <span>Contact us</span>
                   </a>{" "}
                   about the problem
                 </p>
-                <div className="search-form">
-                  <form action="#">
-                    <input type="text" placeholder="Search…" />
-                    <button type="submit">
-                      <i className="fi-rs-search"></i>
-                    </button>
-                  </form>
-                </div>
+
                 <a
                   className="btn btn-default submit-auto-width font-xs hover-up mt-30"
-                  href="index.html"
+                  href="/"
                 >
                   <i className="fi-rs-home mr-5"></i> Back To Home Page
                 </a>

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { verify_url, api_url } from "../../config/env";
 import { MyAccountContext } from "../../context/AccountContext";
@@ -80,7 +80,9 @@ export const Verify = () => {
       // Handle fetch error if needed
     }
   };
-
+  useEffect(() => {
+    document.title = "Ms Books | Verify";
+  });
   return (
     <>
       <div className="page-header breadcrumb-wrap">

@@ -44,6 +44,7 @@ export const ProductsGrid = () => {
   };
 
   useEffect(() => {
+    document.title = "Ms Books | Prouduct Grid";
     async function fetchAllProducts() {
       try {
         setLoading(true);
@@ -73,7 +74,7 @@ export const ProductsGrid = () => {
     setItemOffset(newOffset);
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // Optional: Add smooth scrolling effect
+      behavior: "smooth",
     });
   };
 
@@ -137,13 +138,21 @@ export const ProductsGrid = () => {
                                 <>
                                   <img
                                     className="default-img"
-                                    src={item.strImageThumbnail}
+                                    src={item.strImageThumbnail || productImg}
+                                    onError={(e) => {
+                                      e.target.onError = null;
+                                      e.target.src = productImg;
+                                    }}
                                     alt=""
                                   />
                                   <img
                                     className="hover-img"
                                     src={item.strProfilePicture}
                                     alt=""
+                                    onError={(e) => {
+                                      e.target.onError = null;
+                                      e.target.src = productImg;
+                                    }}
                                   />
                                 </>
                               ) : (
