@@ -1,13 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { createContext, useEffect, useState, useContext } from "react";
-import { cart_url } from "../config/env";
+import { cart_url, shipAddres_url } from "../config/env";
 import { MyAccountContext } from "./AccountContext";
+import { getShipmentAddressThunk } from "../redux/cartSlice";
+import { useDispatch } from "react-redux";
 
 export const PaymentContext = createContext({});
 
 // provider
 export const PaymentProvider = ({ children }) => {
+  const dispatch = useDispatch();
+
   const { userId } = useContext(MyAccountContext);
   const [showPaymentMode, setshowPaymentMode] = useState();
   const [shipmentAddress, setShipmentAddress] = useState();
@@ -17,14 +21,12 @@ export const PaymentProvider = ({ children }) => {
       `${cart_url}&tag=get_payment_modes&intCompanyID=1`
     );
     const paymentMode = await response.json();
-    // console.log(paymentMode);
+
     const responseData = paymentMode.data;
     setshowPaymentMode(responseData);
   };
-  // console.log("user id in provider ===>", userId);
 
   const fetchShipmentAddress = async () => {
-    // console.log("user id fetchShipmentAddress===>", userId);
     try {
       const response = await fetch(
         `${cart_url}&tag=get_user_shipment_address&intUserID=${userId}`
@@ -36,7 +38,22 @@ export const PaymentProvider = ({ children }) => {
       console.error("Error fetching city data:", error);
     }
   };
+  const deleteUserAddres = async (productId) => {
+    let data = new FormData();
+    data.append("intUserID", userId);
+    data.append("intID", productId?.intID);
 
+    const response = await fetch(
+      `${shipAddres_url}&tag=delete_user_shipment_address`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+    if (response.ok) {
+      dispatch(getShipmentAddressThunk(userId));
+    }
+  };
   useEffect(() => {
     PaymentModeDisplay();
     fetchShipmentAddress();
@@ -47,6 +64,7 @@ export const PaymentProvider = ({ children }) => {
       value={{
         shipmentAddress,
         fetchShipmentAddress,
+        deleteUserAddres,
         showPaymentMode,
         setShipmentAddress,
       }}

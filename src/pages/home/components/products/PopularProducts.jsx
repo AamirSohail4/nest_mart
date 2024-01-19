@@ -8,25 +8,10 @@ import { MyAccountContext } from "../../../../context/AccountContext";
 export const PopularProducts = () => {
   const navigate = useNavigate();
   const { userId } = useContext(MyAccountContext);
-  const { addToCart } = useContext(CartContext);
+  const { addProducts } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
   const [myproduct, setMyProduct] = useState([]);
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
-
-  // const formatTotal = (total) => {
-  //   // Check if total is a valid number
-  //   if (typeof total !== 'number' || isNaN(total)) {
-  //     throw new Error('Invalid input. Please provide a valid number.');
-  //   }
-
-  //   // Format the number with a minimum of 2 and a maximum of 4 decimal places
-  //   const formattedTotal = total.toLocaleString(undefined, {
-  //     minimumFractionDigits: 2,
-  //     maximumFractionDigits: 4,
-  //   });
-
-  //   return formattedTotal;
-  // };
 
   const handleHeartClick = (itemId) => {
     if (userId !== null) {
@@ -35,16 +20,14 @@ export const PopularProducts = () => {
       navigate("/login");
     }
   };
-
   const handleAddToCart = (productId, quantity, productDesc) => {
     if (userId !== null) {
-      addToCart(productId, quantity);
+      addProducts(productId, quantity);
       setSelectedProductDesc(productDesc);
       setTimeout(() => {
         setSelectedProductDesc("");
       }, 4000);
     } else {
-      // alert("please first Login");
       navigate("/login");
     }
   };

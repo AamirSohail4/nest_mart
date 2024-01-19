@@ -11,20 +11,30 @@ import img27 from "../assets/imgs/theme/icons/icon-headphone.svg";
 import { api_url } from "../config/env";
 import { Icon } from "@iconify/react";
 import { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+// import { CartContext } from "../context/CartContext";
 import { cart_url } from "../config/env";
-import { WishListContext } from "../context/WishListContext";
+// import { WishListContext } from "../context/WishListContext";
+import { useDispatch, useSelector } from "react-redux";
+import { MyAccountContext } from "../context/AccountContext";
+import {
+  getAllCartItemsThunk,
+  getAllWishlistItemsThunk,
+} from "../redux/cartSlice";
+import { CartContext } from "../context/CartContext";
 
 export const Navbar = () => {
   const navigate = useNavigate();
-  const { cartItem, deleteSingleCartItem } = useContext(CartContext);
-  const { wishListItem } = useContext(WishListContext);
-  // const { handleManuClick } = useContext(MyAccountContext);
+  const dispatch = useDispatch();
+  const { userId } = useContext(MyAccountContext);
+  const { deleteSingleCartItem } = useContext(CartContext);
   const [scrolled, setScrolled] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchBarCategory, setSearchBarCategory] = useState([]);
   const [showManu, setShowManau] = useState();
+
+  const { cartItems } = useSelector((state) => state);
+  const { wishlistItems } = useSelector((state) => state);
 
   const handleManuClick = (intParentID, seolink) => {
     navigate(`/Category?categoryId=${intParentID}&book_name=${seolink}`);
@@ -49,21 +59,9 @@ export const Navbar = () => {
 
   useEffect(() => {
     ManuDisplay();
+    dispatch(getAllCartItemsThunk(userId));
+    dispatch(getAllWishlistItemsThunk(userId));
   }, []);
-  // console.log("category data", showManu);
-  // const calculateSubtotal = () => {
-  //   if (!cartItem || cartItem.length === 0) {
-  //     return 0;
-  //   }
-
-  //   let subtotal = 0;
-
-  //   cartItem.forEach((item) => {
-  //     subtotal += item?.dblItemQty * item.item?.dblSalePrice;
-  //   });
-
-  //   return subtotal.toFixed(2);
-  // };
 
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
@@ -71,7 +69,6 @@ export const Navbar = () => {
 
   const handleCategoryChange = (event) => {
     const selectedId = event.target.value;
-    // console.log("Thsi is my catigory id", selectedId);
     setSelectedCategoryId(selectedId === "all" ? "" : parseInt(selectedId, 10));
   };
 
@@ -95,11 +92,11 @@ export const Navbar = () => {
     SearchBarCategory();
   }, []);
   const calculateTotal = () => {
-    if (!cartItem || !cartItem.length) {
+    if (!cartItems || !cartItems.length) {
       return 0; // Return 0 if cartItem is not defined or empty
     }
 
-    const total = cartItem.reduce(
+    const total = cartItems.reduce(
       (acc, item) =>
         acc +
         parseFloat(item?.item?.dblSalePrice) * parseFloat(item?.dblItemQty),
@@ -119,6 +116,7 @@ export const Navbar = () => {
       `/categories?categoryId=${selectedCategoryId}&book_name=${searchQuery}`
     );
   };
+
   return (
     <header className="header-area header-style-1 header-height-2">
       <div className="mobile-promotion">
@@ -214,7 +212,7 @@ export const Navbar = () => {
                     <Link to="/admin/myacount">
                       <img className="svgInject" alt="Nest" src={img5} />
                       <span className="pro-count blue">
-                        {wishListItem?.length}
+                        {wishlistItems?.length}
                       </span>
                     </Link>
                     <Link to="/admin/myacount">
@@ -224,14 +222,16 @@ export const Navbar = () => {
                   <div className="header-action-icon-2">
                     <Link className="mini-cart-icon" href="/admin/cart">
                       <img alt="Nest" src={img6} />
-                      <span className="pro-count blue">{cartItem?.length}</span>
+                      <span className="pro-count blue">
+                        {cartItems?.length}
+                      </span>
                     </Link>
                     <Link to="/admin/cart">
                       <span className="lable">Cart</span>
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2">
                       <ul>
-                        {cartItem?.map((item, index) => {
+                        {cartItems?.map((item, index) => {
                           return (
                             <li key={index}>
                               <div className="shopping-cart-img">
@@ -335,7 +335,7 @@ export const Navbar = () => {
                 <nav>
                   <ul>
                     <li>
-                      <a to="/ ">Home</a>
+                      <a href="/ ">Home</a>
                     </li>
 
                     {showManu

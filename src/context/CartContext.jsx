@@ -1,15 +1,43 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useState, useEffect, createContext, useContext } from "react";
+import { useEffect, createContext, useContext } from "react";
 import { cart_url } from "../config/env";
 import { MyAccountContext } from "./AccountContext";
+import { getAllCartItemsThunk } from "../redux/cartSlice";
+import { useDispatch } from "react-redux";
 
 export const CartContext = createContext({});
 
 // provider
+
 export const CartProvider = ({ children }) => {
+  const dispatch = useDispatch();
   const { userId } = useContext(MyAccountContext);
-  const [cartItem, setCartItem] = useState();
+
+  const addProducts = async (productId, quantity) => {
+    if (userId !== null) {
+      let data = new FormData();
+      data.append("intUserID", userId);
+      data.append("intItemID", productId);
+      data.append("dblItemQty", quantity);
+      data.append("strItemRemarks", "");
+      const response = await fetch(`${cart_url}&tag=update_user_cart_item`, {
+        method: "POST",
+        body: data,
+      });
+      if (response.ok) {
+        dispatch(getAllCartItemsThunk(userId));
+      }
+      //   setSelectedProductDesc(productDesc);
+      //   setTimeout(() => {
+      //     setSelectedProductDesc("");
+      //   }, 4000);
+      // } else {
+      //   // alert("please first Login");
+      //   navigate("/login");
+      // }
+    }
+  };
 
   const addToCart = async (productId, quantity) => {
     console.log("quantity", quantity);
@@ -23,17 +51,8 @@ export const CartProvider = ({ children }) => {
       body: data,
     });
     if (response.ok) {
-      cartItemDisplay();
+      dispatch(getAllCartItemsThunk(userId));
     }
-  };
-
-  // fetch all cart items from db
-  const cartItemDisplay = async () => {
-    const response = await fetch(
-      `${cart_url}&tag=get_user_cart&intUserID=${userId}`
-    );
-    const cartItems = await response.json();
-    setCartItem(cartItems.data);
   };
 
   const deleteAllCartItems = async () => {
@@ -45,7 +64,7 @@ export const CartProvider = ({ children }) => {
     });
 
     if (response.ok) {
-      cartItemDisplay();
+      dispatch(getAllCartItemsThunk(userId));
     }
   };
 
@@ -60,20 +79,18 @@ export const CartProvider = ({ children }) => {
       body: data,
     });
     if (response.ok) {
-      cartItemDisplay();
+      dispatch(getAllCartItemsThunk(userId));
     }
   };
 
-  useEffect(() => {
-    cartItemDisplay();
-  }, [userId]);
+  useEffect(() => {}, [userId]);
 
   return (
     <CartContext.Provider
       value={{
-        cartItem,
+        addProducts,
+
         addToCart,
-        cartItemDisplay,
         deleteAllCartItems,
         deleteSingleCartItem,
       }}

@@ -9,19 +9,24 @@ import { PaymentProvider } from "./context/PaymentMethod";
 import { MyAccountProvider } from "./context/AccountContext";
 import { WishListProvider } from "./context/WishListContext";
 import { ScrollToTop } from "./component/ScrollToTop";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
+
 export const App = () => {
   return (
     <MyAccountProvider>
-      <WishListProvider>
-        <CartProvider>
-          <PaymentProvider>
-            <AppProvider>
-              <ScrollToTop />
-              <Router />
-            </AppProvider>
-          </PaymentProvider>
-        </CartProvider>
-      </WishListProvider>
+      <Provider store={store}>
+        <WishListProvider>
+          <CartProvider>
+            <PaymentProvider>
+              <AppProvider>
+                <ScrollToTop />
+                <Router />
+              </AppProvider>
+            </PaymentProvider>
+          </CartProvider>
+        </WishListProvider>
+      </Provider>
     </MyAccountProvider>
   );
 };

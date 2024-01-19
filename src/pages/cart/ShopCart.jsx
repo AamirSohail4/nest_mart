@@ -5,15 +5,20 @@ import { api_url, cart_url } from "../../config/env";
 import { Link, useNavigate } from "react-router-dom";
 import { PaymentContext } from "../../context/PaymentMethod";
 import { MyAccountContext } from "../../context/AccountContext";
+import { getShipmentAddressThunk } from "../../redux/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export const ShopCart = () => {
-  // const currentUserId = localStorage.getItem("userId");
+  const { cartItems } = useSelector((state) => state);
+  const { fetchShipmentAddress } = useSelector((state) => state);
+  // console.log("That are the Shipment ", fetchShipmentAddress);
+
+  const dispatch = useDispatch();
   const { userId } = useContext(MyAccountContext);
   const navigatie = useNavigate();
-  const { cartItem, deleteAllCartItems, deleteSingleCartItem, addToCart } =
+  const { deleteAllCartItems, deleteSingleCartItem, addToCart } =
     useContext(CartContext);
-  const { shipmentAddress, fetchShipmentAddress, showPaymentMode } =
-    useContext(PaymentContext);
+  const { showPaymentMode } = useContext(PaymentContext);
 
   const [open, setOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState();
@@ -76,12 +81,12 @@ export const ShopCart = () => {
   };
 
   const calculateTotal = () => {
-    if (!cartItem || !cartItem.length) {
+    if (!cartItems || !cartItems.length) {
       return 0; // Return 0 if cartItem is not defined or empty
     }
 
     // Calculate the subtotal for each item and sum them up
-    const total = cartItem.reduce(
+    const total = cartItems.reduce(
       (acc, item) =>
         acc +
         parseFloat(item?.item?.dblSalePrice) * parseFloat(item?.dblItemQty),
@@ -96,13 +101,6 @@ export const ShopCart = () => {
 
     return formattedTotal;
   };
-  // const formatter = new Intl.NumberFormat("en-US", {
-  //   style: "currency",
-  //   currency: "PKR",
-
-  //   minimumFractionDigits: 0,
-  //   maximumFractionDigits: 4,
-  // });
 
   const [formData, setFormData] = useState({
     name: "",
@@ -123,7 +121,7 @@ export const ShopCart = () => {
         console.error("Error fetching city data:", error);
       }
     };
-
+    dispatch(getShipmentAddressThunk(userId));
     fetchCities();
   }, []);
 
@@ -174,7 +172,6 @@ export const ShopCart = () => {
       return;
     }
 
-    // If there are no errors, proceed with the form submission logic
     let data = new FormData();
     data.append("intUserID", userId);
     data.append("strShipmentContactPerson", formData.name);
@@ -190,7 +187,8 @@ export const ShopCart = () => {
 
     if (response.ok) {
       alert("Shipment Address is updated");
-      fetchShipmentAddress();
+      dispatch(getShipmentAddressThunk(userId));
+
       handleAddModalClick();
     }
 
@@ -275,7 +273,7 @@ export const ShopCart = () => {
                 </thead>
 
                 <tbody id="cartTable">
-                  {cartItem?.map((item, index) => {
+                  {cartItems?.map((item, index) => {
                     const productID = item?.item?.intID;
                     return (
                       <tr key={index} className="">
@@ -481,7 +479,7 @@ export const ShopCart = () => {
                           </div>
 
                           <div className="payment_option">
-                            {shipmentAddress?.map((item, index) => {
+                            {fetchShipmentAddress?.map((item, index) => {
                               return (
                                 <div key={index} className="custome-radio">
                                   <input

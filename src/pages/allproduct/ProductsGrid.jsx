@@ -14,7 +14,7 @@ export const ProductsGrid = () => {
   const navigate = useNavigate();
   const { userId } = useContext(MyAccountContext);
   const { addToWishList } = useContext(WishListContext);
-  const { addToCart } = useContext(CartContext);
+  const { addProducts } = useContext(CartContext);
   const [loading, setLoading] = useState(false);
 
   const [pageCount, setPageCount] = useState(0);
@@ -33,7 +33,7 @@ export const ProductsGrid = () => {
 
   const handleAddToCart = (productId, quantity, productDesc) => {
     if (userId !== null) {
-      addToCart(productId, quantity);
+      addProducts(productId, quantity);
       setSelectedProductDesc(productDesc);
       setTimeout(() => {
         setSelectedProductDesc("");

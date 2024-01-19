@@ -1,23 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useEffect, createContext, useState, useContext } from "react";
+import { useEffect, createContext, useContext } from "react";
 import { shipAddres_url } from "../config/env";
-
 import { MyAccountContext } from "./AccountContext";
-
+import { getAllWishlistItemsThunk } from "../redux/cartSlice";
+import { useDispatch } from "react-redux";
 export const WishListContext = createContext({});
 
-// provider
-
 export const WishListProvider = ({ children }) => {
+  const dispatch = useDispatch();
   const { userId } = useContext(MyAccountContext);
-  // const [loading, setLoading] = useState(false);
-  // console.log('mmmmm', userId);
-  // const navigate = useNavigate();
-  const [wishListItem, setWishListItem] = useState();
-  // const [searchCategory, setSearchCategory] = useState();
 
-  // use this function for product add into cart
   const addToWishList = async (productId) => {
     let data = new FormData();
     data.append("intUserID", userId);
@@ -31,43 +24,9 @@ export const WishListProvider = ({ children }) => {
       }
     );
     if (response.ok) {
-      console.log("mmmm", response);
-      WishListDisplay();
+      dispatch(getAllWishlistItemsThunk(userId));
     }
   };
-
-  // fetch all Wish List  items from db
-  const WishListDisplay = async () => {
-    const response = await fetch(
-      `${shipAddres_url}&tag=get_user_wishlist&intUserID=${userId}`
-    );
-    const wishListItem = await response.json();
-
-    setWishListItem(wishListItem.data);
-    // console.log('my wishilist', wishListItem);
-  };
-
-  // const SerchCategoryClick = async (selectedCategoryId, searchQuery) => {
-  //   try {
-  //     navigate("/categories");
-  //     setLoading(true);
-  //     const response = await fetch(
-  //       `${relateProd_url}&tag=get_items_web&intCategoryID=${selectedCategoryId}&strSearch=${searchQuery}`
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error("Network response was not ok");
-  //     }
-  //     const myQueryData = await response.json();
-  //     setLoading(false);
-  //     if (myQueryData.status === "1") {
-  //       setSearchCategory(myQueryData.data);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
   const deleteWishlist = async (productId) => {
     console.log("product Id", productId.intID);
     let data = new FormData();
@@ -82,23 +41,17 @@ export const WishListProvider = ({ children }) => {
       }
     );
     if (response.ok) {
-      WishListDisplay();
+      dispatch(getAllWishlistItemsThunk(userId));
     }
   };
 
-  useEffect(() => {
-    WishListDisplay();
-  }, [userId]);
+  useEffect(() => {}, [userId]);
 
   return (
     <WishListContext.Provider
       value={{
         addToWishList,
-        wishListItem,
         deleteWishlist,
-
-        // deleteAllCartItems,
-        // deleteSingleCartItem,
       }}
     >
       {children}

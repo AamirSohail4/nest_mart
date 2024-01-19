@@ -2,13 +2,14 @@ import { Icon } from "@iconify/react";
 import { useContext, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { CartContext } from "../../../context/CartContext";
 import { MyAccountContext } from "../../../context/AccountContext";
 import { NewsLetterProduct } from "../../../layouts/NewsLetterProduct";
 import { WishListContext } from "../../../context/WishListContext";
 import productImg from "../../../assets/imgs/banner/product.jpg";
 import { api_url } from "../../../config/env";
 import loadingGif from "../../../assets/imgs/banner/loading.gif";
+import { CartContext } from "../../../context/CartContext";
+
 // import axios from "axios";
 
 export const ManuCategory = () => {
@@ -18,7 +19,7 @@ export const ManuCategory = () => {
   );
   const seolink = new URLSearchParams(location.search).get("book_name");
   const navigate = useNavigate();
-  const { addToCart } = useContext(CartContext);
+  const { addProducts } = useContext(CartContext);
   const { userId } = useContext(MyAccountContext);
   const { addToWishList } = useContext(WishListContext);
   const [pageCount, setPageCount] = useState(0);
@@ -31,7 +32,7 @@ export const ManuCategory = () => {
 
   const handleAddToCart = (productId, quantity, productDesc) => {
     if (userId !== null) {
-      addToCart(productId, quantity);
+      addProducts(productId, quantity);
       setSelectedProductDesc(productDesc);
       setTimeout(() => {
         setSelectedProductDesc("");
@@ -97,7 +98,29 @@ export const ManuCategory = () => {
       behavior: "smooth",
     });
   };
-
+  // const handleAddToCart = async (productId, quantity, productDesc) => {
+  //   if (userId !== null) {
+  //     let data = new FormData();
+  //     data.append("intUserID", userId);
+  //     data.append("intItemID", productId);
+  //     data.append("dblItemQty", quantity);
+  //     data.append("strItemRemarks", "");
+  //     const response = await fetch(`${cart_url}&tag=update_user_cart_item`, {
+  //       method: "POST",
+  //       body: data,
+  //     });
+  //     if (response.ok) {
+  //       dispatch(getAllCartItemsThunk(userId));
+  //     }
+  //     setSelectedProductDesc(productDesc);
+  //     setTimeout(() => {
+  //       setSelectedProductDesc("");
+  //     }, 4000);
+  //   } else {
+  //     // alert("please first Login");
+  //     navigate("/login");
+  //   }
+  // };
   return (
     <>
       {loading ? (

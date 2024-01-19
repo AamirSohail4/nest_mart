@@ -4,15 +4,15 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { teacher_url } from "../../config/env";
 import { api_url } from "../../config/env";
-import { CartContext } from "../../context/CartContext";
 import { WishListContext } from "../../context/WishListContext";
 import { MyAccountContext } from "../../context/AccountContext";
 import productImg from "../../assets/imgs/banner/product.jpg";
+import { CartContext } from "../../context/CartContext";
 
 export const TeacherDetail = () => {
   const navigate = useNavigate();
   const { userId } = useContext(MyAccountContext);
-  const { addToCart } = useContext(CartContext);
+  const { addProducts } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
   const { strSEOLink } = useParams();
   const { id } = useParams();
@@ -33,7 +33,7 @@ export const TeacherDetail = () => {
 
   const handleAddToCart = (productId, quantity, productDesc) => {
     if (userId !== null) {
-      addToCart(productId, quantity);
+      addProducts(productId, quantity);
       setSelectedProductDesc(productDesc);
       setTimeout(() => {
         setSelectedProductDesc("");
@@ -42,6 +42,7 @@ export const TeacherDetail = () => {
       navigate("/login");
     }
   };
+
   async function ShowPublication() {
     const response = await fetch(
       `${api_url}&tag=get_items_web& intSupplierID=${id}`

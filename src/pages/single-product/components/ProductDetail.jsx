@@ -12,7 +12,7 @@ import productImg from "../../../assets/imgs/banner/product.jpg";
 export const ProductDetail = () => {
   const navigate = useNavigate();
   const { seoLink } = useParams();
-  const { addToCart } = useContext(CartContext);
+  const { addProducts } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
   const { userId } = useContext(MyAccountContext);
   const [singleproduct, setSingleProduct] = useState();
@@ -31,7 +31,7 @@ export const ProductDetail = () => {
 
   const handleAddToCart = (productId, quantity, productDesc) => {
     if (userId !== null) {
-      addToCart(productId, quantity);
+      addProducts(productId, quantity);
       setSelectedProductDesc(productDesc);
       setTimeout(() => {
         setSelectedProductDesc("");
@@ -175,6 +175,11 @@ export const ProductDetail = () => {
                   }).format(singleproduct?.dblSalePrice)}
                 </span>
               </div>
+              <div className="contact-info">
+                <div className="social-info">
+                  <h4>{selectedProductDesc}</h4>
+                </div>
+              </div>
             </div>
             <div className="detail-extralink mb-50">
               <div className="detail-qty border radius">
@@ -190,7 +195,13 @@ export const ProductDetail = () => {
                 <button
                   type="submit"
                   className="button button-add-to-cart"
-                  onClick={() => addToCart(singleproduct?.intID, quantity)}
+                  onClick={() =>
+                    handleAddToCart(
+                      singleproduct?.intID,
+                      quantity,
+                      singleproduct?.strDesc
+                    )
+                  }
                 >
                   <i className="fi-rs-shopping-cart"></i>Add to cart
                 </button>

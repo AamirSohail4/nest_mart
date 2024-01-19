@@ -16,7 +16,7 @@ export const Teacher = () => {
   }, []);
 
   const urlGenerater = (url) => {
-    console.log("seo link", url.strSEOLink);
+    // console.log("seo link", url.strSEOLink);
     if (
       url.strSEOLink === null ||
       url.strSEOLink === "" ||
@@ -61,7 +61,6 @@ export const Teacher = () => {
               </div>
               <div className="row product-grid">
                 {allTeacher?.map((item, index) => {
-                  console.log("first", item);
                   return (
                     <div
                       key={index}

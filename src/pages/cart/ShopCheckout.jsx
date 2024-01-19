@@ -1,16 +1,17 @@
 import { PaymentContext } from "../../context/PaymentMethod";
 import { useContext, useEffect } from "react";
-import { CartContext } from "../../context/CartContext";
-
+// import { CartContext } from "../../context/CartContext";
 import { shipAddres_url } from "../../config/env";
 import { MyAccountContext } from "../../context/AccountContext";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const ShopCheckout = () => {
+  const { cartItems } = useSelector((state) => state);
   // const currentUserId = localStorage.getItem('userId');
   const { userId } = useContext(MyAccountContext);
   const { shipmentAddress, showPaymentMode } = useContext(PaymentContext);
-  const { cartItem } = useContext(CartContext);
+  // const { cartItems } = useContext(CartContext);
   const { state } = useLocation();
 
   const addresId = state && state.shipmentaddresValue;
@@ -50,12 +51,12 @@ export const ShopCheckout = () => {
   };
 
   const calculateTotal = () => {
-    if (!cartItem || !cartItem.length) {
-      return 0; // Return 0 if cartItem is not defined or empty
+    if (!cartItems || !cartItems.length) {
+      return 0; // Return 0 if cartItems is not defined or empty
     }
 
     // Calculate the subtotal for each item and sum them up
-    const total = cartItem.reduce(
+    const total = cartItems.reduce(
       (acc, item) =>
         acc +
         parseFloat(item?.item?.dblSalePrice) * parseFloat(item?.dblItemQty),
@@ -99,7 +100,7 @@ export const ShopCheckout = () => {
               <div className="table-responsive order_table checkout">
                 <table className="table no-border">
                   <tbody id="cartTable">
-                    {cartItem?.map((item, index) => {
+                    {cartItems?.map((item, index) => {
                       return (
                         <tr key={index} className="">
                           <td className="custome-checkbox pl-30"></td>

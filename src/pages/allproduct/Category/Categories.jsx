@@ -19,7 +19,7 @@ export const Categories = () => {
     "categoryId"
   );
   const searchQuery = new URLSearchParams(location.search).get("book_name");
-  const { addToCart } = useContext(CartContext);
+  const { addProducts } = useContext(CartContext);
   const [loading, setLoading] = useState(false);
   const { userId } = useContext(MyAccountContext);
   const { addToWishList } = useContext(WishListContext);
@@ -54,7 +54,7 @@ export const Categories = () => {
 
   const handleAddToCart = (productId, quantity, productDesc) => {
     if (userId !== null) {
-      addToCart(productId, quantity);
+      addProducts(productId, quantity);
       setSelectedProductDesc(productDesc);
       setTimeout(() => {
         setSelectedProductDesc("");
