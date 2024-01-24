@@ -57,7 +57,7 @@ export const Router = () => {
         <Route path="verify" element={<Verify />} />
       </Route>
       <Route path="/admin" element={<DashboardLayout />}>
-        <Route path="myacount" element={<MyAccount />} />
+        <Route path="myaccount" element={<MyAccount />} />
         <Route path="checkout" element={<ShopCheckout />} />
         <Route path="cart" element={<ShopCart />} />
       </Route>

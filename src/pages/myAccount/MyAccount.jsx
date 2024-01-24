@@ -17,7 +17,7 @@ export const MyAccount = () => {
   const { wishlistItems } = useSelector((state) => state);
   const { fetchShipmentAddress } = useSelector((state) => state);
   const { userinfo } = useSelector((state) => state);
-  console.log("This is a Current User Information ", userinfo);
+  // console.log("This is a Current User Information ", userinfo);
   // console.log("That are the Shipment ", fetchShipmentAddress);
   const roleId = localStorage.getItem("roleId");
   const { userId } = useContext(MyAccountContext);
@@ -30,8 +30,11 @@ export const MyAccount = () => {
   const [selectedProductDesc, setSelectedProductDesc] = useState("");
 
   const [activeSection, setActiveSection] = useState("dashboard");
-  const handleSectionClick = (section) => {
+  const handleSectionClick = async (section) => {
     setActiveSection(section);
+    if (section === "account") {
+      // window.location.reload();
+    }
   };
 
   const handleAddToCart = (productId, quantity, productDesc) => {
@@ -45,6 +48,7 @@ export const MyAccount = () => {
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("roleId");
+    localStorage.removeItem("persist:root");
     window.location.reload();
     window.location.href = "/";
   };
@@ -57,7 +61,7 @@ export const MyAccount = () => {
     // console.log("Helooo", OrderData);
     setOrderDetails(OrderData.data.orders_list);
   };
-
+  // Form
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
@@ -68,14 +72,55 @@ export const MyAccount = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-    setFormErrors({ ...formErrors, [name]: "" });
+    setFormData((prevData) => {
+      return {
+        ...prevData,
+        [name]: value,
+      };
+    });
+    // setFormErrors({ ...formErrors, [name]: "" });
   };
 
   const handleUpdateClick = async () => {
+    console.log("update");
+    const errors = {};
+
+    // Validate name field
+
+    if (!formData.full_name.trim()) {
+      errors.full_name = "Full Name is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.full_name.trim())) {
+      errors.full_name = "Only alphabetic characters are allowed";
+    }
+
+    // Validate phone field
+    if (!/^\d{11,12}$/.test(formData.alter_phone)) {
+      errors.alter_phone = "Phone must be 11 or 12 digits like 923014788965";
+    }
+
+    // Validate email field
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Invalid email address";
+    }
+
+    // Validate city field
+    if (!formData.city) {
+      errors.city = "City is required";
+    }
+
+    // Validate address field
+    if (!formData.address.trim()) {
+      errors.address = "Address is required";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      // If there are errors, update the state and prevent form submission
+      setFormErrors(errors);
+      return;
+    }
+
     let data = new FormData();
     data.append("intUserID", userId);
     data.append("strFullName", formData.full_name);
@@ -83,7 +128,7 @@ export const MyAccount = () => {
     data.append("strEmail", formData.email);
     data.append("strAddress", formData.address);
     data.append("intCityID", formData.city);
-    data.append("strAlternateContactNo", formData.alter_phone);
+    data.append("strAlternateContactNo", formData.strContactNo);
 
     const response = await fetch(`${userUpdate_url}&tag=update_user_profile`, {
       method: "POST",
@@ -99,16 +144,15 @@ export const MyAccount = () => {
   };
 
   useEffect(() => {
-    dispatch(getShipmentAddressThunk(userId));
-    dispatch(getUserInfoThunk(userId));
     document.title = "Ms Books | MyAccount";
     setFormData({
-      full_name: userinfo?.strFullName || "",
-      email: userinfo?.strEmail || "",
+      full_name: userinfo.strFullName,
+      email: userinfo?.strEmail,
       address: userinfo?.strAddress || "",
       city: userinfo?.city || "",
       alter_phone: userinfo?.strContactNo || "",
     });
+
     const fetchCities = async () => {
       try {
         const response = await fetch(`${api_url}&tag=get_city&intCountryID=1`);
@@ -121,7 +165,9 @@ export const MyAccount = () => {
     };
     OrderDetails();
     fetchCities();
-  }, [userId]);
+    dispatch(getShipmentAddressThunk(userId));
+    dispatch(getUserInfoThunk(userId));
+  }, [dispatch, userId]);
 
   return (
     <>
@@ -207,7 +253,7 @@ export const MyAccount = () => {
                             }`}
                             onClick={() => handleSectionClick("address")}
                           >
-                            <i className="fi-rs-heart mr-10"></i>My Adress
+                            <i className="fi-rs-heart mr-10"></i>My Address
                           </Link>
                         </li>
                         <li className="nav-item">
@@ -245,8 +291,9 @@ export const MyAccount = () => {
                         <div className="card">
                           <div className="card-header">
                             <h3 className="mb-0">
+                              {""}
                               Hello
-                              {userinfo?.strFullName}
+                              {userinfo?.strUserName}
                             </h3>
                           </div>
                           <div className="card-body">
@@ -465,15 +512,23 @@ export const MyAccount = () => {
                                 <label>
                                   Full Name <span className="required">*</span>
                                 </label>
+
                                 <input
-                                  required=""
-                                  className="form-control"
+                                  required
+                                  className={`form-control ${
+                                    formErrors.full_name ? "is-invalid" : ""
+                                  }`}
                                   name="full_name"
                                   id="full_name"
                                   type="text"
-                                  value=""
+                                  value={formData?.full_name}
                                   onChange={handleInputChange}
                                 />
+                                {formErrors.full_name && (
+                                  <div className="invalid-feedback">
+                                    {formErrors.full_name}
+                                  </div>
+                                )}
                               </div>
                               <div className="form-group col-md-6">
                                 <label>
@@ -482,13 +537,20 @@ export const MyAccount = () => {
                                 </label>
                                 <input
                                   required=""
-                                  className="form-control"
+                                  className={`form-control ${
+                                    formErrors.email ? "is-invalid" : ""
+                                  }`}
                                   name="email"
                                   id="email"
                                   type="email"
-                                  value=""
+                                  value={formData?.email}
                                   onChange={handleInputChange}
                                 />
+                                {formErrors.email && (
+                                  <div className="invalid-feedback">
+                                    {formErrors.email}
+                                  </div>
+                                )}
                               </div>
                               <div className="form-group col-md-12">
                                 <label>
@@ -496,23 +558,32 @@ export const MyAccount = () => {
                                 </label>
                                 <input
                                   required=""
-                                  className="form-control"
+                                  className={`form-control ${
+                                    formErrors.address ? "is-invalid" : ""
+                                  }`}
                                   name="address"
                                   id="user_address"
                                   type="text"
-                                  value=""
+                                  value={formData?.address}
                                   onChange={handleInputChange}
                                 />
+                                {formErrors.address && (
+                                  <div className="invalid-feedback">
+                                    {formErrors.address}
+                                  </div>
+                                )}
                               </div>
                               <div className="form-group col-md-12">
                                 <label>
                                   City<span className="required">*</span>
                                 </label>
                                 <select
-                                  className="form-control"
+                                  className={`form-control ${
+                                    formErrors.city ? "is-invalid" : ""
+                                  }`}
                                   name="city"
                                   id="city"
-                                  value=""
+                                  value={formData?.city}
                                   onChange={handleInputChange}
                                 >
                                   {/* Placeholder option */}
@@ -526,6 +597,11 @@ export const MyAccount = () => {
                                     </option>
                                   ))}
                                 </select>
+                                {formErrors.city && (
+                                  <div className="invalid-feedback">
+                                    {formErrors.city}
+                                  </div>
+                                )}
                               </div>
 
                               <div
@@ -540,14 +616,23 @@ export const MyAccount = () => {
                                 </label>
                                 <input
                                   required=""
-                                  className="form-control"
+                                  className={`form-control ${
+                                    formErrors.alter_phone ? "is-invalid" : ""
+                                  }`}
                                   name="alter_phone"
                                   id="alter_phone"
+                                  maxLength="12"
                                   type="text"
-                                  value=""
+                                  value={formData?.alter_phone}
                                   onChange={handleInputChange}
                                 />
+                                {formErrors.alter_phone && (
+                                  <div className="invalid-feedback">
+                                    {formErrors.alter_phone}
+                                  </div>
+                                )}
                               </div>
+
                               <div className="col-md-12">
                                 <button
                                   id="update-profile-btn"

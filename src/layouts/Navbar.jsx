@@ -42,6 +42,7 @@ export const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("roleId");
+    localStorage.removeItem("persist:root");
     window.location.reload();
     window.location.href = "/";
   };
@@ -61,7 +62,7 @@ export const Navbar = () => {
     ManuDisplay();
     dispatch(getAllCartItemsThunk(userId));
     dispatch(getAllWishlistItemsThunk(userId));
-  }, []);
+  }, [userId, dispatch]);
 
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
@@ -116,7 +117,17 @@ export const Navbar = () => {
       `/categories?categoryId=${selectedCategoryId}&book_name=${searchQuery}`
     );
   };
-
+  const handleClick = () => {
+    // Reload the window when the link is clicked
+    if (userId !== null) {
+      navigate("/admin/myaccount");
+      setTimeout(function () {
+        window.location.reload();
+      }, 100);
+    } else {
+      navigate("/login");
+    }
+  };
   return (
     <header className="header-area header-style-1 header-height-2">
       <div className="mobile-promotion">
@@ -135,13 +146,10 @@ export const Navbar = () => {
                     <Link to="/about">About Us</Link>
                   </li>
                   <li>
-                    <Link to="admin/myacount">My Account</Link>
+                    <Link to="admin/myaccount">My Account</Link>
                   </li>
                   <li>
-                    <Link to="admin/myacount">Wishlist</Link>
-                  </li>
-                  <li>
-                    <Link to="admin/myacount">Order Tracking</Link>
+                    <Link to="admin/myaccount">Wishlist</Link>
                   </li>
                 </ul>
               </div>
@@ -209,13 +217,13 @@ export const Navbar = () => {
                 <div className="header-action-2">
                   <div className="header-action-icon-2"></div>
                   <div className="header-action-icon-2">
-                    <Link to="/admin/myacount">
+                    <Link to="/admin/myaccount">
                       <img className="svgInject" alt="Nest" src={img5} />
                       <span className="pro-count blue">
                         {wishlistItems?.length}
                       </span>
                     </Link>
-                    <Link to="/admin/myacount">
+                    <Link to="/admin/myaccount">
                       <span className="lable">Wishlist</span>
                     </Link>
                   </div>
@@ -281,22 +289,22 @@ export const Navbar = () => {
                     </div>
                   </div>
                   <div className="header-action-icon-2">
-                    <Link to="/admin/myacount">
+                    <Link to="/admin/myaccount">
                       <img className="svgInject" alt="Nest" src={img9} />
                     </Link>
-                    <Link to="/admin/myacount">
+                    <Link to="/admin/myaccount" onClick={handleClick}>
                       <span className="lable ml-0">Account</span>
                     </Link>
                     <div className="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                       <ul>
                         <li>
-                          <Link to="/admin/myacount">
+                          <Link to="/admin/myaccount">
                             <i className="fi fi-rs-user mr-10"></i>My Account
                           </Link>
                         </li>
 
                         <li>
-                          <Link to="/admin/myacount">
+                          <Link to="/admin/myaccount">
                             <i className="fi fi-rs-heart mr-10"></i>My Wishlist
                           </Link>
                         </li>

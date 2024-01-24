@@ -12,7 +12,7 @@ export const MyAccountProvider = ({ children }) => {
   // console.log("user id globel =>>", userId);
 
   const [userAddress, setUserAddress] = useState();
-  const [userinfo, setUserInfo] = useState();
+  const [userinfo, setUserInfo] = useState({});
 
   async function userDetails() {
     // console.log("user id user details funtion===>", userId);

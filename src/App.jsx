@@ -10,8 +10,9 @@ import { MyAccountProvider } from "./context/AccountContext";
 import { WishListProvider } from "./context/WishListContext";
 import { ScrollToTop } from "./component/ScrollToTop";
 import { Provider } from "react-redux";
-import { store } from "./redux/store";
-
+import {  store } from "./redux/store";
+// persistor,
+// import { PersistGate } from "redux-persist/integration/react";
 export const App = () => {
   return (
     <MyAccountProvider>
@@ -21,7 +22,9 @@ export const App = () => {
             <PaymentProvider>
               <AppProvider>
                 <ScrollToTop />
-                <Router />
+                {/* <PersistGate loading="null" persistor={persistor}> */}
+                  <Router />
+                {/* </PersistGate> */}
               </AppProvider>
             </PaymentProvider>
           </CartProvider>
