@@ -1,16 +1,43 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api_url } from "../../../../config/env";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { CartContext } from "../../../../context/CartContext";
+import { WishListContext } from "../../../../context/WishListContext";
+import { MyAccountContext } from "../../../../context/AccountContext";
 
 export const PopularProducts = () => {
+  const navigate = useNavigate();
+  const { userId } = useContext(MyAccountContext);
+  const { addProducts } = useContext(CartContext);
+  const { addToWishList } = useContext(WishListContext);
   const [myproduct, setMyProduct] = useState([]);
+  const [selectedProductDesc, setSelectedProductDesc] = useState("");
+
+  const handleHeartClick = (itemId) => {
+    if (userId !== null) {
+      addToWishList(itemId);
+    } else {
+      navigate("/login");
+    }
+  };
+  const handleAddToCart = (productId, quantity, productDesc) => {
+    if (userId !== null) {
+      addProducts(productId, quantity);
+      setSelectedProductDesc(productDesc);
+      setTimeout(() => {
+        setSelectedProductDesc("");
+      }, 4000);
+    } else {
+      navigate("/login");
+    }
+  };
+
   useEffect(() => {
     async function AllProductShow() {
       const response = await fetch(
         `${api_url}&tag=get_items_web&intCategoryID=1&btIsFeatured=1&limit=20`
       );
       const productData = await response.json();
-
       setMyProduct(productData.data);
     }
     AllProductShow();
@@ -49,7 +76,7 @@ export const PopularProducts = () => {
                     >
                       <div className="product-img-action-wrap">
                         <div className="product-img product-img-zoom">
-                          <Link to={`/single-product/${item.strSEOLink}`}>
+                          <Link to={`/product/${item.strSEOLink}`}>
                             <img
                               className="default-img"
                               src={item.strImageThumbnail}
@@ -63,61 +90,59 @@ export const PopularProducts = () => {
                           </Link>
                         </div>
                         <div className="product-action-1">
-                          <Link
+                          <a
                             aria-label="Add To Wishlist"
                             className="action-btn"
-                            to="/shop-wishlist"
+                            onClick={() => handleHeartClick(item.intID)}
                           >
                             <i className="fi-rs-heart"></i>
-                          </Link>
+                          </a>
 
                           <Link
+                            to={`product/${item.strSEOLink}`}
                             aria-label="Quick view"
                             className="action-btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#quickViewModal"
                           >
                             <i className="fi-rs-eye"></i>
                           </Link>
                         </div>
-                        <div className="product-badges product-badges-position product-badges-mrg">
-                          <span className="sale">Sale</span>
-                        </div>
                       </div>
                       <div className="product-content-wrap">
                         <div className="product-category">
-                          <Link to={`single-product/${item.strSEOLink}`}>
+                          <Link to={`product/${item.strSEOLink}`}>
                             {item.strItemCategory}
                           </Link>
                         </div>
                         <h2>
-                          <Link to={`single-product/${item.strSEOLink}`}>
+                          <Link to={`product/${item.strSEOLink}`}>
                             {item.strDesc}
                           </Link>
                         </h2>
-                        <div className="product-rate-cover">
-                          <div className="product-rate d-inline-block">
-                            <div
-                              className="product-rating"
-                              style={{ width: " 80%" }}
-                            ></div>
-                          </div>
-                          <span className="font-small ml-5 text-muted">
-                            (3.5)
-                          </span>
-                        </div>
-
                         <div className="product-card-bottom">
                           <div className="product-price">
-                            <span>Rs: {item.dblSalePrice}</span>
+                            <span>
+                              {item.strUOM ? item.strUOM : "Rs"}
+                              {new Intl.NumberFormat("en-US", {
+                                style: "decimal",
+                              }).format(item.dblSalePrice)}
+                            </span>
+                          </div>
+                          <div className="contact-info">
+                            <div className="social-info">
+                              <h4>{selectedProductDesc}</h4>
+                            </div>
                           </div>
                           <div className="add-cart">
-                            <Link
-                              className="add"
-                              to={`single-product/${item.strSEOLink}`}
+                            <button
+                              id="feature-prod-btn1500"
+                              type="button"
+                              className="btn btn-heading add_in_cart"
+                              onClick={() =>
+                                handleAddToCart(item.intID, 1, item.strDesc)
+                              }
                             >
-                              <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
-                            </Link>
+                              <i className="fi-rs-shopping-cart mr-5"></i>Add
+                            </button>
                           </div>
                         </div>
                       </div>

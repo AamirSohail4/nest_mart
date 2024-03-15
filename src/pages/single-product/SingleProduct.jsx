@@ -1,20 +1,21 @@
 import { Link } from "react-router-dom";
-import { Icon } from "@iconify/react";
+
 import { ProductDetail } from "./components/ProductDetail";
+import { useEffect } from "react";
 
 export const SingleProduct = () => {
+  useEffect(() => {
+    document.title = "Ms Books | Product";
+  });
   return (
     <>
       <div className="page-header breadcrumb-wrap">
         <div className="container">
           <div className="breadcrumb">
             <Link to="/" rel="nofollow">
-              <Icon icon="mynaui:home" />
-              Home
+              <i className="fi-rs-home mr-5"></i>Home
             </Link>
-            <span></span>
-            <Link to="/"></Link>
-            <span></span>
+            <span></span> <Link to="#"></Link> <span>Product Detail</span>
           </div>
         </div>
       </div>

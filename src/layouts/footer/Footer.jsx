@@ -4,11 +4,30 @@ import img6 from "../../assets/imgs/theme/app-store.jpg";
 import img7 from "../../assets/imgs/theme/google-play.jpg";
 import { ScrollButton } from "./scrollbutton/ScrollButton";
 import "./footer.css";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AddressContext } from "../../context/AddresContext";
+import { cart_url } from "../../config/env";
+import { MyAccountContext } from "../../context/AccountContext";
 
 export const Footer = () => {
+  const { handleManuClick } = useContext(MyAccountContext);
   const { address } = useContext(AddressContext);
+  const [footerCategory, setFooterCategory] = useState();
+  // console.log("This Addres Bar", address);
+  useEffect(() => {
+    const DisplayCategory = async () => {
+      const response = await fetch(
+        `${cart_url}&tag=get_all_category&intCompanyID=1`
+      );
+      const mydata = await response.json();
+      const mainData = mydata.data;
+      const filteredData = mainData.filter(
+        (item) => item.intParentID === "0" && item.intLevel === "1"
+      );
+      setFooterCategory(filteredData);
+    };
+    DisplayCategory();
+  }, []);
 
   return (
     <>
@@ -35,21 +54,11 @@ export const Footer = () => {
                 </div>
                 <ul className="contact-infor">
                   <li>
-                    <strong>Address: </strong>{" "}
                     <div
                       dangerouslySetInnerHTML={{
                         __html: address,
                       }}
                     />
-                  </li>
-
-                  <li>
-                    <strong>Email:</strong>
-                    <span>info@msbooks.pk</span>
-                  </li>
-                  <li>
-                    <strong>Hours:</strong>
-                    <span>10:00 - 18:00, Mon - Sat</span>
                   </li>
                 </ul>
               </div>
@@ -66,20 +75,22 @@ export const Footer = () => {
               <h4 className="widget-title">Products</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="/allProducts">All Products</Link>
+                  <Link to="/allProducts">AllProducts</Link>
                 </li>
-                <li>
-                  <Link to="#">A Level</Link>
-                </li>
-                <li>
-                  <Link to="#">O Level</Link>
-                </li>
-                <li>
-                  <Link to="#">CheckPoint</Link>
-                </li>
-                <li>
-                  <Link to="#">ICGS</Link>
-                </li>
+                {footerCategory?.map((item, index) => {
+                  return (
+                    <li key={index}>
+                      <Link
+                        to="#"
+                        onClick={() =>
+                          handleManuClick(item.intID, item.strSEOLink)
+                        }
+                      >
+                        {item.strDesc}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
             <div
@@ -94,19 +105,19 @@ export const Footer = () => {
               <h4 className="widget-title">Our Website</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
                 <li>
-                  <Link to="/sigin">Sign In</Link>
+                  <Link to="/teachers">Teacher</Link>
                 </li>
                 <li>
-                  <Link to="/shop-cart">View Cart</Link>
+                  <Link to="/shop">Book Shop</Link>
                 </li>
                 <li>
-                  <Link to="/shop-wishlist">My Wishlist</Link>
+                  <Link to="/login">Signin</Link>
                 </li>
                 <li>
-                  <Link to="/account">Track My Order</Link>
+                  <Link to="/about">About</Link>
                 </li>
                 <li>
-                  <Link to="/account">Shipping Details</Link>
+                  <Link to="/contact">Contact</Link>
                 </li>
               </ul>
             </div>
@@ -123,10 +134,16 @@ export const Footer = () => {
               <h4 className="widget-title">Install App</h4>
               <p className="">From App Store or Google Play</p>
               <div className="download-app">
-                <Link to="#" className="hover-up mb-sm-2 mb-lg-0">
+                <Link
+                  to="https://apps.apple.com/pk/app/ms-books-o-a-level-resources/id1493565728"
+                  className="hover-up mb-sm-2 mb-lg-0"
+                >
                   <img className="active" src={img6} alt="" />
                 </Link>
-                <Link to="#" className="hover-up mb-sm-2">
+                <Link
+                  to="https://play.google.com/store/apps/details?id=com.msbookspk.msbooks&pli=1"
+                  className="hover-up mb-sm-2"
+                >
                   <img src={img7} alt="" />
                 </Link>
               </div>

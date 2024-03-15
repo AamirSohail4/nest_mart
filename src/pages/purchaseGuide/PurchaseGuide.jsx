@@ -1,18 +1,18 @@
 import img1 from "../../assets/imgs/page/guide-1.png";
-import { useEffect, useState } from "react";
-import { api_url } from "../../config/env";
+// import { useEffect, useState } from "react";
+// import { api_url } from "../../config/env";
 
 export const PurchaseGuide = () => {
-  const [product, setProductData] = useState({});
+  // const [product, setProductData] = useState({});
 
-  useEffect(() => {
-    async function SingleProductShow() {
-      const response = await fetch(`${api_url}&tag=get_items_web`);
-      const res = await response.json();
-      setProductData(res.data);
-    }
-    SingleProductShow();
-  }, []);
+  // useEffect(() => {
+  //   async function SingleProductShow() {
+  //     const response = await fetch(`${api_url}&tag=get_items_web`);
+  //     const res = await response.json();
+  //     setProductData(res.data);
+  //   }
+  //   SingleProductShow();
+  // }, []);
 
   return (
     <>

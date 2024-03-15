@@ -1,25 +1,24 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import img1 from "../assets/imgs/banner/banner-9.png";
-import { useEffect } from "react";
-import { bannerText_url } from "../config/env";
-export const NewsLetterForm = () => {
-  const [contentBanner, setContentBanner] = useState();
+import { api_url } from "../config/env";
+
+export const NewsLetterProduct = (props) => {
+  const { NewsLetterId } = props;
+
+  const [newsData, setNewsData] = useState();
+  const NewsLetterDisplay = async () => {
+    const response = await fetch(
+      `${api_url}&tag=get_category_web&intParentID=${NewsLetterId}`
+    );
+    const newsdata = await response.json();
+
+    setNewsData(newsdata?.data[0]?.strRemarks);
+  };
 
   useEffect(() => {
-    async function TextDisplay() {
-      const response = await fetch(
-        `${bannerText_url}&tag=get_webtext_content&intID=15`
-      );
-      const bannerData = await response.json();
-      // console.log("mydata====>", bannerData);
-      setContentBanner(bannerData.data[0].strText);
-    }
-    TextDisplay();
+    NewsLetterDisplay();
   }, []);
-  // console.log("-This is Banner WebTex-===>", myWebText);
-  const bannerText = contentBanner;
-  // const htmlContent = he.decode(bannerText);
-
   return (
     <>
       <section
@@ -38,7 +37,7 @@ export const NewsLetterForm = () => {
                   <div
                     style={{ color: "white" }}
                     dangerouslySetInnerHTML={{
-                      __html: bannerText,
+                      __html: newsData,
                     }}
                   />
                 </div>

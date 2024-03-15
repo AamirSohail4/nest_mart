@@ -1,4 +1,9 @@
+import { useEffect } from "react";
+
 export const PrivacyPolicy = () => {
+  useEffect(() => {
+    document.title = "Ms Books | PrivacyPolicy";
+  });
   return (
     <>
       <main className="main pages" style={{ transform: "none" }}>

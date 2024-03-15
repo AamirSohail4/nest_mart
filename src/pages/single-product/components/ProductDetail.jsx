@@ -2,22 +2,44 @@ import Slider from "react-slick";
 import he from "he";
 import Zoom from "react-img-zoom-gdn";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { api_url } from "../../../config/env";
-import { cart_url } from "../../../config/env";
 import { CartContext } from "../../../context/CartContext";
+import { WishListContext } from "../../../context/WishListContext";
+import { MyAccountContext } from "../../../context/AccountContext";
+import productImg from "../../../assets/imgs/banner/product.jpg";
 
 export const ProductDetail = () => {
+  const navigate = useNavigate();
   const { seoLink } = useParams();
-  const { CartItemDisplay } = useContext(CartContext);
-
+  const { addProducts } = useContext(CartContext);
+  const { addToWishList } = useContext(WishListContext);
+  const { userId } = useContext(MyAccountContext);
   const [singleproduct, setSingleProduct] = useState();
   const [strSpec, setStrSpec] = useState("");
   const [teacherProfileData, setTeacherProfile] = useState("");
-  const [myItemid, setMyItemId] = useState();
-  // const [additemtoCart, setAddItemToCart] = useState();
-
   const [quantity, setQuantity] = useState(1);
+  const [selectedProductDesc, setSelectedProductDesc] = useState("");
+
+  const handleHeartClick = (itemId) => {
+    if (userId !== null) {
+      addToWishList(itemId);
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleAddToCart = (productId, quantity, productDesc) => {
+    if (userId !== null) {
+      addProducts(productId, quantity);
+      setSelectedProductDesc(productDesc);
+      setTimeout(() => {
+        setSelectedProductDesc("");
+      }, 4000);
+    } else {
+      navigate("/login");
+    }
+  };
   const handleDec = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
@@ -27,52 +49,23 @@ export const ProductDetail = () => {
     setQuantity(quantity + 1);
   };
 
-  // Function for Posting Cart Data
-  const handelAddToCart = async () => {
-    let data = new FormData();
-    // TODO: Change the intUserID to dynamic value.
-    data.append("intUserID", localStorage.getItem("userId"));
-    data.append("intItemID", myItemid);
-    data.append("dblItemQty", quantity);
-    data.append("strItemRemarks", "");
-
-    // console.log("Form Data:", data);
-    const response = await fetch(`${cart_url}&tag=add_user_cart_item`, {
-      method: "POST",
-      body: data,
-    });
-    if (response.ok) {
-      const resData = await response.json();
-      // setAddItemToCart(resData);
-      // navigate("/", { state: { userId } });
-      // alert("item added in cart successfully");
-      CartItemDisplay();
-      console.log("Item added in  Cart api res", resData);
-    }
-  };
-  console.log("This my Itemid throug state ", myItemid, quantity);
-
   useEffect(() => {
     async function SingleProductShow() {
       const response = await fetch(
         `${api_url}&tag=get_items_web&strSEOLink=${seoLink}`
       );
       const productData = await response.json();
-      // console.log(productData);
-      setSingleProduct(productData.data[0]);
-      const myid = productData.data[0].intID;
-      setMyItemId(myid);
-      setStrSpec(productData.data[0]?.strSpecifications);
-      setTeacherProfile(productData.data[0]?.supplier[0].strProfile);
-      // console.log("Check it", singleproduct);
+      console.log(productData);
+      setSingleProduct(productData?.data[0]);
+      setStrSpec(productData?.data[0]?.strSpecifications);
+      setTeacherProfile(productData?.data[0]?.supplier[0]?.strProfile);
     }
     SingleProductShow();
   }, [seoLink]);
 
   let profileValue = teacherProfileData;
   const htmlContent = he.decode(strSpec);
-  const htmlContent1 = he.decode(profileValue);
-  // console.log(htmlContent1);
+  const htmlContent1 = he.decode(profileValue ? profileValue : "");
 
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
@@ -122,8 +115,7 @@ export const ProductDetail = () => {
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
   };
-  // console.log("Teacher Data", singleproduct);
-  
+
   return (
     <div className="product-detail accordion-detail">
       <div className="row mb-50 mt-30">
@@ -143,7 +135,7 @@ export const ProductDetail = () => {
               fade={false}
             >
               <figure className="border-radius-10">
-                {singleproduct?.strImageThumbnail && (
+                {singleproduct?.strImageThumbnail ? (
                   <Zoom
                     img={singleproduct?.strImageThumbnail}
                     zoomScale={1.5}
@@ -151,6 +143,8 @@ export const ProductDetail = () => {
                     width={500}
                     transitionTime={0.5}
                   />
+                ) : (
+                  <img src={productImg} alt="Default Product Image" />
                 )}
               </figure>
             </Slider>
@@ -161,7 +155,7 @@ export const ProductDetail = () => {
             >
               <div>
                 <img
-                  src={singleproduct?.strImageThumbnail}
+                  src={singleproduct?.strImageThumbnail || productImg}
                   alt="product image"
                 />
               </div>
@@ -175,8 +169,16 @@ export const ProductDetail = () => {
               <div className="product-price primary-color float-left">
                 <span className="current-price text-brand">
                   {singleproduct?.strUOM}
-                  {singleproduct?.dblSalePrice}
+
+                  {new Intl.NumberFormat("en-US", {
+                    style: "decimal",
+                  }).format(singleproduct?.dblSalePrice)}
                 </span>
+              </div>
+              <div className="contact-info">
+                <div className="social-info">
+                  <h4>{selectedProductDesc}</h4>
+                </div>
               </div>
             </div>
             <div className="detail-extralink mb-50">
@@ -193,14 +195,20 @@ export const ProductDetail = () => {
                 <button
                   type="submit"
                   className="button button-add-to-cart"
-                  onClick={handelAddToCart}
+                  onClick={() =>
+                    handleAddToCart(
+                      singleproduct?.intID,
+                      quantity,
+                      singleproduct?.strDesc
+                    )
+                  }
                 >
                   <i className="fi-rs-shopping-cart"></i>Add to cart
                 </button>
                 <Link
                   aria-label="Add To Wishlist"
-                  className="action-btn hover-up"
-                  to="shop-wishlist.html"
+                  className="action-btn"
+                  onClick={() => handleHeartClick(singleproduct?.intID)}
                 >
                   <i className="fi-rs-heart"></i>
                 </Link>
@@ -227,7 +235,7 @@ export const ProductDetail = () => {
                   <li className="mb-5">
                     Syllabus:
                     <Link to="#">
-                      {singleproduct?.attributes[4].strAttributeValue}
+                      {singleproduct?.attributes[4]?.strAttributeValue}
                     </Link>
                   </li>
                   <li className="mb-5">
@@ -261,7 +269,13 @@ export const ProductDetail = () => {
                       className="section-title style-2 wow animate__ animate__fadeIn animated"
                       style={{ visibility: "visible", animationName: "fadeIn" }}
                     >
-                      <h4>Teacher Profile</h4>
+                      <div>
+                        {singleproduct?.supplier[0]?.strDesc ? (
+                          <div>
+                            <h4>Teacher Profile</h4>
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
 
                     {singleproduct?.supplier[0]?.strDesc &&
@@ -271,7 +285,7 @@ export const ProductDetail = () => {
                             <div className="product-img-action-wrap">
                               <div className="product-img product-img-zoom">
                                 <Link
-                                  to={`/teacher-detail/${singleproduct?.supplier[0].strSEOLink}/${singleproduct?.supplier[0].intID}`}
+                                  to={`/teacher/${singleproduct?.supplier[0].strSEOLink}/${singleproduct?.supplier[0].intID}`}
                                 >
                                   <img
                                     className="default-img"
@@ -309,9 +323,10 @@ export const ProductDetail = () => {
         </div>
       </div>
       <div className="row mt-60">
-        <div className="col-12">
+        {singleproduct?.related_items &&
+        singleproduct.related_items.length > 0 ? (
           <h2 className="section-title style-1 mb-30">Related products</h2>
-        </div>
+        ) : null}
         <div className="col-12">
           <div className="row related-products">
             {singleproduct?.related_items.map((item, index) => {
@@ -320,18 +335,15 @@ export const ProductDetail = () => {
                   <div className="product-cart-wrap hover-up">
                     <div className="product-img-action-wrap">
                       <div className="product-img product-img-zoom">
-                        <Link
-                          to={`/single-product/${item.strSEOLink}`}
-                          tabIndex="0"
-                        >
+                        <Link to={`/product/${item.strSEOLink}`} tabIndex="0">
                           <img
                             className="default-img"
-                            src={item.strImage}
+                            src={item?.strImage}
                             alt=""
                           />
                           <img
                             className="hover-img"
-                            src={item.strImage}
+                            src={item?.strImage}
                             alt=""
                           />
                         </Link>
@@ -340,16 +352,15 @@ export const ProductDetail = () => {
                         <Link
                           aria-label="Quick view"
                           className="action-btn small hover-up"
-                          data-bs-toggle="modal"
-                          data-bs-target="#quickViewModal"
+                          to={`/product/${item?.strSEOLink}`}
                         >
-                          <i className="fi-rs-search"></i>
+                          <i className="fi-rs-eye"></i>
                         </Link>
+
                         <Link
                           aria-label="Add To Wishlist"
-                          className="action-btn small hover-up"
-                          to="/shop-wishlist"
-                          tabIndex="0"
+                          className="action-btn"
+                          onClick={() => handleHeartClick(item?.intID)}
                         >
                           <i className="fi-rs-heart"></i>
                         </Link>
@@ -358,32 +369,43 @@ export const ProductDetail = () => {
                     </div>
                     <div className="product-content-wrap">
                       <div className="product-category">
-                        <Link to={`/single-product/${item.strSEOLink}`}>
-                          {item.strItemCategory}
+                        <Link to={`/product/${item.strSEOLink}`}>
+                          {item?.strItemCategory}
                         </Link>
                       </div>
                       <h2>
-                        <Link to={`/single-product/${item.strSEOLink}`}>
-                          {item.strDesc}
+                        <Link to={`/product/${item.strSEOLink}`}>
+                          {item?.strDesc}
                         </Link>
                       </h2>
                       <div className="product-card-bottom">
                         <div className="product-price">
                           <span>
-                            {item.strUOM} {item.dblSalePrice}
+                            {item?.strUOM}
+                            {new Intl.NumberFormat("en-US", {
+                              style: "decimal",
+                            }).format(item?.dblSalePrice)}
                           </span>
                         </div>
+
                         <div className="add-cart">
                           <button
-                            id="feature-prod-btn1484"
+                            id="feature-prod-btn1500"
                             type="button"
                             className="btn btn-heading add_in_cart"
-                            data-value="1484"
+                            onClick={() =>
+                              handleAddToCart(item.intID, 1, item.strDesc)
+                            }
                           >
-                            <i className="fi-rs-shopping-cart mr-5"></i>
-                            Add To Cart
+                            <i className="fi-rs-shopping-cart mr-5"></i>Add{" "}
                           </button>
+
                           <div className="overlay"></div>
+                        </div>
+                        <div className="contact-info">
+                          <div className="social-info">
+                            <h4>{selectedProductDesc}</h4>
+                          </div>
                         </div>
                       </div>
                     </div>

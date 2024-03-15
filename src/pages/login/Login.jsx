@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { register_url } from "../../config/env";
 import { useNavigate } from "react-router-dom";
@@ -6,60 +6,53 @@ import { useNavigate } from "react-router-dom";
 export const Login = () => {
   const [userPhone, setUserPhone] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  console.log(userPhone);
   const navigate = useNavigate();
-
+  useEffect(() => {
+    document.title = "Ms Books | login";
+  });
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (userPhone.length === 12) {
+    if (userPhone.length === 12 || userPhone.length === 11) {
       try {
         // Create a new FormData object
         const formData = new FormData();
 
-        // Append key-value pairs to the FormData object
         formData.append("strUserName", userPhone);
         formData.append("intDeviceType", "2");
         formData.append("strPlatform", "iOS version 12");
 
-        // Make an API request using Fetch
         const response = await fetch(register_url, {
           method: "POST",
           body: formData,
         });
 
         if (response.ok) {
-          const responseData = await response.json();
-          console.log("API Response:", responseData);
-
           navigate("/verify", { state: { userPhone } });
           setUserPhone("");
           setErrorMessage("");
         } else {
-          console.error("API Error:", response.status, response.statusText);
           const errorData = await response.json().catch(() => null);
           console.error(
             "Error Details:",
             errorData || "No error details available"
           );
-          // Handle API error if needed
         }
       } catch (error) {
         console.error("Fetch Error:", error);
-        // Handle fetch error if needed
       }
     } else {
-      setErrorMessage("Please enter a valid 112-digit phone number.");
+      setErrorMessage(
+        "Please enter a valid 12-digit phone number. like 923001234567"
+      );
     }
   };
 
   const handleInputChange = (event) => {
     const value = event.target.value;
-
     if (!isNaN(value)) {
       setUserPhone(value);
-
-      if (value.length === 12) {
+      if (value.length === 12 || value.length === 11) {
         setErrorMessage("");
       }
     } else {
@@ -72,7 +65,7 @@ export const Login = () => {
       <div className="page-header breadcrumb-wrap">
         <div className="container">
           <div className="breadcrumb">
-            <a href="https://www.msbooks.pk" rel="nofollow">
+            <a href="/" rel="nofollow">
               <i className="fi-rs-home mr-5"></i>Home
             </a>
             <span></span> Login
@@ -110,6 +103,7 @@ export const Login = () => {
                             placeholder="923000000000 *"
                             id="user_phone"
                             value={userPhone}
+                            maxLength="12"
                             onChange={handleInputChange}
                           />
                         </div>

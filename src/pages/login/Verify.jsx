@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { verify_url } from "../../config/env";
+import { verify_url, api_url } from "../../config/env";
+import { MyAccountContext } from "../../context/AccountContext";
 
 export const Verify = () => {
+  const { userId, setUserId } = useContext(MyAccountContext);
   const [pinValues, setPinValues] = useState(["", "", "", "", "", ""]); // State to store pin values
   const navigate = useNavigate();
   const { state } = useLocation();
   const userPhone = state && state.userPhone;
-  console.log("userPhone", userPhone);
-  //   console.log(state);
 
   const handlePinChange = (index, value) => {
     // Check if the value is numeric and not empty
@@ -24,7 +24,6 @@ export const Verify = () => {
 
   const handleVerifyCode = async () => {
     const enteredPin = pinValues.join("");
-    // Create a new FormData object
     const formData = new FormData();
     formData.append("strUserName", userPhone);
     formData.append("strValidCode", enteredPin);
@@ -35,7 +34,7 @@ export const Verify = () => {
         method: "POST",
         body: formData,
       });
-      console.log("verify res", response);
+
       setPinValues(["", "", "", "", "", ""]);
 
       document.getElementById("pinInput0").focus();
@@ -47,17 +46,30 @@ export const Verify = () => {
           const UserId = responseData["data"]["intUserID"];
           localStorage.setItem("userId", UserId);
           localStorage.setItem("roleId", userRollId);
+          setUserId(UserId);
+          console.log("role id", userRollId);
+          console.log("user id ", userId);
 
-          console.log("This is userRollId", userRollId);
-          console.log("This is veriable data of UserId", UserId);
-
-          navigate("/signUp");
-
-          // Set responseData in the local state if needed
+          const response1 = await fetch(
+            `${api_url}&tag=get_users&intID=${UserId}`
+          );
+          if (response1.ok) {
+            const res = await response1.json();
+            // console.log("dddddd", res);
+            if (
+              res.data[0]?.strFullName === "" ||
+              res.data[0]?.strFullName === null ||
+              res.data[0]?.strFullName === undefined
+            ) {
+              navigate("/signUp");
+            } else {
+              navigate("/");
+            }
+            // console.log("user data", res.data[0]?.strFullName);
+          }
         } else {
-          console.error("API Error:", response.status, response.statusText);
-
-          console.error("Error Details:");
+          // console.error("API Error:", response.status, response.statusText);
+          // console.error("Error Details:");
           // Handle API error if needed
         }
       } else {
@@ -68,12 +80,15 @@ export const Verify = () => {
       // Handle fetch error if needed
     }
   };
+  useEffect(() => {
+    document.title = "Ms Books | Verify";
+  });
   return (
     <>
       <div className="page-header breadcrumb-wrap">
         <div className="container">
           <div className="breadcrumb">
-            <a href="https://www.msbooks.pk" rel="nofollow">
+            <a href="/" rel="nofollow">
               <i className="fi-rs-home mr-5"></i>Home
             </a>
             <span></span> Verify User

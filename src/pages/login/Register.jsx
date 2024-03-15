@@ -1,24 +1,20 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { api_url } from "../../config/env";
 import { singUp_url } from "../../config/env";
 
 export const Register = () => {
-  const myUserId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("userId");
+  const roleId = localStorage.getItem("roleId");
+  const [formErrors, setFormErrors] = useState({});
   const [locatCities, setCities] = useState([]);
-  const { state } = useLocation();
   const navigate = useNavigate();
-
-  const userRollId = state && state.userRollId;
-  const userId = state && state.UserId;
-  console.log("SingUp Page Response Data=>", userRollId);
-  console.log("SingUp Page Response Data=>", userId);
 
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    altPhone: "",
+    phone: "",
     address: "",
     city: "",
   });
@@ -29,32 +25,76 @@ export const Register = () => {
       ...prevData,
       [name]: value,
     }));
+    setFormErrors({ ...formErrors, [name]: "" });
   };
 
   const handleButtonClick = async () => {
+    const errors = {};
+
+    // Validate name field
+
+    if (!formData.firstName.trim()) {
+      errors.firstName = "Name is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.firstName.trim())) {
+      errors.firstName = "Only alphabetic characters are allowed";
+    }
+
+    if (!formData.lastName.trim()) {
+      errors.lastName = "Name is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.lastName.trim())) {
+      errors.lastName = "Only alphabetic characters are allowed";
+    }
+
+    // Validate name field
+
+    // Validate phone field
+    if (!/^\d{11,12}$/.test(formData.phone)) {
+      errors.phone = "Phone must be 11 or 12 digits like 923014788965";
+    }
+
+    // Validate email field
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Invalid email address";
+    }
+
+    // Validate city field
+    if (!formData.city) {
+      errors.city = "City is required";
+    }
+
+    // Validate address field
+    if (!formData.address.trim()) {
+      errors.address = "Address is required";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      // If there are errors, update the state and prevent form submission
+      setFormErrors(errors);
+      return;
+    }
+
     let data = new FormData();
-    data.append("intUserID", myUserId);
+    data.append("intUserID", userId);
     data.append("strFullName", formData.firstName + " " + formData.lastName);
-    data.append("intRoleID", localStorage.getItem("roleId"));
+    data.append("intRoleID", roleId);
     data.append("strEmail", formData.email);
     data.append("strAddress", formData.address);
     data.append("intCityID", formData.city);
-    data.append("strAlternateContactNo", formData.altPhone);
-    // console.log("Form Data:", data);
+    data.append("strAlternateContactNo", formData.phone);
     const response = await fetch(`${singUp_url}&tag=update_user_profile`, {
       method: "POST",
       body: data,
     });
     if (response.ok) {
-      const resData = await response.json();
-
       navigate("/");
-      console.log("api res", resData);
       resetForm();
     }
   };
 
   useEffect(() => {
+    document.title = "Ms Books | SingUp";
     const fetchCities = async () => {
       try {
         const response = await fetch(`${api_url}&tag=get_city&intCountryID=1`);
@@ -74,10 +114,11 @@ export const Register = () => {
       firstName: "",
       lastName: "",
       email: "",
-      altPhone: "",
+      phone: "",
       address: "",
       city: "",
     });
+    setFormErrors({});
   };
 
   return (
@@ -121,12 +162,19 @@ export const Register = () => {
                         <input
                           name="firstName"
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.firstName ? "is-invalid" : ""
+                          }`}
                           placeholder="Enter First Name"
                           type="text"
                           value={formData.firstName}
                           onChange={handleInputChange}
                         />
+                        {formErrors.firstName && (
+                          <div className="invalid-feedback">
+                            {formErrors.firstName}
+                          </div>
+                        )}
                       </div>
                       <div className="form-group col-md-12">
                         <label>
@@ -135,12 +183,19 @@ export const Register = () => {
                         <input
                           name="lastName"
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.lastName ? "is-invalid" : ""
+                          }`}
                           placeholder="Enter Last Name"
                           type="text"
                           value={formData.lastName}
                           onChange={handleInputChange}
                         />
+                        {formErrors.lastName && (
+                          <div className="invalid-feedback">
+                            {formErrors.lastName}
+                          </div>
+                        )}
                       </div>
                       <div className="form-group col-md-12">
                         <label>
@@ -149,26 +204,40 @@ export const Register = () => {
                         <input
                           name="email"
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.email ? "is-invalid" : ""
+                          }`}
                           placeholder="Enter Email"
                           type="email"
                           value={formData.email}
                           onChange={handleInputChange}
                         />
+                        {formErrors.email && (
+                          <div className="invalid-feedback">
+                            {formErrors.email}
+                          </div>
+                        )}
                       </div>
                       <div className="form-group col-md-12">
                         <label>
                           Phone Number <span className="required">*</span>
                         </label>
                         <input
-                          name="altPhone"
-                          required=""
-                          className="form-control"
+                          name="phone"
+                          maxLength="12"
+                          className={`form-control ${
+                            formErrors.phone ? "is-invalid" : ""
+                          }`}
                           placeholder="Enter Phone Number"
                           type="number"
-                          value={formData.altPhone}
+                          value={formData.phone}
                           onChange={handleInputChange}
                         />
+                        {formErrors.phone && (
+                          <div className="invalid-feedback">
+                            {formErrors.phone}
+                          </div>
+                        )}
                       </div>
                       <div className="form-group col-md-12">
                         <label>
@@ -177,12 +246,19 @@ export const Register = () => {
                         <input
                           name="address"
                           required=""
-                          className="form-control"
-                          placeholder="Enter First Name"
-                          type="text"
+                          className={`form-control ${
+                            formErrors.address ? "is-invalid" : ""
+                          }`}
+                          placeholder="Enter address"
+                          type="address"
                           value={formData.address}
                           onChange={handleInputChange}
                         />
+                        {formErrors.address && (
+                          <div className="invalid-feedback">
+                            {formErrors.address}
+                          </div>
+                        )}
                       </div>
 
                       <div className="form-group col-md-12">
@@ -190,7 +266,9 @@ export const Register = () => {
                           City<span className="required">*</span>
                         </label>
                         <select
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.city ? "is-invalid" : ""
+                          }`}
                           name="city"
                           id="city"
                           value={formData.city}
@@ -207,6 +285,11 @@ export const Register = () => {
                             </option>
                           ))}
                         </select>
+                        {formErrors.city && (
+                          <div className="invalid-feedback">
+                            {formErrors.city}
+                          </div>
+                        )}
                       </div>
                       <div className="form-group col-md-12">
                         <button

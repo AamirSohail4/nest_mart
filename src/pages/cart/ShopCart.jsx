@@ -2,29 +2,52 @@ import { useContext, useEffect } from "react";
 import { CartContext } from "../../context/CartContext";
 import { useState } from "react";
 import { api_url, cart_url } from "../../config/env";
+import { Link, useNavigate } from "react-router-dom";
+import { PaymentContext } from "../../context/PaymentMethod";
+import { MyAccountContext } from "../../context/AccountContext";
+import { getShipmentAddressThunk } from "../../redux/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export const ShopCart = () => {
-  const myUserId = localStorage.getItem("userId");
-  const { cartItem, showPaymentMode, shipmentAddres, fetchShipmentAddres } =
+  const { cartItems } = useSelector((state) => state);
+  const { fetchShipmentAddress } = useSelector((state) => state);
+  // console.log("That are the Shipment ", fetchShipmentAddress);
+
+  const dispatch = useDispatch();
+  const { userId } = useContext(MyAccountContext);
+  const navigatie = useNavigate();
+  const { deleteAllCartItems, deleteSingleCartItem, addToCart } =
     useContext(CartContext);
-  const { handleDeleteClick, DeleteCartSingleItem } = useContext(CartContext);
+  const { showPaymentMode } = useContext(PaymentContext);
+
   const [open, setOpen] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [selectedPayment, setSelectedPayment] = useState();
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [locatCities, setCities] = useState([]);
+  const [shipmentaddresValue, setShipmentaddresValue] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
 
-  // console.log("My User Id is ", myUserId);
-  // console.log("This My Shipment Addres===>", shipmentAddres);
+  const handelShipmentValue = async (itemValue) => {
+    setShipmentaddresValue(itemValue);
+  };
+
+  const handleCheckout = () => {
+    if (!selectedPayment || !shipmentaddresValue) {
+      alert("Please Select a Payment option and a Shipment address.");
+      return;
+    } else {
+      navigatie("/admin/checkout", {
+        state: { selectedPayment, shipmentaddresValue },
+      });
+    }
+  };
   const handleAddModalClick = () => {
-    console.log("button click");
-    console.log("open =>>", open);
     setOpen(!open);
   };
 
   const handlePaymentSelection = async (value) => {
-    // console.log("Selected Payment Mode:", value); // Log the selected value to the console
     const modeValue = value;
+    // console.log("mode value", modeValue);
 
     setSelectedPayment(value);
 
@@ -35,34 +58,50 @@ export const ShopCart = () => {
         );
 
         const data = await response.json();
-        console.log("My Api Response Data", data.data.strDetails);
-        setPaymentDetails(data.data.strDetails);
+
+        setPaymentDetails(data?.data?.strDetails);
       } catch (error) {
         console.error("Error fetching payment details:", error);
-       
       }
     }
   };
- 
-  const handleDec = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
+
+  const handleDec = async (q, productID) => {
+    if (q > 1) {
+      let qq = q - 1;
+      addToCart(productID, qq);
     }
   };
-  const handleInc = () => {
-    setQuantity(quantity + 1);
+
+  const handleInc = (q, productID) => {
+    if (q >= 1) {
+      let qq = parseInt(q) + 1;
+      addToCart(productID, qq);
+    }
   };
 
   const calculateTotal = () => {
-    if (!cartItem || !cartItem.length) {
+    if (!cartItems || !cartItems.length) {
       return 0; // Return 0 if cartItem is not defined or empty
     }
 
-    return cartItem.reduce(
-      (total, item) => total + parseFloat(item.item.dblSalePrice) * quantity,
+    // Calculate the subtotal for each item and sum them up
+    const total = cartItems.reduce(
+      (acc, item) =>
+        acc +
+        parseFloat(item?.item?.dblSalePrice) * parseFloat(item?.dblItemQty),
       0
     );
+
+    // Apply number formatting to the total
+    const formattedTotal = total.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 4,
+    });
+
+    return formattedTotal;
   };
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -70,50 +109,93 @@ export const ShopCart = () => {
     address: "",
     city: "",
   });
+
+  useEffect(() => {
+    document.title = "Ms Books | Cart";
+    const fetchCities = async () => {
+      try {
+        const response = await fetch(`${api_url}&tag=get_city&intCountryID=1`);
+        const data = await response.json();
+        setCities(data.data);
+      } catch (error) {
+        console.error("Error fetching city data:", error);
+      }
+    };
+    dispatch(getShipmentAddressThunk(userId));
+    fetchCities();
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+    setFormErrors({ ...formErrors, [name]: "" });
   };
 
   const handleButtonClick = async () => {
-    let data = new FormData();
-    data.append("intUserID", myUserId);
-    data.append("strShipmentContactPerson", formData.name);
-    data.append("strShipmentAddress", formData.address);
-    data.append("strShipmentEmail", formData.email);
-    data.append("intCityID", formData.city);
-    data.append("strAlternateContactNo", formData.phone);
+    const errors = {};
 
-    // console.log("Form Data:", data);
+    // Validate name field
+
+    if (!formData.name.trim()) {
+      errors.name = "Name is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.name.trim())) {
+      errors.name = "Only alphabetic characters are allowed";
+    }
+    // Validate phone field
+    if (!/^\d{11,12}$/.test(formData.phone)) {
+      errors.phone = "Phone must be 11 or 12 digits like 923014788965";
+    }
+
+    // Validate email field
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Invalid email address";
+    }
+
+    // Validate city field
+    if (!formData.city) {
+      errors.city = "City is required";
+    }
+
+    // Validate address field
+    if (!formData.address.trim()) {
+      errors.address = "Address is required";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      // If there are errors, update the state and prevent form submission
+      setFormErrors(errors);
+      return;
+    }
+
+    let data = new FormData();
+    data.append("intUserID", userId);
+    data.append("strShipmentContactPerson", formData.name);
+    data.append("strShipmentPhone", formData.phone);
+    data.append("strShipmentEmail", formData.email);
+    data.append("intShipmentCityID", formData.city);
+    data.append("strShipmentAddress", formData.address);
+
     const response = await fetch(`${cart_url}&tag=add_user_shipment_address`, {
       method: "POST",
       body: data,
     });
+
     if (response.ok) {
-      const resData = await response.json();
+      alert("Shipment Address is updated");
+      dispatch(getShipmentAddressThunk(userId));
 
-      console.log("Shipment api res", resData);
-      fetchShipmentAddres();
-      resetForm();
+      handleAddModalClick();
     }
+
+    // Reset the form after submission
+    resetForm();
   };
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const response = await fetch(`${api_url}&tag=get_city&intCountryID=1`);
-        const data = await response.json();
 
-        setCities(data.data);
-      } catch (error) {
-        console.error("Error fetching city data:", error);
-      }
-    };
-
-    fetchCities();
-  }, []);
   const resetForm = () => {
     setFormData({
       name: "",
@@ -122,16 +204,21 @@ export const ShopCart = () => {
       address: "",
       city: "",
     });
+
+    setFormErrors({});
   };
+
   return (
     <>
       <div className="page-header breadcrumb-wrap">
         <div className="container">
           <div className="breadcrumb">
-            <a href="/" rel="nofollow">
+            <Link to="/" rel="nofollow">
               <i className="fi-rs-home mr-5"></i>Home
-            </a>
-            <span></span> Shop
+            </Link>
+            <Link to="/allproducts">
+              <span>Shop</span>
+            </Link>
             <span></span> Cart
           </div>
         </div>
@@ -145,16 +232,13 @@ export const ShopCart = () => {
           <div className="col-lg-8 mb-40">
             <h1 className="heading-2 mb-10">Your Cart</h1>
             <div className="d-flex justify-content-between">
-              <h6 className="text-body">
-                There are <span className="text-brand">{cartItem?.length}</span>{" "}
-                products in your cart
-              </h6>
+              <h6 className="text-body">products in your cart</h6>
               <h6 className="text-body">
                 <button
                   id="clr-cart"
                   style={{ border: "none", backgroundColor: "white" }}
                   className="text-muted clear-cart btnCartEmpty"
-                  onClick={handleDeleteClick}
+                  onClick={deleteAllCartItems}
                 >
                   <i className="fi-rs-trash mr-5"></i>
                   Clear Cart
@@ -189,27 +273,34 @@ export const ShopCart = () => {
                 </thead>
 
                 <tbody id="cartTable">
-                  {cartItem?.map((item, index) => {
-                    // console.log("Single Cart Item", item);
+                  {cartItems?.map((item, index) => {
+                    const productID = item?.item?.intID;
                     return (
                       <tr key={index} className="">
                         <td className="custome-checkbox pl-30"></td>
                         <td className="image product-thumbnail pt-40">
-                          <img src={item.item.strImage} alt="#" />
+                          <img src={item?.item?.strImage} alt="#" />
                         </td>
                         <td className="product-des product-name">
                           <h6 className="mb-5">
-                            <a
-                              className="product-name mb-10 text-heading"
-                              href=""
-                            >
-                              {item.item.strDesc}
+                            <a className="product-name mb-10 text-heading">
+                              {item?.item?.strDesc}
                             </a>
                           </h6>
                         </td>
                         <td className="price" data-title="Price">
                           <h4 className="text-body">
-                            {item.item.strUOM} {item.item.dblSalePrice}
+                            {item?.item?.strUOM}
+                            {new Intl.NumberFormat("en-US", {
+                              style: "decimal",
+                            }).format(parseFloat(item?.item?.dblSalePrice))}
+
+                            {/* {parseFloat(
+                              item?.item?.dblSalePrice
+                            ).toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })} */}
                           </h4>
                         </td>
                         <td
@@ -219,28 +310,30 @@ export const ShopCart = () => {
                           <div className="detail-extralink mr-15">
                             <div className="detail-qty border radius">
                               <a
-                                href="#"
                                 className="qty-down cartQtyUpdate"
                                 data-pid="1866"
                                 data-type="down"
                               >
                                 <i
                                   className="fi-rs-angle-small-down"
-                                  onClick={handleDec}
+                                  onClick={() =>
+                                    handleDec(item?.dblItemQty, productID)
+                                  }
                                 ></i>
                               </a>
                               <span className="qty-val item-qty">
-                                {quantity}
+                                {item?.dblItemQty}
                               </span>
                               <a
-                                href="#"
                                 className="qty-up cartQtyUpdate"
                                 data-pid="1866"
                                 data-type="up"
                               >
                                 <i
                                   className="fi-rs-angle-small-up"
-                                  onClick={handleInc}
+                                  onClick={() =>
+                                    handleInc(item?.dblItemQty, productID)
+                                  }
                                 ></i>
                               </a>
                             </div>
@@ -248,8 +341,17 @@ export const ShopCart = () => {
                         </td>
                         <td className="price" data-title="Price">
                           <h4 className="text-brand">
-                            {item.item.strUOM}{" "}
-                            {parseFloat(item.item.dblSalePrice) * quantity}
+                            {/* {item?.item?.strUOM} */}
+                            {new Intl.NumberFormat("en-US", {
+                              style: "decimal",
+                            }).format(
+                              parseFloat(item?.item?.dblSalePrice) *
+                                parseFloat(item?.dblItemQty)
+                            )}
+                            {/* {formatter.format(
+                              parseFloat(item?.item?.dblSalePrice) *
+                                parseFloat(item?.dblItemQty)
+                            )} */}
                           </h4>
                         </td>
                         <td className="action text-center" data-title="Remove">
@@ -258,7 +360,7 @@ export const ShopCart = () => {
                             id="del-btn1866"
                             className="text-body cartTableDel"
                             data-pid="1866"
-                            onClick={() => DeleteCartSingleItem(item)}
+                            onClick={() => deleteSingleCartItem(item)}
                           >
                             <i className="fi-rs-trash"></i>
                           </button>
@@ -288,7 +390,6 @@ export const ShopCart = () => {
                         id="get-coupon-value"
                         className="font-medium mr-15 coupon"
                         name="Coupon"
-                        value=""
                         placeholder="Enter Your Coupon"
                       />
                       <button className="btn" id="apply-coupon">
@@ -319,12 +420,12 @@ export const ShopCart = () => {
                               <div key={index} className="custome-radio">
                                 <input
                                   className="form-check-input"
-                                  required=""
+                                  required
                                   type="radio"
                                   name="payment_option"
                                   id={`paymentRadios${index}`}
                                   value={item.intID}
-                                  data-name={item.strDesc}
+                                  checked={selectedPayment === item.intID}
                                   onChange={() =>
                                     handlePaymentSelection(item.intID)
                                   }
@@ -340,18 +441,14 @@ export const ShopCart = () => {
                                 </label>
                               </div>
                             ))}
-
                             <div id="bankTranfer">
-                              {/* Display payment details here based on the selected option */}
                               {paymentDetails && (
                                 <div id="bank detail" className="Detail_dta">
-                                  {/* Render payment details dynamically based on the selected payment mode */}
                                   {selectedPayment === "3" ? (
                                     <>
                                       <p className="Detail_dta">
                                         {paymentDetails.toUpperCase()}
                                       </p>
-                                      {/* Add other details as needed */}
                                     </>
                                   ) : selectedPayment === "1" ? (
                                     <p>Cash on Delivery</p>
@@ -380,27 +477,35 @@ export const ShopCart = () => {
                               </button>
                             </div>
                           </div>
+
                           <div className="payment_option">
-                            <div className="custome-radio">
-                              <input
-                                className="form-check-input"
-                                required=""
-                                type="radio"
-                                name="shipment_option"
-                                id="exampleRadios0"
-                                value="1"
-                                data-name=" "
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor="exampleRadios0"
-                                data-bs-toggle="collapse"
-                                data-target="#bankTranfer"
-                                aria-controls="bankTranfer"
-                              >
-                                {shipmentAddres && shipmentAddres}
-                              </label>
-                            </div>
+                            {fetchShipmentAddress?.map((item, index) => {
+                              return (
+                                <div key={index} className="custome-radio">
+                                  <input
+                                    className="form-check-input"
+                                    required
+                                    type="radio"
+                                    name="shipment_option"
+                                    data-name=" "
+                                    id={`exampleRadios0${index}`}
+                                    value={item.intID}
+                                    onChange={() =>
+                                      handelShipmentValue(item.intID)
+                                    }
+                                  />
+                                  <label
+                                    className="form-check-label"
+                                    htmlFor={`exampleRadios0${index}`}
+                                    data-bs-toggle="collapse"
+                                    data-target="#bankTranfer"
+                                    aria-controls="bankTranfer"
+                                  >
+                                    {item.strShipmentAddress}
+                                  </label>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       </td>
@@ -457,9 +562,14 @@ export const ShopCart = () => {
                   </tbody>
                 </table>
               </div>
-              <a href="#" className="btn mb-20 w-100 btnValidateCheckout">
+              <button
+                // to="/checkout"
+                type="button"
+                onClick={handleCheckout}
+                className="btn mb-20 w-100 btnValidateCheckout"
+              >
                 Proceed To CheckOut<i className="fi-rs-sign-out ml-15"></i>
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -498,55 +608,64 @@ export const ShopCart = () => {
                         </label>
                         <input
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.name ? "is-invalid" : ""
+                          }`}
                           name="name"
-                          id="address"
                           type="text"
                           value={formData.name}
                           onChange={handleInputChange}
                         />
+                        {formErrors.name && (
+                          <div className="invalid-feedback">
+                            {formErrors.name}
+                          </div>
+                        )}
                       </div>
-                      {/* <div className="form-group col-md-6">
-                        <label>
-                          Contact Person <span className="required">*</span>
-                        </label>
-                        <input
-                          required=""
-                          className="form-control"
-                          name="contact_person"
-                          id="contact_person"
-                          type="text"
-                          value={formData.contactname}
-                          onChange={handleInputChange}
-                        />
-                      </div> */}
+
                       <div className="form-group col-md-6">
                         <label>
                           Contact No <span className="required">*</span>
                         </label>
                         <input
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.phone ? "is-invalid" : ""
+                          }`}
                           name="phone"
                           id="phone"
                           type="text"
                           value={formData.phone}
                           onChange={handleInputChange}
+                          maxLength={12}
                         />
+                        {formErrors.phone && (
+                          <div className="invalid-feedback">
+                            {formErrors.phone}
+                          </div>
+                        )}
                       </div>
+
                       <div className="form-group col-md-6">
                         <label>
                           Email Address <span className="required">*</span>
                         </label>
                         <input
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.email ? "is-invalid" : ""
+                          }`}
                           name="email"
                           id="email"
                           type="email"
                           value={formData.email}
                           onChange={handleInputChange}
                         />
+                        {formErrors.email && (
+                          <div className="invalid-feedback">
+                            {formErrors.email}
+                          </div>
+                        )}
                       </div>
 
                       <div className="form-group col-md-6">
@@ -554,7 +673,9 @@ export const ShopCart = () => {
                           City<span className="required">*</span>
                         </label>
                         <select
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.city ? "is-invalid" : ""
+                          }`}
                           name="city"
                           id="city"
                           value={formData.city}
@@ -563,28 +684,41 @@ export const ShopCart = () => {
                           <option value="" disabled>
                             Select a city
                           </option>
-
                           {locatCities.map((pakCity, index) => (
                             <option key={index} value={pakCity.intID}>
                               {pakCity.strDesc}
                             </option>
                           ))}
                         </select>
+                        {formErrors.city && (
+                          <div className="invalid-feedback">
+                            {formErrors.city}
+                          </div>
+                        )}
                       </div>
+
                       <div className="form-group col-md-12">
                         <label>
                           Address <span className="required">*</span>
                         </label>
                         <input
                           required=""
-                          className="form-control"
+                          className={`form-control ${
+                            formErrors.address ? "is-invalid" : ""
+                          }`}
                           name="address"
                           id="address"
                           type="text"
                           value={formData.address}
                           onChange={handleInputChange}
                         />
+                        {formErrors.address && (
+                          <div className="invalid-feedback">
+                            {formErrors.address}
+                          </div>
+                        )}
                       </div>
+
                       <div className="col-md-12">
                         <button
                           id="address-btn"

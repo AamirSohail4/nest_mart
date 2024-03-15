@@ -1,17 +1,47 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import he from "he";
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { teacher_url } from "../../config/env";
 import { api_url } from "../../config/env";
+import { WishListContext } from "../../context/WishListContext";
+import { MyAccountContext } from "../../context/AccountContext";
+import productImg from "../../assets/imgs/banner/product.jpg";
+import { CartContext } from "../../context/CartContext";
 
 export const TeacherDetail = () => {
+  const navigate = useNavigate();
+  const { userId } = useContext(MyAccountContext);
+  const { addProducts } = useContext(CartContext);
+  const { addToWishList } = useContext(WishListContext);
   const { strSEOLink } = useParams();
   const { id } = useParams();
   const [teacher, setTeacher] = useState({});
   const [teacherDetail, setTeacherDetail] = useState([]);
   const [publicationData, setPulicationData] = useState([]);
+  const [selectedProductDesc, setSelectedProductDesc] = useState("");
+
   const [strSpec, setStrSpec] = useState("");
+
+  const handleHeartClick = (itemId) => {
+    if (userId !== null) {
+      addToWishList(itemId);
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleAddToCart = (productId, quantity, productDesc) => {
+    if (userId !== null) {
+      addProducts(productId, quantity);
+      setSelectedProductDesc(productDesc);
+      setTimeout(() => {
+        setSelectedProductDesc("");
+      }, 4000);
+    } else {
+      navigate("/login");
+    }
+  };
 
   async function ShowPublication() {
     const response = await fetch(
@@ -23,6 +53,7 @@ export const TeacherDetail = () => {
   }
 
   useEffect(() => {
+    document.title = "Ms Books | Teacher";
     async function TeacherDetails() {
       const response = await fetch(
         `${teacher_url}&tag=get_teacher_detail&strSEOLink=${strSEOLink}`
@@ -34,7 +65,7 @@ export const TeacherDetail = () => {
       const subjects = [];
       const institute = [];
 
-      teacherData.data.teacher_detail.forEach((detail) => {
+      teacherData.data?.teacher_detail?.forEach((detail) => {
         if (detail.strType === "Class") {
           classes.push(detail.strDesc);
         } else if (detail.strType === "Subject") {
@@ -53,7 +84,7 @@ export const TeacherDetail = () => {
     ShowPublication();
   }, []);
 
-  const htmlContent = he.decode(strSpec);
+  const htmlContent = he.decode(strSpec ? strSpec : "");
 
   return (
     <>
@@ -64,7 +95,7 @@ export const TeacherDetail = () => {
         >
           <div className="archive-header-3-inner">
             <div className="vendor-logo mr-50">
-              <img src={teacher.strProfilePicture} alt="" />
+              <img src={teacher?.strProfilePicture || productImg} alt="" />
             </div>
             <div className="vendor-content text-white">
               <h3 className="mb-5">
@@ -131,7 +162,7 @@ export const TeacherDetail = () => {
               >
                 <div className="row product-grid-4">
                   {Array.isArray(publicationData) ? (
-                    publicationData.map((items, index) => (
+                    publicationData.map((item, index) => (
                       <div
                         key={index}
                         className="col-lg-1-5 col-md-4 col-12 col-sm-6 "
@@ -147,36 +178,41 @@ export const TeacherDetail = () => {
                         >
                           <div className="product-img-action-wrap">
                             <div className="product-img product-img-zoom">
-                              <Link to={`/single-product/${items.strSEOLink}`}>
-                                <img
-                                  className="default-img"
-                                  src={items.strImageThumbnail}
-                                  alt=""
-                                />
-                                <img
-                                  className="hover-img"
-                                  src={items.strImageThumbnail}
-                                  alt=""
-                                />
+                              <Link to={`/product/${item?.strSEOLink}`}>
+                                {item.strImageThumbnail ? (
+                                  <>
+                                    <img
+                                      className="default-img"
+                                      src={item.strImageThumbnail}
+                                      alt=""
+                                    />
+                                    <img
+                                      className="hover-img"
+                                      src={item.strImageThumbnail}
+                                      alt=""
+                                    />
+                                  </>
+                                ) : (
+                                  <img
+                                    className="default-img"
+                                    src={productImg}
+                                    alt=""
+                                  />
+                                )}
                               </Link>
                             </div>
                             <div className="product-action-1">
-                              <button
-                                id="wishlist-btn137"
-                                style={{
-                                  border: "none",
-                                  backgroundColor: "white",
-                                }}
-                                data-pid="137"
+                              <Link
                                 aria-label="Add To Wishlist"
-                                className="action-btn btnAdd2Wishlist"
+                                className="action-btn"
+                                onClick={() => handleHeartClick(item.intID)}
                               >
                                 <i className="fi-rs-heart"></i>
-                              </button>
+                              </Link>
                               <Link
+                                to={`/product/${item.strSEOLink}`}
                                 aria-label="Quick view"
                                 className="action-btn"
-                                to=""
                               >
                                 <i className="fi-rs-eye"></i>
                               </Link>
@@ -184,24 +220,32 @@ export const TeacherDetail = () => {
                           </div>
                           <div className="product-content-wrap">
                             <div className="product-category">
-                              <Link to="#">{items.strItemCategory}</Link>
+                              <Link to="#">{item?.strItemCategory}</Link>
                             </div>
                             <h2>
-                              <Link to="">{items.strDesc}</Link>
+                              <Link to="">{item?.strDesc}</Link>
                             </h2>
                             <div className="product-card-bottom">
                               <div className="product-price">
-                                <span>Rs. {items.dblSalePrice}</span>
+                                <span>Rs. {item?.dblSalePrice}</span>
+                              </div>
+                              <div className="contact-info">
+                                <div className="social-info">
+                                  <h4>{selectedProductDesc}</h4>
+                                </div>
                               </div>
                               <div className="add-cart">
-                                <Link
-                                  className="add add_in_cart"
-                                  data-value="137"
-                                  data-desc="O Level Computer Notes P1 &amp; P2 by Navid Saqib"
+                                <button
+                                  id="feature-prod-btn1500"
+                                  type="button"
+                                  className="btn btn-heading add_in_cart"
+                                  onClick={() =>
+                                    handleAddToCart(item.intID, 1, item.strDesc)
+                                  }
                                 >
                                   <i className="fi-rs-shopping-cart mr-5"></i>
-                                  Add{" "}
-                                </Link>
+                                  Add
+                                </button>
                               </div>
                             </div>
                           </div>
