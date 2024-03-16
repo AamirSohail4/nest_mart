@@ -29,7 +29,7 @@ export const Shop = () => {
   };
 
   useEffect(() => {
-    document.title='Ms Books | Shop'
+    document.title='HORECA SYSTEMS | Shop'
     fetchData();
   }, []);
 

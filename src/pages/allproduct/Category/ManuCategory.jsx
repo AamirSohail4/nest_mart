@@ -53,7 +53,7 @@ export const ManuCategory = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        document.title = "Ms Books | Categories";
+        document.title = "HORECA SYSTEMS | Categories";
         setLoading(true);
         const response = await fetch(
           `${api_url}&tag=get_items_web&strCategorySEOLink=${seolink}`
@@ -82,7 +82,6 @@ export const ManuCategory = () => {
 
   const itemsPerPage = 20;
   useEffect(() => {
-    document.title = "Ms Books | Category";
     if (categoryData) {
       const endOffset = itemOffset + itemsPerPage;
       setCurrentItems(categoryData?.slice(itemOffset, endOffset));

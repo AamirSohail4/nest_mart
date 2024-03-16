@@ -44,7 +44,7 @@ export const ProductsGrid = () => {
   };
 
   useEffect(() => {
-    document.title = "Ms Books | Prouduct Grid";
+    document.title = "HORECA SYSTEMS | Prouduct Grid";
     async function fetchAllProducts() {
       try {
         setLoading(true);
@@ -147,7 +147,7 @@ export const ProductsGrid = () => {
                                   />
                                   <img
                                     className="hover-img"
-                                    src={item.strProfilePicture}
+                                    src={item.strImage}
                                     alt=""
                                     onError={(e) => {
                                       e.target.onError = null;

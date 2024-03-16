@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { api_url } from "../../../../config/env";
+import { allProduct_url } from "../../../../config/env";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../../../context/CartContext";
 import { WishListContext } from "../../../../context/WishListContext";
 import { MyAccountContext } from "../../../../context/AccountContext";
+import productImg from "../../../../assets//imgs/banner/product.jpg";
 
 export const PopularProducts = () => {
   const navigate = useNavigate();
@@ -34,9 +35,7 @@ export const PopularProducts = () => {
 
   useEffect(() => {
     async function AllProductShow() {
-      const response = await fetch(
-        `${api_url}&tag=get_items_web&intCategoryID=1&btIsFeatured=1&limit=20`
-      );
+      const response = await fetch(`${allProduct_url}&limit=20`);
       const productData = await response.json();
       setMyProduct(productData.data);
     }
@@ -57,100 +56,101 @@ export const PopularProducts = () => {
           >
             <h3>Popular Products</h3>
           </div>
-          <div className="tab-content" id="myTabContent">
-            <div className="row product-grid-4">
-              {myproduct?.map((item, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="col-lg-1-5 col-md-4 col-12 col-sm-6"
-                  >
-                    <div
-                      className="product-cart-wrap mb-30 wow animate__ animate__fadeIn animated"
-                      data-wow-delay=".2s"
-                      style={{
-                        visibility: "visible",
-                        animationDelay: "0.2s",
-                        animationName: "fadeIn",
-                      }}
-                    >
-                      <div className="product-img-action-wrap">
-                        <div className="product-img product-img-zoom">
-                          <Link to={`/product/${item.strSEOLink}`}>
+          <div className="row product-grid">
+            {myproduct?.map((item, index) => (
+              <div key={index} className="col-lg-1-5 col-md-4 col-12 col-sm-6">
+                <div className="product-cart-wrap mb-30">
+                  <div className="product-img-action-wrap">
+                    <div className="product-img product-img-zoom">
+                      <Link to={`/product/${item.intID}`}>
+                        {item.strImageThumbnail ? (
+                          <>
                             <img
                               className="default-img"
-                              src={item.strImageThumbnail}
+                              src={item.strImageThumbnail || productImg}
+                              onError={(e) => {
+                                e.target.onError = null;
+                                e.target.src = productImg;
+                              }}
                               alt=""
                             />
                             <img
                               className="hover-img"
-                              src={item.strImageThumbnail}
+                              src={item.strImage}
                               alt=""
+                              onError={(e) => {
+                                e.target.onError = null;
+                                e.target.src = productImg;
+                              }}
                             />
-                          </Link>
-                        </div>
-                        <div className="product-action-1">
-                          <a
-                            aria-label="Add To Wishlist"
-                            className="action-btn"
-                            onClick={() => handleHeartClick(item.intID)}
-                          >
-                            <i className="fi-rs-heart"></i>
-                          </a>
+                          </>
+                        ) : (
+                          <img
+                            className="default-img"
+                            src={productImg}
+                            alt=""
+                          />
+                        )}
+                      </Link>
+                    </div>
+                    <div className="product-action-1">
+                      <a
+                        aria-label="Add To Wishlist"
+                        className="action-btn"
+                        onClick={() => handleHeartClick(item.intID)}
+                      >
+                        <i className="fi-rs-heart"></i>
+                      </a>
 
-                          <Link
-                            to={`product/${item.strSEOLink}`}
-                            aria-label="Quick view"
-                            className="action-btn"
-                          >
-                            <i className="fi-rs-eye"></i>
-                          </Link>
+                      <Link
+                        to={`/product/${item.intID}`}
+                        aria-label="Quick view"
+                        className="action-btn"
+                      >
+                        <i className="fi-rs-eye"></i>
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="product-content-wrap">
+                    <div className="product-category">
+                      <Link to={`/product/${item.intID}`}>
+                        {item.strItemCategory}
+                      </Link>
+                    </div>
+                    <h2>
+                      <Link to={`/product/${item.intID}`}>{item.strDesc}</Link>
+                    </h2>
+
+                    <div>
+                      <span className="font-small text-muted"></span>
+                    </div>
+
+                    <div className="product-card-bottom">
+                      <div className="product-price">
+                        <span>Rs: {item.dblSalePrice}</span>
+                      </div>
+                      <div className="contact-info">
+                        <div className="social-info">
+                          <h4>{selectedProductDesc}</h4>
                         </div>
                       </div>
-                      <div className="product-content-wrap">
-                        <div className="product-category">
-                          <Link to={`product/${item.strSEOLink}`}>
-                            {item.strItemCategory}
-                          </Link>
-                        </div>
-                        <h2>
-                          <Link to={`product/${item.strSEOLink}`}>
-                            {item.strDesc}
-                          </Link>
-                        </h2>
-                        <div className="product-card-bottom">
-                          <div className="product-price">
-                            <span>
-                              {item.strUOM ? item.strUOM : "Rs"}
-                              {new Intl.NumberFormat("en-US", {
-                                style: "decimal",
-                              }).format(item.dblSalePrice)}
-                            </span>
-                          </div>
-                          <div className="contact-info">
-                            <div className="social-info">
-                              <h4>{selectedProductDesc}</h4>
-                            </div>
-                          </div>
-                          <div className="add-cart">
-                            <button
-                              id="feature-prod-btn1500"
-                              type="button"
-                              className="btn btn-heading add_in_cart"
-                              onClick={() =>
-                                handleAddToCart(item.intID, 1, item.strDesc)
-                              }
-                            >
-                              <i className="fi-rs-shopping-cart mr-5"></i>Add
-                            </button>
-                          </div>
-                        </div>
+                      <div className="add-cart">
+                        <button
+                          id="feature-prod-btn1500"
+                          type="button"
+                          className="btn btn-heading add_in_cart"
+                          onClick={() =>
+                            handleAddToCart(item.intID, 1, item.strDesc)
+                          }
+                        >
+                          <i className="fi-rs-shopping-cart mr-5"></i>Add
+                        </button>
                       </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

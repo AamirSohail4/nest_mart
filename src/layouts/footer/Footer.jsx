@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import img1 from "../../assets/imgs/theme/msbooks_logo.png";
+import img1 from "../../assets/imgs/theme/logo.jpeg";
 import img6 from "../../assets/imgs/theme/app-store.jpg";
 import img7 from "../../assets/imgs/theme/google-play.jpg";
 import { ScrollButton } from "./scrollbutton/ScrollButton";
@@ -49,16 +49,30 @@ export const Footer = () => {
               >
                 <div className="logo mb-30">
                   <Link to="index.html" className="mb-15">
-                    <img src={img1} alt="logo" />
+                    <img
+                      src={img1}
+                      style={{ width: "50px", minWidth: "50px" }}
+                      alt="logo"
+                    />
                   </Link>
                 </div>
                 <ul className="contact-infor">
                   <li>
-                    <div
+                    {/* <div
                       dangerouslySetInnerHTML={{
                         __html: address,
                       }}
-                    />
+                    /> */}
+                    <p className="col-md-4"></p>
+                    <h4 className="mb-15 text-brand">Office</h4>
+                    <p className="mb-15 text-brand">Landline:04235774780</p>
+                    <p className="mb-15 text-brand">Mobile 0304 7414142</p>
+                    <p className="mb-15 text-brand">Mobile 0304 7414142</p>
+                    <p className="mb-15 text-brand">Whatsapp 0304 7414142</p>
+                    <p className="mb-15 text-brand">(042) 35858584</p>
+                    <p className="mb-15 text-brand">
+                      G8GV+7FQ, St 33, Canal Park Lahore
+                    </p>
                   </li>
                 </ul>
               </div>
@@ -104,12 +118,12 @@ export const Footer = () => {
             >
               <h4 className="widget-title">Our Website</h4>
               <ul className="footer-list mb-sm-5 mb-md-0">
-                <li>
+                {/* <li>
                   <Link to="/teachers">Teacher</Link>
                 </li>
                 <li>
                   <Link to="/shop">Book Shop</Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to="/login">Signin</Link>
                 </li>
@@ -133,18 +147,18 @@ export const Footer = () => {
             >
               <h4 className="widget-title">Install App</h4>
               <p className="">From App Store or Google Play</p>
-              <div className="download-app">
-                <Link
-                  to="https://apps.apple.com/pk/app/ms-books-o-a-level-resources/id1493565728"
-                  className="hover-up mb-sm-2 mb-lg-0"
-                >
-                  <img className="active" src={img6} alt="" />
+              <div className="mobile-social-icon">
+                <Link to="https://www.instagram.com/horecasystemspk/?igshid=148y4fpr7bxag">
+                  <img
+                    src="https://weberp.pk/app/msbooks/images/web_imageslist/42/icon-instagram-white.svg"
+                    alt=""
+                  />
                 </Link>
-                <Link
-                  to="https://play.google.com/store/apps/details?id=com.msbookspk.msbooks&pli=1"
-                  className="hover-up mb-sm-2"
-                >
-                  <img src={img7} alt="" />
+                <Link to="https://www.facebook.com/HorecaSystemsPk/">
+                  <img
+                    src="https://www.weberp.pk/app/msbooks/images/web_imageslist/41/icon-facebook-white.svg"
+                    alt=""
+                  />
                 </Link>
               </div>
             </div>

@@ -111,7 +111,7 @@ export const ShopCart = () => {
   });
 
   useEffect(() => {
-    document.title = "Ms Books | Cart";
+    document.title = "HORECA SYSTEMS | Cart";
     const fetchCities = async () => {
       try {
         const response = await fetch(`${api_url}&tag=get_city&intCountryID=1`);

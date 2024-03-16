@@ -30,7 +30,7 @@ export const Router = () => {
       <Route path="/" element={<FrontendLayout />}>
         <Route index element={<Home />} />
         <Route path="allProducts/:page?" element={<ProductsGrid />} />
-        <Route path="product/:seoLink" element={<SingleProduct />} />
+        <Route path="product/:Id" element={<SingleProduct />} />
         <Route path="signUp" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="about" element={<About />} />
