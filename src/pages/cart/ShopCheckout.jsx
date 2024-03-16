@@ -74,7 +74,7 @@ export const ShopCheckout = () => {
   });
   const subtotal = calculateTotal();
   useEffect(() => {
-    document.title = "Ms Books | Checkout";
+    document.title = "HORECA SYSTEMS | Checkout";
   });
   return (
     <div className="container mb-80 mt-50">

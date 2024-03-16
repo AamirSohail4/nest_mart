@@ -10,3 +10,4 @@ export const allProduct_url = import.meta.env.VITE_APP_API_ALLPRODUCT;
 export const shipAddres_url = import.meta.env.VITE_APP_API_SHIPADRES;
 export const userInfo_url = import.meta.env.VITE_APP_API_USERINFO;
 export const userUpdate_url = import.meta.env.VITE_APP_API_USERUPDATE;
+export const searchurl = import.meta.env.VITE_APP_API_SEARCH;

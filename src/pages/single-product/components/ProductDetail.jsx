@@ -3,7 +3,7 @@ import he from "he";
 import Zoom from "react-img-zoom-gdn";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { api_url } from "../../../config/env";
+import { allProduct_url } from "../../../config/env";
 import { CartContext } from "../../../context/CartContext";
 import { WishListContext } from "../../../context/WishListContext";
 import { MyAccountContext } from "../../../context/AccountContext";
@@ -11,7 +11,8 @@ import productImg from "../../../assets/imgs/banner/product.jpg";
 
 export const ProductDetail = () => {
   const navigate = useNavigate();
-  const { seoLink } = useParams();
+  const { Id } = useParams();
+  console.log("This a book id", Id);
   const { addProducts } = useContext(CartContext);
   const { addToWishList } = useContext(WishListContext);
   const { userId } = useContext(MyAccountContext);
@@ -51,17 +52,16 @@ export const ProductDetail = () => {
 
   useEffect(() => {
     async function SingleProductShow() {
-      const response = await fetch(
-        `${api_url}&tag=get_items_web&strSEOLink=${seoLink}`
-      );
+      const response = await fetch(`${allProduct_url}&intID=${Id}`);
       const productData = await response.json();
-      console.log(productData);
+
       setSingleProduct(productData?.data[0]);
       setStrSpec(productData?.data[0]?.strSpecifications);
       setTeacherProfile(productData?.data[0]?.supplier[0]?.strProfile);
     }
     SingleProductShow();
-  }, [seoLink]);
+  }, [Id]);
+  console.log("The Porduct fetch on the base of id", singleproduct);
 
   let profileValue = teacherProfileData;
   const htmlContent = he.decode(strSpec);
@@ -219,19 +219,19 @@ export const ProductDetail = () => {
               <div className="font-xs">
                 <ul className="mr-50 float-start">
                   <li className="mb-5">
-                    Grade:
-                    <span className="text-brand">{singleproduct?.Grade}</span>
+                    Category:
+                    <span className="text-brand">
+                      {singleproduct?.strItemCategory}
+                    </span>
                   </li>
                   <li className="mb-5">
-                    Type:
-                    <span className="text-brand">{singleproduct?.Type}</span>
-                  </li>
-                  <li>
-                    Author:
-                    <span className="text-brand">{singleproduct?.Author}</span>
+                    Typ:
+                    <span className="text-brand">
+                      {singleproduct?.strWeightUOM}
+                    </span>
                   </li>
                 </ul>
-                <ul className="float-start">
+                {/* <ul className="float-start">
                   <li className="mb-5">
                     Syllabus:
                     <Link to="#">
@@ -248,11 +248,11 @@ export const ProductDetail = () => {
                     Edition:
                     <span className="in-stock text-brand ml-5">S15-W22</span>
                   </li>
-                </ul>
+                </ul> */}
               </div>
             </div>
             <br></br>
-            <div className="row">
+            {/* <div className="row">
               <div className="short-desc mb-30">
                 <div
                   dangerouslySetInnerHTML={{
@@ -260,8 +260,8 @@ export const ProductDetail = () => {
                   }}
                 />
               </div>
-            </div>
-            <div className="row">
+            </div> */}
+            {/* <div className="row">
               <div className="short-desc mb-30">
                 <section className="product-tabs section-padding position-relative">
                   <div className="container">
@@ -318,11 +318,11 @@ export const ProductDetail = () => {
                   </div>
                 </section>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
-      <div className="row mt-60">
+      {/* <div className="row mt-60">
         {singleproduct?.related_items &&
         singleproduct.related_items.length > 0 ? (
           <h2 className="section-title style-1 mb-30">Related products</h2>
@@ -335,7 +335,7 @@ export const ProductDetail = () => {
                   <div className="product-cart-wrap hover-up">
                     <div className="product-img-action-wrap">
                       <div className="product-img product-img-zoom">
-                        <Link to={`/product/${item.strSEOLink}`} tabIndex="0">
+                        <Link to={`/product/${item.intID}`} tabIndex="0">
                           <img
                             className="default-img"
                             src={item?.strImage}
@@ -352,7 +352,7 @@ export const ProductDetail = () => {
                         <Link
                           aria-label="Quick view"
                           className="action-btn small hover-up"
-                          to={`/product/${item?.strSEOLink}`}
+                          to={`/product/${item?.intID}`}
                         >
                           <i className="fi-rs-eye"></i>
                         </Link>
@@ -369,12 +369,12 @@ export const ProductDetail = () => {
                     </div>
                     <div className="product-content-wrap">
                       <div className="product-category">
-                        <Link to={`/product/${item.strSEOLink}`}>
+                        <Link to={`/product/${item.intID}`}>
                           {item?.strItemCategory}
                         </Link>
                       </div>
                       <h2>
-                        <Link to={`/product/${item.strSEOLink}`}>
+                        <Link to={`/product/${item.intID}`}>
                           {item?.strDesc}
                         </Link>
                       </h2>
@@ -415,7 +415,7 @@ export const ProductDetail = () => {
             })}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

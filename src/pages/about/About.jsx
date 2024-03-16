@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-
+import img1 from "../../assets/imgs/theme/about.jpeg";
 export const About = () => {
   useEffect(() => {
-    document.title = "Ms Books | About";
+    document.title = "HORECA SYSTEMS | About";
   });
   return (
     <>
@@ -24,16 +24,14 @@ export const About = () => {
                 <section className="row align-items-center mb-50">
                   <div className="col-lg-6">
                     <img
-                      src="https://www.weberp.pk/app/msbooks/images/web_imageslist/43/MS-Books-Official-Logo-Square.svg"
+                      src={img1}
                       className="border-radius-15 mb-md-3 mb-lg-0 mb-sm-4"
                       alt=""
                     />
                   </div>
                   <div className="col-lg-6">
                     <div className="pl-25">
-                      <h2 className="mb-30">
-                        Welcome to MS BOOKS PUBLICATIONS
-                      </h2>
+                      <h2 className="mb-30">Welcome to HORECA SYSTEMS</h2>
                       <p
                         dir="ltr"
                         style={{
@@ -79,7 +77,7 @@ export const About = () => {
                             whiteSpace: "pre-wrap",
                           }}
                         >
-                          MS Books strives to provide the best educational
+                          HORECA SYSTEMS strives to provide the best educational
                           opportunities, resources, and possibilities for
                           students. We endeavor for excellence through our
                           helping materials to achieve best grades and fall in
@@ -139,8 +137,8 @@ export const About = () => {
                             whiteSpace: "pre-wrap",
                           }}
                         >
-                          Our vision is to make MS Books the first choice of
-                          students for study guide by developing a better
+                          Our vision is to make HORECA SYSTEMS the first choice
+                          of students for study guide by developing a better
                           understanding of the concepts of O level, IGCSE &amp;
                           A level studies and to help students to prepare for
                           CIEs in an effective way so they may acquire the best
@@ -165,7 +163,7 @@ export const About = () => {
                           style={{
                             fontSize: "16pt",
                             fontFamily: "Calibri, sans-serif",
-                            color: "#4f81bd",
+                            color: "#765550",
                             backgroundColor: "transparent",
                             fontWeight: "700",
                             fontStyle: "italic",
@@ -175,7 +173,7 @@ export const About = () => {
                             whiteSpace: "pre",
                           }}
                         >
-                          WHY MS BOOKS?
+                          WHY HORECA SYSTEMS?
                         </span>
                       </p>
                       <p
@@ -200,7 +198,7 @@ export const About = () => {
                               whiteSpace: "pre-wrap",
                             }}
                           >
-                            MS Books provides an opportunity
+                            HORECA SYSTEMS provides an opportunity
                           </span>
                           <span
                             style={{

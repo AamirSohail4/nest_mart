@@ -31,7 +31,7 @@ export const CopyRight = () => {
           </div>
           <div className="col-xl-4 col-lg-6 col-md-6">
             <p className="font-sm mb-0">
-              © 2023, <strong className="text-brand">MSBOOKS</strong> -{" "}
+              © 2023, <strong className="text-brand">Horeca Systems</strong> -
               <br></br>All rights reserved
             </p>
           </div>
@@ -58,11 +58,11 @@ export const CopyRight = () => {
           <div className="col-xl-4 col-lg-6 col-md-6 text-end d-none d-md-block">
             <div className="mobile-social-icon">
               <h6>Follow Us</h6>
-              <Link to="https://web.facebook.com/MSBooks.pk">
+              <Link to="https://www.facebook.com/HorecaSystemsPk/">
                 <img src={img3} alt="" />
               </Link>
 
-              <Link to="https://www.instagram.com/msbooks.pk">
+              <Link to="https://www.instagram.com/horecasystemspk/?igshid=148y4fpr7bxag">
                 <img src={img5} alt="" />
               </Link>
             </div>

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 export const PrivacyPolicy = () => {
   useEffect(() => {
-    document.title = "Ms Books | PrivacyPolicy";
+    document.title = "HORECA SYSTEMS | PrivacyPolicy";
   });
   return (
     <>

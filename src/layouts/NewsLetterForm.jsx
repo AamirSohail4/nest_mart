@@ -34,14 +34,14 @@ export const NewsLetterForm = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="position-relative newsletter-inner">
-                <div className="newsletter-content">
+                {/* <div className="newsletter-content">
                   <div
                     style={{ color: "white" }}
                     dangerouslySetInnerHTML={{
                       __html: bannerText,
                     }}
                   />
-                </div>
+                </div> */}
                 <img src={img1} alt="newsletter" />
               </div>
             </div>

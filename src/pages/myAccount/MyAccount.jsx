@@ -144,7 +144,7 @@ export const MyAccount = () => {
   };
 
   useEffect(() => {
-    document.title = "Ms Books | MyAccount";
+    document.title = "HORECA SYSTEMS | MyAccount";
     setFormData({
       full_name: userinfo.strFullName,
       email: userinfo?.strEmail,

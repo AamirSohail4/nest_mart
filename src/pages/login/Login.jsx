@@ -8,7 +8,7 @@ export const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
-    document.title = "Ms Books | login";
+    document.title = "HORECA SYSTEMS | login";
   });
   const handleSubmit = async (event) => {
     event.preventDefault();

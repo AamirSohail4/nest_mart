@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export const SingleProduct = () => {
   useEffect(() => {
-    document.title = "Ms Books | Product";
+    document.title = "HORECA SYSTEMS | Product";
   });
   return (
     <>

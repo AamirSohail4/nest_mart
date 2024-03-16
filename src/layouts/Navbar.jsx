@@ -5,10 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import img5 from "../assets/imgs/theme/icons/icon-heart.svg";
 import img6 from "../assets/imgs/theme/icons/icon-cart.svg";
 import img9 from "../assets/imgs/theme/icons/icon-user.svg";
-import img10 from "../assets/imgs/theme/msbooks_logo.png";
+import img10 from "../assets/imgs/theme/logo.jpeg";
 import img27 from "../assets/imgs/theme/icons/icon-headphone.svg";
 
-import { api_url } from "../config/env";
+import { api_url, searchurl } from "../config/env";
 import { Icon } from "@iconify/react";
 import { useContext } from "react";
 // import { CartContext } from "../context/CartContext";
@@ -74,7 +74,7 @@ export const Navbar = () => {
   };
 
   async function SearchBarCategory() {
-    const response = await fetch(`${api_url}&tag=get_category_web`);
+    const response = await fetch(`${searchurl}&tag=get_category`);
     const categoryData = await response.json();
     setSearchBarCategory(categoryData.data);
   }
@@ -177,7 +177,11 @@ export const Navbar = () => {
           <div className="header-wrap">
             <div className="logo logo-width-1">
               <Link to="/">
-                <img src={img10} alt="logo" />
+                <img
+                  src={img10}
+                  style={{ width: "50px", minWidth: "48px" }}
+                  alt="logo"
+                />
               </Link>
             </div>
             <div className="header-right">
@@ -448,12 +452,12 @@ export const Navbar = () => {
                         </li>
                       ))}
 
-                    <li>
+                    {/* <li>
                       <Link to="/teachers ">Teacher</Link>
                     </li>
                     <li>
                       <Link to="/shop ">Book Shops</Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Link to="/about">About</Link>
                     </li>

@@ -34,11 +34,10 @@ export const Categories = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        document.title = "Ms Books | Categories";
+        document.title = "HORECA SYSTEMS | Categories";
         setLoading(true);
-        const response = await fetch(
-          ` ${relateProd_url}&tag=get_items_web&intCategoryID=${selectedCategoryId}&strSearch=${searchQuery} `
-        );
+        const response = await fetch();
+        // ` ${relateProd_url}&tag=get_items_web&intCategoryID=${selectedCategoryId}&strSearch=${searchQuery} `
         const SearbarResponse = await response.json();
         setSearchCategory(SearbarResponse?.data);
         setLoading(false);
@@ -74,7 +73,6 @@ export const Categories = () => {
   const itemsPerPage = 20;
 
   useEffect(() => {
-    document.title = "Ms Books | Categories";
     if (searchCategory) {
       const endOffset = itemOffset + itemsPerPage;
       setCurrentItems(searchCategory?.slice(itemOffset, endOffset));

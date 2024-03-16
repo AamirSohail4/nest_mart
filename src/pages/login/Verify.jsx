@@ -81,7 +81,7 @@ export const Verify = () => {
     }
   };
   useEffect(() => {
-    document.title = "Ms Books | Verify";
+    document.title = "HORECA SYSTEMS | Verify";
   });
   return (
     <>
