@@ -12,9 +12,9 @@ export const DashboardLayout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!userId || userId === null) {
-      navigate("/login");
-    }
+    // if (!userId || userId === null) {
+    //   navigate("/login");
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

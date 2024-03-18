@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import { register_url } from "../../config/env";
 import { useNavigate } from "react-router-dom";
+import img1 from "../../assets/imgs/theme/logo.jpeg";
 
 export const Login = () => {
   const [userPhone, setUserPhone] = useState("");
@@ -80,7 +81,8 @@ export const Login = () => {
                 <div className="col-lg-6 pr-30 d-none d-lg-block">
                   <img
                     className="border-radius-15"
-                    src="https://www.weberp.pk/app/msbooks/images/web_imageslist/43/MS-Books-Official-Logo-Square.svg"
+                    style={{ width: "400px" }}
+                    src={img1}
                     alt=""
                   />
                 </div>
