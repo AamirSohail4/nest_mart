@@ -62,7 +62,6 @@ export const MainSlider = () => {
           </div>
         </div>
       </div>
-      
     </section>
   );
 };
